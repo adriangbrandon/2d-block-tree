@@ -71,6 +71,10 @@ namespace cds {
         const data_type &data = m_data;
 
 
+		//*******************************************************//
+        //******************* CONSTRUCTORS **********************//
+        //*******************************************************//
+
         //Default constructor
         table_bitmap() = default;
 
@@ -120,6 +124,11 @@ namespace cds {
             sdsl::util::init_support(m_rank_bitmap, &m_bitmap);
         }
 
+
+        //*******************************************************//
+        //******************** FUNCTIONS ************************//
+        //*******************************************************//
+
         //Number of elements
         inline size_type size()const
         {
@@ -131,6 +140,11 @@ namespace cds {
         {
             return m_data.empty();
         }
+
+
+        //*******************************************************//
+        //*************** BASIC OPERATIONS **********************//
+        //*******************************************************//
 
         //Swap method
         void swap(table_bitmap& o)
@@ -178,6 +192,10 @@ namespace cds {
             }
             return -1;
         }
+
+		//*******************************************************//
+        //********************** FILE ***************************//
+        //*******************************************************//
 
         //Serialize to a stream
         size_type serialize(std::ostream& out, sdsl::structure_tree_node* v=nullptr, std::string name="")const
