@@ -1,7 +1,7 @@
 /***
 BSD 2-Clause License
 
-Copyright (c) 2018, <author_name>
+Copyright (c) 2018, Adrián
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -26,24 +26,75 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 
-#include <table_bitmap.hpp>
 
-using namespace cds;
+//
+// Created by Adrián on 15/07/2019.
+//
 
-int main(){
+#include <kr_block_adjacent_list.hpp>
+#include <kr_roll_adjacent_list.hpp>
+#include <iostream>
 
-    std::vector<std::pair<uint32_t, uint32_t>> input = {{1,3}, {4,5}, {5,6}, {9,7}, {14,2}};
 
-    table_bitmap<uint32_t> tb(input);
+int main(int argc, char **argv) {
 
-    for(uint64_t i = 0; i < 15; ++i){
-        auto exists = tb.exist(i);
-        std::cout << "Key " << i << " exists: " << exists;
-        if(exists){
-           std::cout << " and contains: " << tb[i];
-        }
-        std::cout << std::endl;
+    std::vector<uint64_t > row0 = {1, 3, 5, 7};
+    std::vector<uint64_t > row1 = {};
+    std::vector<uint64_t > row2 = {2, 6};
+    std::vector<uint64_t > row3 = {};
+    std::vector<uint64_t > row4 = {4,5};
+    std::vector<uint64_t > row5 = {2};
+    std::vector<uint64_t > row6 = {1};
+    std::vector<uint64_t > row7 = {1,5};
+    std::vector<std::vector<uint64_t>> matrix8_8;
+    matrix8_8.push_back(row0);
+    matrix8_8.push_back(row1);
+    matrix8_8.push_back(row2);
+    matrix8_8.push_back(row3);
+    matrix8_8.push_back(row4);
+    matrix8_8.push_back(row5);
+    matrix8_8.push_back(row6);
+    matrix8_8.push_back(row7);
+
+
+    karp_rabin::kr_block_adjacent_list<> m_kr(4, 3355443229, 2);
+    m_kr.init(matrix8_8.begin(), matrix8_8.end(), 2);
+    std::cout << "Hash 0: " << m_kr.hash << std::endl;
+    auto i = 1;
+    while(m_kr.next()){
+        std::cout << "Hash " << i << ": " << m_kr.hash << std::endl;
+        ++i;
     }
 
-    std::cout << "Size of the structure: " << sdsl::size_in_bytes(tb) << " bytes. "<< std::endl;
+    karp_rabin::kr_roll_adjacent_list<> m_kr_roll(4, 3355443229, 2);
+    m_kr_roll.init(matrix8_8.begin(), matrix8_8.end(), 4);
+    auto old_hash = m_kr_roll.hash;
+    std::cout << "Hash 0: " << m_kr_roll.hash << std::endl;
+    m_kr_roll.shift_right();
+    std::cout << "Hash 0.1: " << m_kr_roll.hash << std::endl;
+    m_kr_roll.shift_right();
+    std::cout << "Hash 0.2: " << m_kr_roll.hash << std::endl;
+    m_kr_roll.shift_right();
+    std::cout << "Hash 0.3: " << m_kr_roll.hash << std::endl;
+    m_kr_roll.shift_right();
+    std::cout << "Hash 1: " << m_kr_roll.hash << std::endl;
+    m_kr_roll.next_row(old_hash);
+    std::cout << "Hash 0.d1: " << m_kr_roll.hash << std::endl;
+    old_hash = m_kr_roll.hash;
+    m_kr_roll.next_row(old_hash);
+    std::cout << "Hash 0.d2: " << m_kr_roll.hash << std::endl;
+    old_hash = m_kr_roll.hash;
+    m_kr_roll.next_row(old_hash);
+    std::cout << "Hash 0.d3: " << m_kr_roll.hash << std::endl;
+    old_hash = m_kr_roll.hash;
+    m_kr_roll.next_row(old_hash);
+    std::cout << "Hash 2: " << m_kr_roll.hash << std::endl;
+    m_kr_roll.shift_right();
+    std::cout << "Hash 2.1: " << m_kr_roll.hash << std::endl;
+    m_kr_roll.shift_right();
+    std::cout << "Hash 2.2: " << m_kr_roll.hash << std::endl;
+    m_kr_roll.shift_right();
+    std::cout << "Hash 2.3: " << m_kr_roll.hash << std::endl;
+    m_kr_roll.shift_right();
+    std::cout << "Hash 3: " << m_kr_roll.hash << std::endl;
 }

@@ -2,14 +2,14 @@ cmake_minimum_required(VERSION 2.8.7)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
 include(AppendCompilerFlags)
 
-project(name_project)
-set(PROJECT_VENDOR "name_author")
-set(CMAKE_PROJECT_NAME "name_project")
-set(PROJECT_CONTACT "project_contact")
+project(2d-block-tree)
+set(PROJECT_VENDOR "Adrian Gomez Brandon")
+set(CMAKE_PROJECT_NAME "2d-block-tree")
+set(PROJECT_CONTACT "adrian.gbrandon@udc.es")
 
 
 #Change to "Debug" when you need it
-set(CMAKE_BUILD_TYPE "Release")
+set(CMAKE_BUILD_TYPE "Debug")
 
 # C++11 compiler Check
 if(NOT CMAKE_CXX_COMPILER_VERSION) # work around for cmake versions smaller than 2.8.10
@@ -57,5 +57,5 @@ include_directories("${PROJECT_SOURCE_DIR}/external/googletest/include"
         )
 
 
-add_executable(template_executable src/main.cpp)
-target_link_libraries(template_executable sdsl divsufsort divsufsort64)
+add_executable(main src/main.cpp)
+target_link_libraries(main sdsl divsufsort divsufsort64)
