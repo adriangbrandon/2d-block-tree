@@ -144,7 +144,7 @@ namespace block_tree_2d {
                 if(ht.hash_collision(kr_block.hash, it_table, it_hash)){
                     if(exist_identical_block(adjacent_lists, i%total_blocks_in_row, i/total_blocks_in_row,
                             iterators_value, it_hash->second, block_size)){ //check if they are identical
-                        //add pointer and offset [<p, <x,y>>]
+                        //TODO: add pointer and offset [<p, <x,y>>]
 
                     }else{
                         //add <z_order, kr_block.iterators_value> to chain in map

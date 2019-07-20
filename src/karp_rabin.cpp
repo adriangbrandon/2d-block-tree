@@ -61,16 +61,20 @@ int main(int argc, char **argv) {
 
     karp_rabin::kr_block_adjacent_list<> m_kr(4, 3355443229, 2);
     m_kr.init(matrix8_8.begin(), matrix8_8.end(), 2);
-    std::cout << "Hash 0: " << m_kr.hash << std::endl;
-    auto i = 1;
+    auto i = 0;
     while(m_kr.next()){
         std::cout << "Hash " << i << ": " << m_kr.hash << std::endl;
         ++i;
     }
 
-    karp_rabin::kr_roll_adjacent_list<> m_kr_roll(4, 3355443229, 2);
-    m_kr_roll.init(matrix8_8.begin(), matrix8_8.end(), 4);
-    auto old_hash = m_kr_roll.hash;
+    karp_rabin::kr_roll_adjacent_list<> m_kr_roll(2, 3355443229, 2);
+    m_kr_roll.init(matrix8_8.begin(), matrix8_8.end(), 7);
+    i = 0;
+    while(m_kr_roll.next()){
+        std::cout << "Hash Roll " << i << ": " << m_kr_roll.hash << std::endl;
+        ++i;
+    }
+    /*auto old_hash = m_kr_roll.hash;
     std::cout << "Hash 0: " << m_kr_roll.hash << std::endl;
     m_kr_roll.shift_right();
     std::cout << "Hash 0.1: " << m_kr_roll.hash << std::endl;
@@ -98,5 +102,6 @@ int main(int argc, char **argv) {
     m_kr_roll.shift_right();
     std::cout << "Hash 2.3: " << m_kr_roll.hash << std::endl;
     m_kr_roll.shift_right();
-    std::cout << "Hash 3: " << m_kr_roll.hash << std::endl;
+    std::cout << "Hash 3: " << m_kr_roll.hash << std::endl;*/
+
 }

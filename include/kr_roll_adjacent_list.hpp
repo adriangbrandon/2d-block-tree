@@ -57,8 +57,10 @@ namespace karp_rabin {
         size_type m_asize_pow_block; //asize^block_size
 
         hash_type m_hash;
-        size_type m_ith_shift_in_row = 0;
-        size_type m_total_shifts_in_row; // number of shifts
+        hash_type m_prev_hash;
+        size_type m_ith_shift_in_row = (size_type) -1;
+        size_type m_ith_shift_in_col = 0;
+        size_type m_total_shifts; // number of shifts
 
         iterator_list_type m_iterator_list;
         iterator_list_type m_end_list;
@@ -84,7 +86,6 @@ namespace karp_rabin {
                 m_iterators_beg[list_id] = (*(m_iterator_list+list_id)).begin();
                 m_iterators_end[list_id] = m_iterators_beg[list_id];
             }
-            m_ith_shift_in_row = 0;
         }
 
         void init_hs(){
@@ -141,58 +142,27 @@ namespace karp_rabin {
             return hash_value;
         }
 
-    public:
-
-        const hash_type &hash = m_hash;
-
-        kr_roll_adjacent_list(size_type bs, size_type q, size_type as){
-            m_block_size = bs;
-            m_prime = q;
-            m_asize = as;
-            m_asize_pow_block = m_asize;
-            for(size_type i = 1; i < m_block_size; ++i){
-                m_asize_pow_block = (m_asize_pow_block * m_asize) % m_prime;
-            }
-            m_iterators_beg = std::vector<iterator_value_type>(m_block_size);
-            m_iterators_end = std::vector<iterator_value_type>(m_block_size);
-            m_h_in_down = std::vector<hash_type>(m_block_size);
-            m_h_in_right = std::vector<hash_type>(m_block_size);
-            m_h_out_down = std::vector<hash_type>(m_block_size);
-            m_h_out_right = std::vector<hash_type>(m_block_size);
-        }
-
-        //pre: list with size at least block_size
-        void init(const iterator_list_type &iterator, const iterator_list_type &end_list, size_type total_shifts){
-            m_total_shifts_in_row = total_shifts;
-            m_end_list = end_list;
-            init_iterators(iterator);
-            init_hs();
-            m_hash = compute_initial_hash_block();
-        }
-
         void shift_right(){
             auto hash = m_hash;
             //Delete previous part
             for(auto i = 0; i < m_block_size; ++i){
-                if(m_iterators_beg[i] != (m_iterator_list+i)->end() && *(m_iterators_beg[i]) == m_ith_shift_in_row){
+                if(m_iterators_beg[i] != (m_iterator_list+i)->end() && *(m_iterators_beg[i]) == m_ith_shift_in_row-1){
                     hash += (m_prime - m_h_out_right[i]) % m_prime;
                     ++m_iterators_beg[i];
                 }
             }
             hash = (hash * m_asize) % m_prime;
             for(auto i = 0; i < m_block_size; ++i){
-                if(m_iterators_end[i] != (m_iterator_list+i)->end() && *(m_iterators_end[i]) == m_ith_shift_in_row + m_block_size){
+                if(m_iterators_end[i] != (m_iterator_list+i)->end() && *(m_iterators_end[i]) == m_ith_shift_in_row + m_block_size-1){
                     hash = (hash + m_h_in_right[i]) % m_prime;
                     ++m_iterators_end[i];
                 }
             }
             m_hash = hash;
-            ++m_ith_shift_in_row;
         }
 
-        void next_row(hash_type h){
-            m_hash = h;
-            auto hash = m_hash;
+        void next_row(){
+            auto hash = m_prev_hash;
             //Delete previous part
             for(auto it_element = m_iterator_list->begin();
                 it_element != m_iterator_list->end() && (*it_element) < m_block_size;
@@ -222,6 +192,55 @@ namespace karp_rabin {
                     //nothing to do. Pointers are updated in ++it_element
                 }
             }
+        }
+
+    public:
+
+        const hash_type &hash = m_hash;
+
+        kr_roll_adjacent_list(size_type bs, size_type q, size_type as){
+            m_block_size = bs;
+            m_prime = q;
+            m_asize = as;
+            m_asize_pow_block = m_asize;
+            for(size_type i = 1; i < m_block_size; ++i){
+                m_asize_pow_block = (m_asize_pow_block * m_asize) % m_prime;
+            }
+            m_iterators_beg = std::vector<iterator_value_type>(m_block_size);
+            m_iterators_end = std::vector<iterator_value_type>(m_block_size);
+            m_h_in_down = std::vector<hash_type>(m_block_size);
+            m_h_in_right = std::vector<hash_type>(m_block_size);
+            m_h_out_down = std::vector<hash_type>(m_block_size);
+            m_h_out_right = std::vector<hash_type>(m_block_size);
+        }
+
+        //pre: list with size at least block_size
+        void init(const iterator_list_type &iterator, const iterator_list_type &end_list, size_type total_shifts){
+            m_total_shifts = total_shifts;
+            m_end_list = end_list;
+            init_iterators(iterator);
+            init_hs();
+            //m_hash = compute_initial_hash_block();
+        }
+
+        
+        bool next(){
+            if(m_ith_shift_in_row == m_total_shifts-1 && m_ith_shift_in_col == m_total_shifts-1){
+                return false;
+            }
+            ++m_ith_shift_in_row;
+            if(m_ith_shift_in_row == 0 && m_ith_shift_in_col == 0){
+                m_hash = compute_initial_hash_block();
+                m_prev_hash = m_hash;
+            }else if (m_ith_shift_in_row == m_total_shifts){
+                m_ith_shift_in_row = 0;
+                ++m_ith_shift_in_col;
+                next_row();
+                m_prev_hash = m_hash;
+            }else{
+                shift_right();
+            }
+            return true;
         }
 
 
