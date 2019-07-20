@@ -33,6 +33,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <kr_block_adjacent_list.hpp>
 #include <kr_roll_adjacent_list.hpp>
+#include <block_tree_algorithm_helper.hpp>
+#include <hash_table_chainning.hpp>
 #include <iostream>
 
 

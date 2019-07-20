@@ -39,7 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace karp_rabin {
 
-    template <bool roll = false, class t_input = std::vector<std::vector<uint64_t>>>
+    template <class t_input = std::vector<std::vector<uint64_t>>>
     class kr_block_adjacent_list {
 
     public:
@@ -56,12 +56,24 @@ namespace karp_rabin {
         size_type m_asize;
 
         hash_type m_hash;
-        size_type m_ith_block_in_row = 0;
+        size_type m_ith_block_in_row = -1;
         size_type m_total_blocks_in_row; //side in number of blocks
 
         iterator_list_type m_iterator_list;
         iterator_list_type m_end_list;
         std::vector<iterator_value_type> m_iterators_value;
+
+        void copy(const kr_block_adjacent_list &p){
+            m_block_size = p.m_block_size;
+            m_prime = p.m_prime;
+            m_asize = p.m_asize;
+            m_hash = p.m_hash;
+            m_ith_block_in_row = p.m_ith_block_in_row;
+            m_total_blocks_in_row = p.m_total_blocks_in_row;
+            m_iterator_list = p.m_iterator_list;
+            m_end_list = p.m_end_list;
+            m_iterators_value = p.m_iterators_value;
+        }
 
         void init_iterators_first_row(const iterator_list_type &iterator){
             m_iterator_list = iterator;
@@ -113,6 +125,9 @@ namespace karp_rabin {
     public:
 
         const hash_type &hash = m_hash;
+        const std::vector<iterator_value_type> &iterators_value = m_iterators_value;
+
+        kr_block_adjacent_list() = default;
 
         kr_block_adjacent_list(size_type bs, size_type q, size_type as){
             m_block_size = bs;
@@ -126,7 +141,7 @@ namespace karp_rabin {
             m_total_blocks_in_row = total_blocks_in_row;
             m_end_list = end_list;
             init_iterators_first_row(iterator);
-            m_hash = compute_hash_block();
+            //m_hash = compute_hash_block();
         }
 
 

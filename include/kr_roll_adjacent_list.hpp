@@ -39,7 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace karp_rabin {
 
-    template <bool roll = false, class t_input = std::vector<std::vector<uint64_t>>>
+    template <class t_input = std::vector<std::vector<uint64_t>>>
     class kr_roll_adjacent_list {
 
     public:
@@ -109,27 +109,6 @@ namespace karp_rabin {
             for(int64_t i = m_block_size-1; i > 0; --i){
                 m_h_out_down[i-1] = (m_h_out_down[i] * m_asize) % m_prime;
             }
-            //Shift down out
-            /*m_h_out_down[0]=1;
-            for(auto i = 1; i < m_block_size; ++i){
-                m_h_out_down[i] = (m_h_out_down[i-1] * m_asize) % m_prime;
-            }*/
-            //Shift right out and in
-            /*m_h_in_right[0]=m_h_out_down[m_block_size-1];
-            m_h_out_right[0]=1;
-            for(auto i = 1; i < m_block_size; ++i){
-                m_h_out_right[i] = (m_h_in_right[i-1] * m_asize) % m_prime;
-                m_h_in_right[i] = m_h_out_right[i];
-                for(auto j = 1; j < m_block_size; ++j){
-                    m_h_in_right[i] = (m_h_in_right[i] * m_asize) % m_prime;
-                }
-            }
-
-            //Shift down in
-            m_h_in_down[0] = m_h_out_right[m_block_size-1];
-            for(auto i = 1; i < m_block_size; ++i){
-                m_h_in_down[i] = (m_h_in_down[i-1] * m_asize) % m_prime;
-            }*/
         }
 
         hash_type compute_initial_hash_block(){
@@ -245,14 +224,6 @@ namespace karp_rabin {
             }
         }
 
-        /*bool next(){
-            ++m_ith_block_in_row;
-            if(m_ith_block_in_row == m_total_blocks_in_row){
-                if(!init_iterators_next_row()) return false;
-            }
-            m_hash = compute_hash_block();
-            return true;
-        }*/
 
     };
 

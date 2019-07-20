@@ -30,7 +30,7 @@ if( CMAKE_COMPILER_IS_GNUCXX )
 else()
     append_cxx_compiler_flags("-std=c++11" "CLANG" CMAKE_CXX_FLAGS)
     append_cxx_compiler_flags("-stdlib=libc++" "CLANG" CMAKE_CXX_FLAGS)
-    append_cxx_compiler_flags("-msse4.2 -O3  -ffast-math -funroll-loops -DNDEBUG" "CLANG" CMAKE_CXX_FLAGS_RELEASE)
+    append_cxx_compiler_flags("-msse4.2 -O3 -ffast-math -funroll-loops -DNDEBUG" "CLANG" CMAKE_CXX_FLAGS_RELEASE)
 endif()
 include(CheckSSE)
 FindSSE ()
@@ -57,5 +57,11 @@ include_directories("${PROJECT_SOURCE_DIR}/external/googletest/include"
         )
 
 
-add_executable(main src/main.cpp)
-target_link_libraries(main sdsl divsufsort divsufsort64)
+add_executable(karp_rabin src/karp_rabin.cpp)
+target_link_libraries(karp_rabin sdsl divsufsort divsufsort64)
+
+add_executable(hash_table src/hash_table.cpp)
+target_link_libraries(hash_table sdsl divsufsort divsufsort64)
+
+add_executable(algorithm src/algorithm.cpp)
+target_link_libraries(algorithm sdsl divsufsort divsufsort64)
