@@ -141,6 +141,7 @@ namespace block_tree_2d {
             while(kr_block.next()){
                 std::cout << "Hash: " << kr_block.hash << std::endl;
                 //check if kr_block.hash exists in map
+                //TODO: check if the block is completely empty (hash == 0 and is_empty)
                 if(ht.hash_collision(kr_block.hash, it_table, it_hash)){
                     if(exist_identical_block(adjacent_lists, i%total_blocks_in_row, i/total_blocks_in_row,
                             iterators_value, it_hash->second, block_size)){ //check if they are identical
@@ -164,8 +165,12 @@ namespace block_tree_2d {
 
         }
 
-        template <class t_input, class t_map, class t_size>
-        void get_type_of_nodes(){
+        template <class input_type, class hash_table_type>
+        void get_type_of_nodes(input_type &adjacent_lists, hash_table_type &ht,
+                               const size_type dimensions, const size_type block_size){
+
+
+
 
         }
     };

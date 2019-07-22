@@ -223,7 +223,7 @@ namespace karp_rabin {
             //m_hash = compute_initial_hash_block();
         }
 
-        
+
         bool next(){
             if(m_ith_shift_in_row == m_total_shifts-1 && m_ith_shift_in_col == m_total_shifts-1){
                 return false;

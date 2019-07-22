@@ -46,7 +46,6 @@ namespace codes {
             uint64_t x = interleaving_number_decode(code);
             uint64_t y = interleaving_number_decode(code >> 1);
             return {x, y};
-            //return std::make_pair(x, y);
         }
     };
 }
