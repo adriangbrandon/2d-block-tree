@@ -63,6 +63,9 @@ target_link_libraries(karp_rabin sdsl divsufsort divsufsort64)
 add_executable(karp_rabin_v2 src/karp_rabin_v2.cpp)
 target_link_libraries(karp_rabin_v2 sdsl divsufsort divsufsort64)
 
+add_executable(karp_rabin_test test/karp_rabin_test.cpp)
+target_link_libraries(karp_rabin_test sdsl divsufsort divsufsort64)
+
 add_executable(hash_table src/hash_table.cpp)
 target_link_libraries(hash_table sdsl divsufsort divsufsort64)
 

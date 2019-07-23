@@ -147,7 +147,6 @@ namespace karp_rabin {
         const hash_type &hash = m_hash;
         const size_type &row = m_row;
         const size_type &col = m_col;
-        const std::vector<iterator_value_type> &iterators_value = m_iterators_value;
 
         kr_block_adjacent_list_v2() = default;
 

@@ -38,9 +38,94 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 
 
+
+uint64_t comp_hash(const std::vector<std::vector<uint64_t>> &adjacency_list,
+             uint64_t prime,
+             uint64_t x, uint64_t y,
+             uint64_t block_size){
+
+    auto x_min = x;
+    auto x_max = x_min + block_size -1;
+    auto y_min = y;
+    auto y_max = y_min + block_size -1;
+    uint64_t hash_i = 0;
+    for(uint64_t i = y_min; i <= y_max; ++i){
+        auto prev_value = (uint64_t) x_min -1;
+        auto it = std::lower_bound(adjacency_list[i].begin(), adjacency_list[i].end(), x_min);
+        while(it != adjacency_list[i].end() && (*it) <= x_max){
+            //2.1 Compute hash_value with 0s
+            for(auto v = prev_value+1; v < (*it); ++v){
+                hash_i = (hash_i * 2) % prime;
+            }
+            //2.2 Compute hash_value with 1
+            hash_i = (hash_i * 2 + 1) % prime;
+            //2.3 Next element of adjacent list
+            prev_value = (*it);
+            ++it;
+        }
+        //3. Check the last element and compute hash_value with 0s
+        //prev_value is always smaller than block_size
+        for(auto j = prev_value + 1; j <= x_max; ++j){
+            hash_i = (hash_i * 2) % prime;
+        }
+    }
+    //std::cout << "Hash Expected: " << hash_i << std::endl;
+    return hash_i;
+}
+
+
+void print_adjacency_lists(const std::vector<std::vector<uint64_t>> &adjacency_list){
+
+    auto i = 0;
+    for(const auto &list : adjacency_list){
+        std::cout << "List " << i << ": { ";
+        for(const auto &v : list){
+            std::cout << v << ", ";
+        }
+        std::cout << " }" << std::endl;
+        ++i;
+    }
+}
+
+
 int main(int argc, char **argv) {
 
-    std::vector<uint64_t > row0 = {1, 3, 5, 7};
+
+    uint64_t prime = 3355443229;
+    uint64_t block_size = 4;
+    int64_t size = atoi(argv[1]);
+    uint64_t freq = atoi(argv[2]);
+    uint64_t rep = atoi(argv[3]);
+
+    for(uint64_t i = 0; i < rep; ++i){
+        std::vector<std::vector<uint64_t>> adjacency_lists(size, std::vector<uint64_t>());
+        for(auto &list : adjacency_lists){
+            int64_t last = rand() % freq;
+            while(last < size){
+                list.push_back(last);
+                last = last + (rand() % freq +1);
+            }
+        }
+
+        karp_rabin::kr_roll_adjacent_list_v2<> m_kr_roll(block_size, prime, adjacency_lists);
+        while(m_kr_roll.next()){
+            //std::cout << "Hash Roll " << i << ": " << m_kr_roll.hash << std::endl;
+            //std::cout << "<x, y>: <" << m_kr_roll.col << ", " << m_kr_roll.row << ">" << std::endl;
+            auto expected_hash = comp_hash(adjacency_lists, prime, m_kr_roll.col, m_kr_roll.row, block_size);
+            if(expected_hash != m_kr_roll.hash){
+                std::cout << "Error at <x, y>: <" << m_kr_roll.col << ", " << m_kr_roll.row << ">" << std::endl;
+                std::cout << "Obtained: " << m_kr_roll.hash << std::endl;
+                std::cout << "Expected: " << expected_hash << std::endl;
+                print_adjacency_lists(adjacency_lists);
+                exit(1);
+            }
+        }
+        //print_adjacency_lists(adjacency_lists);
+        std::cout << "Everything is OK!" << std::endl;
+    }
+
+
+    /*std::vector<uint64_t > row0 = {1, 3, 5, 7};
     std::vector<uint64_t > row1 = {};
     std::vector<uint64_t > row2 = {2, 6};
     std::vector<uint64_t > row3 = {};
@@ -58,24 +143,10 @@ int main(int argc, char **argv) {
     matrix8_8.push_back(row4);
     matrix8_8.push_back(row5);
     matrix8_8.push_back(row6);
-    matrix8_8.push_back(row7);
+    matrix8_8.push_back(row7);*/
 
 
-    karp_rabin::kr_block_adjacent_list_v2<> m_kr(4, 3355443229, matrix8_8);
-    auto i = 0;
-    while(m_kr.next()){
-        std::cout << "Hash " << i << ": " << m_kr.hash << std::endl;
-        std::cout << "<x, y>: <" << m_kr.col << ", " << m_kr.row << ">" << std::endl;
-        ++i;
-    }
 
-    karp_rabin::kr_roll_adjacent_list_v2<> m_kr_roll(4, 3355443229, matrix8_8);
-    i = 0;
-    while(m_kr_roll.next()){
-        std::cout << "Hash Roll " << i << ": " << m_kr_roll.hash << std::endl;
-        std::cout << "<x, y>: <" << m_kr_roll.col << ", " << m_kr_roll.row << ">" << std::endl;
-        ++i;
-    }
     /*auto old_hash = m_kr_roll.hash;
     std::cout << "Hash 0: " << m_kr_roll.hash << std::endl;
     m_kr_roll.shift_right();
