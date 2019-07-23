@@ -94,35 +94,40 @@ int main(int argc, char **argv) {
     uint64_t prime = 3355443229;
     uint64_t block_size = 4;
     int64_t size = atoi(argv[1]);
-    uint64_t freq = atoi(argv[2]);
-    uint64_t rep = atoi(argv[3]);
+    //uint64_t freq = atoi(argv[2]);
+    uint64_t rep = atoi(argv[2]);
 
-    for(uint64_t i = 0; i < rep; ++i){
-        std::vector<std::vector<uint64_t>> adjacency_lists(size, std::vector<uint64_t>());
-        for(auto &list : adjacency_lists){
-            int64_t last = rand() % freq;
-            while(last < size){
-                list.push_back(last);
-                last = last + (rand() % freq +1);
-            }
-        }
+    std::vector<uint64_t> freqs = {10, 20, 40, 80, 160, 320, 640};
 
-        karp_rabin::kr_roll_adjacent_list_v2<> m_kr_roll(block_size, prime, adjacency_lists);
-        while(m_kr_roll.next()){
-            //std::cout << "Hash Roll " << i << ": " << m_kr_roll.hash << std::endl;
-            //std::cout << "<x, y>: <" << m_kr_roll.col << ", " << m_kr_roll.row << ">" << std::endl;
-            auto expected_hash = comp_hash(adjacency_lists, prime, m_kr_roll.col, m_kr_roll.row, block_size);
-            if(expected_hash != m_kr_roll.hash){
-                std::cout << "Error at <x, y>: <" << m_kr_roll.col << ", " << m_kr_roll.row << ">" << std::endl;
-                std::cout << "Obtained: " << m_kr_roll.hash << std::endl;
-                std::cout << "Expected: " << expected_hash << std::endl;
-                print_adjacency_lists(adjacency_lists);
-                exit(1);
+    for(const auto &freq : freqs){
+        for(uint64_t i = 0; i < rep; ++i){
+            std::vector<std::vector<uint64_t>> adjacency_lists(size, std::vector<uint64_t>());
+            for(auto &list : adjacency_lists){
+                int64_t last = rand() % freq;
+                while(last < size){
+                    list.push_back(last);
+                    last = last + (rand() % freq +1);
+                }
             }
+
+            karp_rabin::kr_roll_adjacent_list_v2<> m_kr_roll(block_size, prime, adjacency_lists);
+            while(m_kr_roll.next()){
+                //std::cout << "Hash Roll " << i << ": " << m_kr_roll.hash << std::endl;
+                //std::cout << "<x, y>: <" << m_kr_roll.col << ", " << m_kr_roll.row << ">" << std::endl;
+                auto expected_hash = comp_hash(adjacency_lists, prime, m_kr_roll.col, m_kr_roll.row, block_size);
+                if(expected_hash != m_kr_roll.hash){
+                    std::cout << "Error at <x, y>: <" << m_kr_roll.col << ", " << m_kr_roll.row << ">" << std::endl;
+                    std::cout << "Obtained: " << m_kr_roll.hash << std::endl;
+                    std::cout << "Expected: " << expected_hash << std::endl;
+                    print_adjacency_lists(adjacency_lists);
+                    exit(1);
+                }
+            }
+            print_adjacency_lists(adjacency_lists);
+            std::cout << "Everything is OK!" << std::endl;
         }
-        //print_adjacency_lists(adjacency_lists);
-        std::cout << "Everything is OK!" << std::endl;
     }
+
 
 
     /*std::vector<uint64_t > row0 = {1, 3, 5, 7};

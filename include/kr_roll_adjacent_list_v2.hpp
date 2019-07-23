@@ -262,6 +262,10 @@ namespace karp_rabin {
 
             //1.6 Init heaps
             init_heaps();
+            //1.7 Check if the first area is empty
+            if(m_hash == 0 && (m_heap_in.empty() || *(m_heap_in.top().first) >= m_block_size)){
+                return shift_right();
+            }
             return true;
 
         }

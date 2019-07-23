@@ -45,10 +45,10 @@ int main(int argc, char **argv) {
     std::vector<uint64_t > row2 = {2, 6};
     std::vector<uint64_t > row3 = {};
     //std::vector<uint64_t > row4 = {4,5};
-    std::vector<uint64_t > row4 = {};
+    std::vector<uint64_t > row4 = {4,5};
     std::vector<uint64_t > row5 = {};
     std::vector<uint64_t > row6 = {};
-    std::vector<uint64_t > row7 = {};
+    std::vector<uint64_t > row7 = {1,5};
     //std::vector<uint64_t > row7 = {1,5};
     std::vector<std::vector<uint64_t>> matrix8_8;
     matrix8_8.push_back(row0);

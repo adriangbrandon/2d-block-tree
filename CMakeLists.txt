@@ -9,7 +9,7 @@ set(PROJECT_CONTACT "adrian.gbrandon@udc.es")
 
 
 #Change to "Debug" when you need it
-set(CMAKE_BUILD_TYPE "Debug")
+set(CMAKE_BUILD_TYPE "Release")
 
 # C++11 compiler Check
 if(NOT CMAKE_CXX_COMPILER_VERSION) # work around for cmake versions smaller than 2.8.10
