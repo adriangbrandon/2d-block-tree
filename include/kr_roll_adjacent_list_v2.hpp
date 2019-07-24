@@ -79,7 +79,8 @@ namespace karp_rabin {
 
         iterator_list_type m_iterator_list;
         iterator_list_type m_end_list;
-        std::vector<iterator_value_type> m_iterators_end;
+        std::vector<iterator_value_type> m_iterators_end_first_block;
+        std::vector<iterator_value_type > m_iterators;
 
         std::vector<hash_type> m_h_in_right;
         std::vector<hash_type> m_h_out_right;
@@ -102,8 +103,9 @@ namespace karp_rabin {
         void init_iterators(const iterator_list_type &iterator){
             m_iterator_list = iterator;
             for(auto list_id = 0; list_id < m_block_size; ++list_id){
-                m_iterators_end[list_id] = (m_iterator_list+list_id)->begin();
+                m_iterators_end_first_block[list_id] = (m_iterator_list+list_id)->begin();
             }
+
         }
 
         void init_hs(){
@@ -131,8 +133,8 @@ namespace karp_rabin {
                     v_out.emplace_back(m_iterator_list[m_row+i].begin(), i);
                 }
                 auto cyclic_i = (m_row + i) % m_block_size;
-                if(m_iterators_end[cyclic_i] != m_iterator_list[m_row+i].end()){
-                    v_in.emplace_back(m_iterators_end[cyclic_i],  i);
+                if(m_iterators_end_first_block[cyclic_i] != m_iterator_list[m_row+i].end()){
+                    v_in.emplace_back(m_iterators_end_first_block[cyclic_i],  i);
                 }
             }
             m_heap_in = heap_type(v_in.begin(), v_in.end());
@@ -150,9 +152,9 @@ namespace karp_rabin {
             for(auto it_list = m_iterator_list; it_list != m_iterator_list + m_block_size; ++it_list){
                 int64_t prev_value = -1;
                 //1.2. Iterate over the elements of an adjacent list
-                auto &it_element = m_iterators_end[list_id];
+                auto &it_element = m_iterators_end_first_block[list_id];
                 size_type hash_row = 0;
-                while(it_element != (*it_list).end() && (*it_element) < m_block_size){
+                while(it_element != it_list->end() && (*it_element) < m_block_size){
                     //2.1 Compute hash_value with 0s
                     for(auto v = prev_value+1; v < (*it_element); ++v){
                         hash_row = (hash_row * m_asize) % m_prime;
@@ -175,6 +177,8 @@ namespace karp_rabin {
             }
             m_hash = hash_value;
             m_prev_hash = m_hash;
+            //Initial iterators at the end of first block
+            m_iterators = m_iterators_end_first_block;
 
             //2. Initialize heaps
             init_heaps();
@@ -210,7 +214,7 @@ namespace karp_rabin {
                 auto in_top = m_heap_in.top();
                 hash = (hash + m_h_in_right[in_top.second]) % m_prime;
                 m_heap_in.pop();
-                ++in_top.first;
+                m_iterators[in_top.second] = ++in_top.first;
                 if(in_top.first != (m_iterator_list + m_row + in_top.second)->end()){
                     m_heap_in.push({in_top.first, in_top.second});
                 }
@@ -258,7 +262,8 @@ namespace karp_rabin {
 
             //1.5 Store prev hash and position of next one
             m_prev_kr[cyclic_i] = hash_row;
-            m_iterators_end[cyclic_i] = it_element;
+            m_iterators_end_first_block[cyclic_i] = it_element;
+            m_iterators = m_iterators_end_first_block;
 
             //1.6 Init heaps
             init_heaps();
@@ -275,12 +280,14 @@ namespace karp_rabin {
         const hash_type &hash = m_hash;
         const size_type &row = m_row;
         const size_type &col = m_col;
+        const std::vector<iterator_value_type > &iterators = m_iterators;
 
         kr_roll_adjacent_list_v2(size_type bs, size_type q, input_type &input){
             m_block_size = bs;
             m_prime = q;
             m_total_shifts = std::distance(input.begin(), input.end()) - m_block_size + 1;
-            m_iterators_end = std::vector<iterator_value_type>(m_block_size);
+            m_iterators_end_first_block = std::vector<iterator_value_type>(m_block_size);
+            m_iterators = std::vector<iterator_value_type>(m_block_size);
             m_h_in_right = std::vector<hash_type>(m_block_size);
             m_h_out_right = std::vector<hash_type>(m_block_size);
             m_prev_kr = std::vector<hash_type>(m_block_size);

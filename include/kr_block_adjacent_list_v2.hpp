@@ -75,7 +75,7 @@ namespace karp_rabin {
         void init_iterators_first_row(const iterator_list_type &iterator){
             m_iterator_list = iterator;
             for(auto list_id = 0; list_id < m_block_size; ++list_id){
-                m_iterators_value[list_id] = (*(m_iterator_list+list_id)).begin();
+                m_iterators_value[list_id] = (m_iterator_list+list_id)->begin();
             }
         }
 
@@ -83,7 +83,7 @@ namespace karp_rabin {
             m_iterator_list = m_iterator_list + m_block_size;
             if(m_iterator_list == m_end_list) return false;
             for(auto list_id = 0; list_id < m_block_size; ++list_id){
-                m_iterators_value[list_id] = (*(m_iterator_list+list_id)).begin();
+                m_iterators_value[list_id] = (m_iterator_list+list_id)->begin();
             }
             ++m_row;
             return true;
@@ -93,7 +93,7 @@ namespace karp_rabin {
             auto min = (size_type) -1;
             bool next_row = true;
             for(auto list_id = 0; list_id < m_block_size; ++list_id){
-                if(m_iterators_value[list_id] != m_iterator_list[list_id].end()){
+                if(m_iterators_value[list_id] != (m_iterator_list+list_id)->end()){
                     if(min == -1){
                         min = *(m_iterators_value[list_id]);
                     }else if(min > *(m_iterators_value[list_id])){
@@ -144,6 +144,7 @@ namespace karp_rabin {
 
     public:
 
+        const std::vector<iterator_value_type > &iterators = m_iterators_value;
         const hash_type &hash = m_hash;
         const size_type &row = m_row;
         const size_type &col = m_col;

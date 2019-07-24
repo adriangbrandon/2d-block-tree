@@ -22,7 +22,7 @@ namespace hash_table {
         //typedef chainning_list_element<t_value> key_value_type;
         typedef t_hash hash_type;
         typedef t_value value_type;
-        typedef std::list<value_type> value_list_type;
+        typedef std::list<std::pair<value_type, bool>> value_list_type;
         typedef std::pair<hash_type, value_list_type> hash_list_element_type;
         typedef std::list<hash_list_element_type> hash_list_type;
         typedef std::vector<hash_list_type> table_type;
@@ -119,16 +119,52 @@ namespace hash_table {
             if(it_table->empty()){
                 ++m_used;
             }
-            value_list_type value_list = {value};
+            value_list_type value_list = {{value, false}};
             it_table->emplace_back(hash, value_list);
         }
 
         void insert_hash_collision(const iterator_hash_type &it_hash, value_type &value){
-            it_hash->second.emplace_back(value);
+            it_hash->second.emplace_back(value, false);
         }
 
-        void remove(const iterator_hash_type &it_hash, iterator_value_type &it) {
+
+
+        void remove_value(const iterator_table_type &it_table, iterator_hash_type &it_hash, iterator_value_type &it) {
             it = it_hash->second.erase(it);
+            if(it_hash->second.empty()){
+                it_hash = it_table->erase(it_hash);
+                --m_used;
+            }
+        }
+
+        void remove_marked(){
+            auto it_table = m_table.begin();
+            while(it_table != m_table.end()){
+                auto it_hash = it_table->begin();
+                while(it_hash != it_table->end()){
+                    auto it = it_hash->second.begin();
+                    //Delete those marked elements
+                    while(it != it_hash->second.end()){
+                        if(it->second){
+                            it = it_hash->second.erase(it);
+                        }else{
+                            ++it;
+                        }
+                    }
+                    //There is no elements with the current hash
+                    if(it_hash->second.empty()){
+                        it_hash = it_table->erase(it_hash);
+                        --m_used;
+                    }else{
+                        ++it_hash;
+                    }
+                }
+                ++it_table;
+            }
+        }
+
+        void remove_hash(const iterator_table_type &it_table, iterator_hash_type &it_hash){
+            it_hash = it_table->erase(it_hash);
         }
 
 
@@ -182,7 +218,7 @@ namespace hash_table {
                     auto it_v = it_h->second.begin();
                     std::cout << "Values: ";
                     while(it_v != it_h->second.end()){
-                        std::cout << (*it_v) << ", ";
+                        std::cout << "<" << it_v->first << ", " << it_v->second << ">" << ", ";
                         ++it_v;
                     }
                     std::cout << std::endl;
