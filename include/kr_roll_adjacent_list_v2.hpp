@@ -37,6 +37,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cstdint>
 #include <vector>
 #include <queue>
+#include <heap.hpp>
 
 namespace karp_rabin {
 
@@ -63,7 +64,7 @@ namespace karp_rabin {
             }
         };
 
-        typedef std::priority_queue<pq_element_type, std::vector<pq_element_type>, compare_pq> heap_type;
+        typedef util::heap<pq_element_type, std::vector<pq_element_type>, compare_pq> heap_type;
 
 
     private:
@@ -137,8 +138,8 @@ namespace karp_rabin {
                     v_in.emplace_back(m_iterators_end_first_block[cyclic_i],  i);
                 }
             }
-            m_heap_in = heap_type(v_in.begin(), v_in.end());
-            m_heap_out = heap_type(v_out.begin(), v_out.end());
+            m_heap_in = heap_type(v_in);
+            m_heap_out = heap_type(v_out);
 
         }
 
@@ -202,10 +203,12 @@ namespace karp_rabin {
             while(!m_heap_out.empty() && *(m_heap_out.top().first) == m_col-1){
                 auto out_top = m_heap_out.top();
                 hash += (m_prime - m_h_out_right[out_top.second]) % m_prime;
-                m_heap_out.pop();
+                //m_heap_out.pop();
                 ++out_top.first;
                 if(out_top.first != (m_iterator_list + m_row + out_top.second)->end()){
-                    m_heap_out.push({out_top.first, out_top.second});
+                    m_heap_out.update_top({out_top.first, out_top.second});
+                }else{
+                    m_heap_out.pop();
                 }
             }
             hash = (hash * m_asize) % m_prime;
@@ -213,10 +216,12 @@ namespace karp_rabin {
             while(!m_heap_in.empty() && *(m_heap_in.top().first) == m_col+m_block_size-1){
                 auto in_top = m_heap_in.top();
                 hash = (hash + m_h_in_right[in_top.second]) % m_prime;
-                m_heap_in.pop();
+                //m_heap_in.pop();
                 m_iterators[in_top.second] = ++in_top.first;
                 if(in_top.first != (m_iterator_list + m_row + in_top.second)->end()){
-                    m_heap_in.push({in_top.first, in_top.second});
+                    m_heap_in.update_top({in_top.first, in_top.second});
+                }else{
+                    m_heap_in.pop();
                 }
             }
             m_hash = hash;

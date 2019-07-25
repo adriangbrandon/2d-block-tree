@@ -36,6 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <block_tree_algorithm_helper.hpp>
 #include <hash_table_chainning.hpp>
 #include <iostream>
+#include <heap.hpp>
 
 
 int main(int argc, char **argv) {
@@ -76,6 +77,33 @@ int main(int argc, char **argv) {
         std::cout << "<x, y>: <" << m_kr_roll.col << ", " << m_kr_roll.row << ">" << std::endl;
         ++i;
     }
+
+    /*std::vector<uint64_t> v = {3, 8, 1, 4, 9};
+    util::heap<uint64_t, std::vector<uint64_t>, std::greater<uint64_t>> m_heap(v);
+    std::cout << m_heap.top() << std::endl;
+    m_heap.update_top(5);
+    std::cout << "empty: " << m_heap.empty() << std::endl;
+    std::cout << m_heap.top() << std::endl;
+
+    m_heap.pop();
+    std::cout << "empty: " << m_heap.empty() << std::endl;
+    std::cout << m_heap.top() << std::endl;
+
+    m_heap.pop();
+    std::cout << "empty: " << m_heap.empty() << std::endl;
+    std::cout << m_heap.top() << std::endl;
+
+    m_heap.pop();
+    std::cout << "empty: " << m_heap.empty() << std::endl;
+    std::cout << m_heap.top() << std::endl;
+
+    m_heap.pop();
+    std::cout << "empty: " << m_heap.empty() << std::endl;
+    std::cout << m_heap.top() << std::endl;
+
+    m_heap.pop();
+    std::cout << "empty: " << m_heap.empty() << std::endl;
+    std::cout << m_heap.top() << std::endl;*/
     /*auto old_hash = m_kr_roll.hash;
     std::cout << "Hash 0: " << m_kr_roll.hash << std::endl;
     m_kr_roll.shift_right();

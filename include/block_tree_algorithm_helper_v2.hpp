@@ -37,8 +37,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <kr_block_adjacent_list_v2.hpp>
 #include <kr_roll_adjacent_list_v2.hpp>
 #include <hash_table_chainning.hpp>
+#include <sdsl/bit_vectors.hpp>
 #include <zeta_order.hpp>
 #include <iostream>
+
+#define NODE_EMPTY 0
+#define NODE_LEAF 1
+#define NODE_INTERNAL 2
 
 namespace block_tree_2d {
 
@@ -46,6 +51,15 @@ namespace block_tree_2d {
 
     public:
         typedef uint64_t size_type;
+        typedef typename sdsl::bit_vector::rank_1_type rank_type;
+        typedef struct {
+            size_type z_order = 0;
+            size_type type = NODE_EMPTY;
+            size_type offset_x = 0;
+            size_type offset_y = 0;
+            size_type ptr = 0;
+            size_type hash = 0;
+        } node_type;
 
     private:
 
@@ -168,6 +182,12 @@ namespace block_tree_2d {
             }
         }
 
+        static size_type compute_position_block(const size_type z_order,
+                                                const rank_type &rank){
+            return rank(z_order+1)-1;
+        }
+
+
 
 
 
@@ -179,7 +199,8 @@ namespace block_tree_2d {
 
         template <class input_type, class hash_table_type>
         static void get_fingerprint_blocks(input_type &adjacent_lists, hash_table_type &ht,
-                                           const size_type dimensions, const size_type block_size){
+                                           const size_type dimensions, const size_type block_size,
+                                           const rank_type &rank, std::vector<node_type> &nodes){
 
             typedef karp_rabin::kr_block_adjacent_list_v2<input_type> kr_type;
             typedef typename kr_type::hash_type hash_type;
@@ -199,6 +220,9 @@ namespace block_tree_2d {
                 std::cout << "Target: (" << kr_block.col << ", " << kr_block.row << ")" << std::endl;
                 std::cout << "Hash: " << kr_block.hash << std::endl;
                 //check if kr_block.hash exists in map
+                //Target z-order
+                auto z_order_target = codes::zeta_order::encode(kr_block.col, kr_block.row);
+                auto pos_target = compute_position_block(z_order_target, rank);
                 if(ht.hash_collision(kr_block.hash, it_table, it_hash)){
                     size_type sx_source, sy_source, ex_source, ey_source;
                     size_type sx_target = kr_block.col * block_size;
@@ -210,18 +234,30 @@ namespace block_tree_2d {
                                        kr_block.iterators, it_hash->second, block_size,
                                        sx_source, sy_source, ex_source, ey_source, iterators_source, source)){ //check if they are identical
                         std::cout << "Pointer to source in z-order: " << (source->first) << " offset: <0,0>" << std::endl;
-                        //TODO: add pointer and offset [<p, <x,y>>]
+
+                        //Add pointer and offset [<p, <x,y>>]
+                        auto pos_source = compute_position_block(source->first, rank);
+                        nodes[pos_target].type = NODE_LEAF;
+                        nodes[pos_target].ptr = pos_source;
+                        nodes[pos_target].hash = kr_block.hash;
+                        nodes[pos_target].z_order = z_order_target;
                         //Delete info of <target> from adjacency list
                         delete_info(adjacent_lists, sx_target, sy_target, ex_target, ey_target, kr_block.iterators, block_size);
                     }else{
                         //add <z_order> to chain in map
                         size_type z_order = codes::zeta_order::encode(kr_block.col, kr_block.row);
                         ht.insert_hash_collision(it_hash, z_order);
+                        nodes[pos_target].type = NODE_INTERNAL;
+                        nodes[pos_target].hash = kr_block.hash;
+                        nodes[pos_target].z_order = z_order_target;
                     }
                 }else{
                     //add <z_order> to map [chain should be empty]
                     size_type z_order = codes::zeta_order::encode(kr_block.col, kr_block.row);
                     ht.insert_no_hash_collision(it_table, kr_block.hash, z_order);
+                    nodes[pos_target].type = NODE_INTERNAL;
+                    nodes[pos_target].hash = kr_block.hash;
+                    nodes[pos_target].z_order = z_order_target;
                 }
                 std::cout << std::endl;
             }
@@ -294,9 +330,7 @@ namespace block_tree_2d {
                 std::cout << std::endl;
             }
 
-
-
-
+            print_ajdacent_list(adjacent_lists);
         }
     };
 }
