@@ -61,5 +61,6 @@ int main(int argc, char **argv) {
 
     htc_type m_htc(16);
     block_tree_2d::algorithm::get_fingerprint_blocks(matrix8_8, m_htc, 8, 2);
+    block_tree_2d::algorithm::get_type_of_nodes(matrix8_8, m_htc, 8, 2);
 
 }
