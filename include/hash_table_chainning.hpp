@@ -163,8 +163,24 @@ namespace hash_table {
             }
         }
 
-        void remove_hash(const iterator_table_type &it_table, iterator_hash_type &it_hash){
-            it_hash = it_table->erase(it_hash);
+        bool remove_value(const hash_type &hash, const value_type &value){
+            auto it_table = m_table.begin() + h(hash);
+            auto it_hash = it_table->begin();
+            while(it_hash != it_table->end()){
+                if(it_hash->first == hash){
+                    auto it = it_hash->second.begin();
+                    while(it != it_hash->second.end()){
+                        if(it->first == value){
+                            remove_value(it_table, it_hash, it);
+                            return true;
+                        }
+                        ++it;
+                    }
+                    return false;
+                }
+                ++it_hash;
+            }
+            return false;
         }
 
 

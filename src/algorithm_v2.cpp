@@ -59,11 +59,50 @@ int main(int argc, char **argv) {
     matrix8_8.push_back(row6);
     matrix8_8.push_back(row7);
 
-    std::vector<block_tree_2d::algorithm::node_type> nodes(16);
+
+
+    uint64_t k = 2;
+    uint64_t k_pow_2 = 4;
+    uint64_t dimensions = 8;
+    uint64_t levels = 2;
+
+
+    uint64_t level = 0;
+    uint64_t blocks = k_pow_2;
+    uint64_t block_size = dimensions / k;
+
+    std::vector<block_tree_2d::algorithm::node_type> nodes(blocks);
+    sdsl::bit_vector bitmap(blocks, 1);
+    sdsl::bit_vector::rank_1_type rank;
+    sdsl::util::init_support(rank, &bitmap);
+    block_tree_2d::algorithm::hash_type hash = {{0,0}, {1,1}, {2,2}, {3,3}};
+    while(block_size > 1){
+        htc_type m_htc(nodes.size());
+        block_tree_2d::algorithm::get_fingerprint_blocks(matrix8_8, m_htc, dimensions, block_size, hash, nodes);
+        block_tree_2d::algorithm::get_type_of_nodes(matrix8_8, m_htc, dimensions, block_size, hash, nodes);
+        auto i = 0;
+        std::cout << "--------- Nodes at level: " << level << " ---------------" << std::endl;
+        for(const auto &n : nodes){
+            std::cout << "Node: " << i << std::endl;
+            std::cout << "z_order: " << n.z_order << std::endl;
+            std::cout << "type   : " << n.type << std::endl;
+            std::cout << "offset : <" << n.offset_x << ", " << n.offset_y << ">" << std::endl;
+            std::cout << "ptr    : " << n.ptr << std::endl;
+            std::cout << "hash   : " << n.hash << std::endl;
+            std::cout << std::endl;
+            ++i;
+        }
+        std::cout << "----------------------------------------------------------" << std::endl;
+        ++level;
+        block_tree_2d::algorithm::prepare_next_level(bitmap, hash, k_pow_2, nodes);
+        block_size = block_size / k;
+    }
+
+    /*std::vector<block_tree_2d::algorithm::node_type> nodes(16);
     sdsl::bit_vector bitmap(16, 1);
     sdsl::bit_vector::rank_1_type rank;
     sdsl::util::init_support(rank, &bitmap);
-    htc_type m_htc(16);
+
     block_tree_2d::algorithm::get_fingerprint_blocks(matrix8_8, m_htc, 8, 2, rank, nodes);
     std::cout << "Nodes" << std::endl;
     auto i = 0;
@@ -77,6 +116,18 @@ int main(int argc, char **argv) {
         std::cout << std::endl;
         ++i;
     }
-    block_tree_2d::algorithm::get_type_of_nodes(matrix8_8, m_htc, 8, 2);
+    block_tree_2d::algorithm::get_type_of_nodes(matrix8_8, m_htc, 8, 2, rank, nodes);
+
+    i=0;
+    for(const auto &n : nodes){
+        std::cout << "Node: " << i << std::endl;
+        std::cout << "z_order: " << n.z_order << std::endl;
+        std::cout << "type   : " << n.type << std::endl;
+        std::cout << "offset : <" << n.offset_x << ", " << n.offset_y << ">" << std::endl;
+        std::cout << "ptr    : " << n.ptr << std::endl;
+        std::cout << "hash   : " << n.hash << std::endl;
+        std::cout << std::endl;
+        ++i;
+    }*/
 
 }

@@ -39,6 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <hash_table_chainning.hpp>
 #include <sdsl/bit_vectors.hpp>
 #include <zeta_order.hpp>
+#include <unordered_map>
 #include <iostream>
 
 #define NODE_EMPTY 0
@@ -51,7 +52,7 @@ namespace block_tree_2d {
 
     public:
         typedef uint64_t size_type;
-        typedef typename sdsl::bit_vector::rank_1_type rank_type;
+        typedef std::unordered_map<size_type, size_type > hash_type;
         typedef struct {
             size_type z_order = 0;
             size_type type = NODE_EMPTY;
@@ -182,10 +183,10 @@ namespace block_tree_2d {
             }
         }
 
-        static size_type compute_position_block(const size_type z_order,
+        /*static size_type compute_position_block(const size_type z_order,
                                                 const rank_type &rank){
             return rank(z_order+1)-1;
-        }
+        }*/
 
 
 
@@ -197,10 +198,31 @@ namespace block_tree_2d {
     public:
         static constexpr uint64_t prime = 3355443229;
 
+
+        static void prepare_next_level(sdsl::bit_vector &bv, hash_type &hash,
+                                       const size_type k_pow_2,
+                                       std::vector<node_type> &nodes){
+
+            size_type n = hash.size();
+            hash.clear();
+            size_type number_nodes = 0;
+            for(const auto &node : nodes){
+                if(node.type == NODE_INTERNAL){
+                    for(size_type i = node.z_order * k_pow_2; i < (node.z_order+1)*k_pow_2; ++i){
+                        hash.insert({i, number_nodes});
+                        ++number_nodes;
+                    }
+                }
+            }
+            nodes.clear();
+            nodes = std::vector<node_type>(number_nodes);
+
+        }
+
         template <class input_type, class hash_table_type>
         static void get_fingerprint_blocks(input_type &adjacent_lists, hash_table_type &ht,
                                            const size_type dimensions, const size_type block_size,
-                                           const rank_type &rank, std::vector<node_type> &nodes){
+                                           const hash_type &hash, std::vector<node_type> &nodes){
 
             typedef karp_rabin::kr_block_adjacent_list_v2<input_type> kr_type;
             typedef typename kr_type::hash_type hash_type;
@@ -222,7 +244,7 @@ namespace block_tree_2d {
                 //check if kr_block.hash exists in map
                 //Target z-order
                 auto z_order_target = codes::zeta_order::encode(kr_block.col, kr_block.row);
-                auto pos_target = compute_position_block(z_order_target, rank);
+                auto pos_target = hash.find(z_order_target)->second;
                 if(ht.hash_collision(kr_block.hash, it_table, it_hash)){
                     size_type sx_source, sy_source, ex_source, ey_source;
                     size_type sx_target = kr_block.col * block_size;
@@ -236,7 +258,7 @@ namespace block_tree_2d {
                         std::cout << "Pointer to source in z-order: " << (source->first) << " offset: <0,0>" << std::endl;
 
                         //Add pointer and offset [<p, <x,y>>]
-                        auto pos_source = compute_position_block(source->first, rank);
+                        auto pos_source = hash.find(source->first)->second;
                         nodes[pos_target].type = NODE_LEAF;
                         nodes[pos_target].ptr = pos_source;
                         nodes[pos_target].hash = kr_block.hash;
@@ -268,7 +290,8 @@ namespace block_tree_2d {
 
         template <class input_type, class hash_table_type>
         static void get_type_of_nodes(input_type &adjacent_lists, hash_table_type &ht,
-                               const size_type dimensions, const size_type block_size){
+                               const size_type dimensions, const size_type block_size,
+                               const hash_type &hash, std::vector<node_type> &nodes){
 
             typedef karp_rabin::kr_roll_adjacent_list_v2<input_type> kr_type;
             typedef typename kr_type::hash_type hash_type;
@@ -296,22 +319,56 @@ namespace block_tree_2d {
                                              sx_target, sy_target, ex_target, ey_target, iterators_target, target)){ //check if they are identical
                         std::cout << "Pointer to source in (x,y): " << kr_roll.col << ", " << kr_roll.row << std::endl;
                         //Compute offsets and top-left block
-                        size_type x_block, y_block, off_x, off_y;
+                        size_type x_block, y_block;
+                        size_type source_ptr, source_off_x, source_off_y, off_x, off_y;
                         compute_topleft_and_offsets(kr_roll.col, kr_roll.row, block_size, x_block, y_block, off_x, off_y);
-                        //top-left block
-                        codes::zeta_order::encode(x_block, y_block);
-                        //top-right block
-                        if(off_x){
-                            codes::zeta_order::encode(x_block + 1, y_block);
-                        }
-                        //bottom-left block
-                        if(off_y){
-                            codes::zeta_order::encode(x_block, y_block + 1);
-                        }
+
                         //bottom-right block
                         if(off_x && off_y){
-                            codes::zeta_order::encode(x_block + 1, y_block + 1);
+                            auto z_bottom_right = codes::zeta_order::encode(x_block + 1, y_block + 1);
+                            auto it_bottom_right = hash.find(z_bottom_right);
+                            if(it_bottom_right != hash.end()){
+                                ht.remove_value(nodes[it_bottom_right->second].hash, z_bottom_right);
+                                source_ptr = it_bottom_right->second;
+                                source_off_x = kr_roll.col - (x_block + 1)*block_size;
+                                source_off_y = kr_roll.row - (y_block + 1)*block_size;
+                            }
                         }
+
+                        //bottom-left block
+                        if(off_y){
+                            auto z_bottom_left = codes::zeta_order::encode(x_block, y_block + 1);
+                            auto it_bottom_left = hash.find(z_bottom_left);
+                            if(it_bottom_left != hash.end()){
+                                ht.remove_value(nodes[it_bottom_left->second].hash, z_bottom_left);
+                                source_ptr = it_bottom_left->second;
+                                source_off_x = kr_roll.col - (x_block)*block_size;
+                                source_off_y = kr_roll.row - (y_block + 1)*block_size;
+                            }
+                        }
+
+                        //top-right block
+                        if(off_x){
+                            auto z_top_right = codes::zeta_order::encode(x_block+1, y_block);
+                            auto it_top_right = hash.find(z_top_right);
+                            if(it_top_right != hash.end()){
+                                ht.remove_value(nodes[it_top_right->second].hash, z_top_right);
+                                source_ptr = it_top_right->second;
+                                source_off_x = kr_roll.col - (x_block+1)*block_size;
+                                source_off_y = kr_roll.row - (y_block)*block_size;
+                            }
+                        }
+
+                        //top-left block
+                        auto z_top_left = codes::zeta_order::encode(x_block, y_block);
+                        auto it_top_left = hash.find(z_top_left);
+                        if(it_top_left != hash.end()){
+                            ht.remove_value(nodes[it_top_left->second].hash, z_top_left);
+                            source_ptr = it_top_left->second;
+                            source_off_x = off_x;
+                            source_off_y = off_y;
+                        }
+
 
                         //TODO: delete <block sources> from hash_table ERROR!!
 
@@ -325,6 +382,13 @@ namespace block_tree_2d {
                         ht.remove_value(it_table, it_hash, target);
                         //Delete info of <target> from adjacency list
                         delete_info(adjacent_lists, sx_target, sy_target, ex_target, ey_target, iterators_target, block_size);
+                        auto z_order_target = codes::zeta_order::encode(sx_target / block_size, sy_target / block_size);
+                        auto pos_target = hash.find(z_order_target)->second;
+                        nodes[pos_target].type = NODE_LEAF;
+                        nodes[pos_target].ptr = source_ptr;
+                        nodes[pos_target].offset_x = source_off_x;
+                        nodes[pos_target].offset_y = source_off_y;
+                        nodes[pos_target].z_order = z_order_target;
                     }
                 }
                 std::cout << std::endl;
