@@ -31,36 +31,89 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Created by Adrián on 20/07/2019.
 //
 
-#include <block_tree_algorithm_helper.hpp>
-#include <hash_table_chainning.hpp>
+
 #include <iostream>
 #include <vector>
+#include <list>
+#include <time_util.hpp>
 
 int main(int argc, char **argv) {
 
-    typedef uint64_t hash_type;
-    typedef std::vector<uint64_t>::iterator iterator_type;
-    typedef hash_table::hash_table_chainning<hash_type, std::pair<uint64_t, std::vector<iterator_type>>> htc_type;
+    std::list<uint64_t > list = {1, 3, 5, 7};
+    std::cout << *(list.end()) << std::endl;
+    auto it = list.begin();
 
-    std::vector<uint64_t> row0 = {1, 3, 5, 7};
-    std::vector<uint64_t> row1 = {};
-    std::vector<uint64_t> row2 = {2, 6};
-    std::vector<uint64_t> row3 = {};
-    std::vector<uint64_t> row4 = {4, 5};
-    std::vector<uint64_t> row5 = {2};
-    std::vector<uint64_t> row6 = {1};
-    std::vector<uint64_t> row7 = {1, 5};
-    std::vector<std::vector<uint64_t>> matrix8_8;
-    matrix8_8.push_back(row0);
-    matrix8_8.push_back(row1);
-    matrix8_8.push_back(row2);
-    matrix8_8.push_back(row3);
-    matrix8_8.push_back(row4);
-    matrix8_8.push_back(row5);
-    matrix8_8.push_back(row6);
-    matrix8_8.push_back(row7);
+    auto rend = list.rend();
 
-    htc_type m_htc(4);
-    block_tree_2d::algorithm::get_fingerprint_blocks(matrix8_8, m_htc, 8, 4);
+    auto it2 = list.end();
+    auto beg = list.begin();
+    --beg;
+    --it2;
+    while(it2 != beg){
+        std::cout << *it2 << std::endl;
+        --it2;
+    }
+    std::cout << "--------------" << std::endl;
+    std::cout << *(++beg) << std::endl;
+    //advance(it, 2);
+    list.erase(it);
+
+    if(it == list.begin()){
+        std::cout << "Begin" << std::endl;
+    }
+    std::cout << *(list.end()) << std::endl;
+    std::cout << *it << std::endl;
+
+    std::cout << "----------" << std::endl;
+    it2 = list.begin();
+    while(it2 != list.end()){
+        std::cout << *it2 << std::endl;
+        ++it2;
+    }
+
+    std::cout << "----------" << std::endl;
+    while(it != list.end()){
+        std::cout << *it << std::endl;
+        ++it;
+    }
+
+
+    uint64_t size = 1000000;
+    std::vector<uint64_t > elements(size);
+    std::vector<uint64_t > el(size);
+    for(uint64_t i = 0; i < elements.size(); ++i){
+        elements[i] = i;
+        el[i] = i;
+    }
+    auto j = 0, k = 0;
+    auto pos = 4;
+    auto t0 = util::time::user::now();
+    while(j < 100){
+        elements.erase(elements.begin()+pos);
+        ++j;
+    }
+    auto t1 = util::time::user::now();
+
+    auto rest = el.size() - pos-1;
+    auto t2 = util::time::user::now();
+    while(k < 100){
+        std::memmove(&el[pos], &el[pos+1],   (el.size() - pos-1) * sizeof(uint64_t));
+        el.resize(el.size()-1);
+        ++k;
+    }
+    auto t3 = util::time::user::now();
+
+    for(uint64_t i = 0; i < elements.size(); ++i){
+        if(el[i] != elements[i]){
+            std::cout << "Error at i:" << i << "(" << el[i] << ":" << elements[i] << ")" << std::endl;
+            exit(11);
+        }
+    }
+
+    std::cout << "Erase: " << t1-t0 << std::endl;
+    std::cout << "Memmove: " << t3-t2 << std::endl;
+
+    exit(10);
+
 
 }

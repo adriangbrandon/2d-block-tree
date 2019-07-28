@@ -87,7 +87,10 @@ namespace block_tree_2d {
 
             //Compute the range of z-block
             range_block(id_b1, sx_b1, ex_b1, sy_b1, ey_b1, block_size);
-            if(sx_b1 == sx_b2 && sy_b1 == sy_b2) return false; //are the same
+            //if(sx_b1 == sx_b2 && sy_b1 == sy_b2) return false; //are the same
+            if(!(sx_b1 > ex_b2 || ex_b1 < sx_b2 || sy_b1 > ey_b2 || ey_b1 < sy_b2)){
+                return false;
+            }
             size_type row = 0;
             while(row < block_size){
                 auto beg_list_b1 = (adjacent_lists.begin() + sy_b1 + row)->begin();
@@ -138,19 +141,66 @@ namespace block_tree_2d {
 
         }
 
-        template <class input_type, class iterators_type>
-        static void delete_info(input_type &adjacent_lists,
-                                const size_type sx_b2, const size_type sy_b2,
-                                const size_type ex_b2, const size_type ey_b2,
-                                const iterators_type &iterators_b2,
-                                const size_type block_size){
+        template <class input_type, class iterators_type, class heap_type>
+        static void delete_info_shift(input_type &adjacent_lists,
+                                      const size_type sx_b2, const size_type sy_b2,
+                                      const size_type ex_b2, const size_type ey_b2,
+                                      const iterators_type &iterators_b2,
+                                      const size_type sy_b1,
+                                      iterators_type &kr_iterators,
+                                      heap_type &heap_in,
+                                      heap_type &heap_out,
+                                      const size_type block_size){
 
             size_type row = 0;
             while(row < block_size){
                 auto beg_list_b2 = (adjacent_lists.begin() + sy_b2 + row)->begin();
                 auto it_b2 = iterators_b2[(sy_b2 + row) % block_size];
-                while(it_b2 != beg_list_b2 && *(--it_b2) >= sx_b2){
-                    (adjacent_lists.begin() + sy_b2 + row)->erase(it_b2);
+                while(!(adjacent_lists.begin() + sy_b2 + row)->empty() &&
+                       it_b2 != beg_list_b2 && *(--it_b2) >= sx_b2){
+                    auto new_it = (adjacent_lists.begin() + sy_b2 + row)->erase(it_b2);
+                    //Update pointers of karp_rabin blocks
+                    auto cyclic_b1 = (sy_b1 + row) % block_size;
+                    if(it_b2 == kr_iterators[cyclic_b1]){
+                        kr_iterators[cyclic_b1] = new_it;
+                        std::cout << "Row: " << sy_b2 + row << std::endl;
+                        std::cout << "Deleted " << *it_b2 << std::endl;
+                        std::cout << "New pointer to " << *(kr_iterators[cyclic_b1]) << std::endl;
+                    }
+                    if(!heap_in.empty() && it_b2 == heap_in.top().first){
+                        if(new_it != (adjacent_lists.begin() + sy_b2 + row)->end()){
+                            heap_in.update_top({new_it, heap_in.top().second});
+                        }else{
+                            heap_in.pop();
+                        }
+                    }
+                    it_b2 = new_it;
+
+
+                }
+                ++row;
+            }
+
+        }
+
+
+        template <class input_type, class iterators_type>
+        static void delete_info_block(input_type &adjacent_lists,
+                                      const size_type sx_b2, const size_type sy_b2,
+                                      const size_type ex_b2, const size_type ey_b2,
+                                      iterators_type &iterators_b2,
+                                      const size_type block_size){
+
+            size_type row = 0;
+            while(row < block_size){
+                auto beg_list_b2 = (adjacent_lists.begin() + sy_b2 + row)->begin();
+                auto &it_b2 = iterators_b2[(sy_b2 + row) % block_size];
+                while(!(adjacent_lists.begin() + sy_b2 + row)->empty() &&
+                      it_b2 != beg_list_b2 && *(--it_b2) >= sx_b2){
+                    it_b2 = (adjacent_lists.begin() + sy_b2 + row)->erase(it_b2);
+                    std::cout << "Row: " << sy_b2 + row << std::endl;
+                    std::cout << "Deleted " << *it_b2 << std::endl;
+                    std::cout << "New pointer to " << *(iterators_b2[(sy_b2 + row) % block_size]) << std::endl;
                 }
                 ++row;
             }
@@ -264,7 +314,7 @@ namespace block_tree_2d {
                         nodes[pos_target].hash = kr_block.hash;
                         nodes[pos_target].z_order = z_order_target;
                         //Delete info of <target> from adjacency list
-                        delete_info(adjacent_lists, sx_target, sy_target, ex_target, ey_target, kr_block.iterators, block_size);
+                        delete_info_block(adjacent_lists, sx_target, sy_target, ex_target, ey_target, kr_block.iterators,  block_size);
                     }else{
                         //add <z_order> to chain in map
                         size_type z_order = codes::zeta_order::encode(kr_block.col, kr_block.row);
@@ -317,12 +367,15 @@ namespace block_tree_2d {
                     if(exist_identical(adjacent_lists, kr_roll.col, kr_roll.row, ex_source, ey_source,
                                              kr_roll.iterators, it_hash->second, block_size,
                                              sx_target, sy_target, ex_target, ey_target, iterators_target, target)){ //check if they are identical
+                        std::cout << "Target: (" << sx_target << ", " << sy_target << ")" << std::endl;
                         std::cout << "Pointer to source in (x,y): " << kr_roll.col << ", " << kr_roll.row << std::endl;
                         //Compute offsets and top-left block
                         size_type x_block, y_block;
                         size_type source_ptr, source_off_x, source_off_y, off_x, off_y;
                         compute_topleft_and_offsets(kr_roll.col, kr_roll.row, block_size, x_block, y_block, off_x, off_y);
-
+                        //Delete <target> from hash_table
+                        ht.remove_value(it_table, it_hash, target);
+                        //Delete sources from hash_table
                         //bottom-right block
                         if(off_x && off_y){
                             auto z_bottom_right = codes::zeta_order::encode(x_block + 1, y_block + 1);
@@ -370,18 +423,9 @@ namespace block_tree_2d {
                         }
 
 
-                        //TODO: delete <block sources> from hash_table ERROR!!
-
-                        //TODO: SOLUTION:
-                        //TODO: if any  <block sources> is untouchable
-                        //TODO:     remove it from hash and discard pointer
-                        //TODO: else
-                        //TODO:     add pointer and offset [<p, <x,y>>]
-
-                        //Delete <target> from hash_table
-                        ht.remove_value(it_table, it_hash, target);
                         //Delete info of <target> from adjacency list
-                        delete_info(adjacent_lists, sx_target, sy_target, ex_target, ey_target, iterators_target, block_size);
+                        delete_info_shift(adjacent_lists, sx_target, sy_target, ex_target, ey_target, iterators_target,
+                                kr_roll.row, kr_roll.iterators, kr_roll.heap_in, kr_roll.heap_out, block_size);
                         auto z_order_target = codes::zeta_order::encode(sx_target / block_size, sy_target / block_size);
                         auto pos_target = hash.find(z_order_target)->second;
                         nodes[pos_target].type = NODE_LEAF;

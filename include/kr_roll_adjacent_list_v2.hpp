@@ -38,6 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <queue>
 #include <heap.hpp>
+#include <iostream>
 
 namespace karp_rabin {
 
@@ -92,6 +93,14 @@ namespace karp_rabin {
         std::vector<hash_type> m_prev_kr;
 
 
+       /* bool is_empty(){
+            for(auto row = 0; row < m_block_size; ++row){
+                auto it = m_iterators[]
+            }
+            for(auto it : m_iterators){
+
+            }
+        }*/
         /*void init_iterators_first_row(const iterator_list_type &iterator){
             m_iterator_list = iterator;
             for(auto list_id = 0; list_id < m_block_size; ++list_id){
@@ -143,6 +152,19 @@ namespace karp_rabin {
 
         }
 
+        bool is_empty(){
+            size_type row = 0;
+            while(row < m_block_size){
+                auto beg_list = (m_iterator_list + m_row + row)->begin();
+                auto it = m_iterators[(m_row + row) % m_block_size];
+                if(it != beg_list && *(--it) >= m_col){
+                    return false;
+                }
+                ++row;
+            }
+            return true;
+        }
+
 
         bool compute_initial_hash_block(){
 
@@ -183,6 +205,9 @@ namespace karp_rabin {
 
             //2. Initialize heaps
             init_heaps();
+            if(m_hash == 0 && is_empty()){
+                shift_right();
+            }
             return true;
         }
 
@@ -217,7 +242,7 @@ namespace karp_rabin {
                 auto in_top = m_heap_in.top();
                 hash = (hash + m_h_in_right[in_top.second]) % m_prime;
                 //m_heap_in.pop();
-                m_iterators[in_top.second] = ++in_top.first;
+                m_iterators[(m_row + in_top.second) % m_block_size] = ++in_top.first;
                 if(in_top.first != (m_iterator_list + m_row + in_top.second)->end()){
                     m_heap_in.update_top({in_top.first, in_top.second});
                 }else{
@@ -225,7 +250,9 @@ namespace karp_rabin {
                 }
             }
             m_hash = hash;
-
+            if(m_hash == 0 && is_empty()){
+                return shift_right();
+            }
             return true;
         }
 
@@ -285,7 +312,9 @@ namespace karp_rabin {
         const hash_type &hash = m_hash;
         const size_type &row = m_row;
         const size_type &col = m_col;
-        const std::vector<iterator_value_type > &iterators = m_iterators;
+        std::vector<iterator_value_type > &iterators = m_iterators;
+        heap_type &heap_in = m_heap_in;
+        heap_type &heap_out = m_heap_out;
 
         kr_roll_adjacent_list_v2(size_type bs, size_type q, input_type &input){
             m_block_size = bs;

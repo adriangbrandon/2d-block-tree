@@ -36,6 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <cstdint>
 #include <vector>
+#include <iostream>
 
 namespace karp_rabin {
 
@@ -144,7 +145,7 @@ namespace karp_rabin {
 
     public:
 
-        const std::vector<iterator_value_type > &iterators = m_iterators_value;
+        std::vector<iterator_value_type > &iterators = m_iterators_value;
         const hash_type &hash = m_hash;
         const size_type &row = m_row;
         const size_type &col = m_col;
@@ -169,6 +170,7 @@ namespace karp_rabin {
 
 
         bool next(){
+            //std::cout << *((m_iterator_list+1)->end()) << std::endl;
             if(!compute_ith_block_in_row()) return false;
             m_hash = compute_hash_block();
             return true;
