@@ -36,6 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <list>
 #include <time_util.hpp>
+#include <alternative_code.hpp>
 
 int main(int argc, char **argv) {
 
@@ -78,7 +79,7 @@ int main(int argc, char **argv) {
     }
 
 
-    uint64_t size = 1000000;
+    uint64_t size = 10000;
     std::vector<uint64_t > elements(size);
     std::vector<uint64_t > el(size);
     for(uint64_t i = 0; i < elements.size(); ++i){
@@ -112,6 +113,12 @@ int main(int argc, char **argv) {
 
     std::cout << "Erase: " << t1-t0 << std::endl;
     std::cout << "Memmove: " << t3-t2 << std::endl;
+
+    uint64_t v1 = codes::alternative_code::encode(-1);
+    int64_t v2 = codes::alternative_code::decode(v1);
+    std::cout << "v1: " << v1 << std::endl;
+    std::cout << "v2: " << v2 << std::endl;
+
 
     exit(10);
 

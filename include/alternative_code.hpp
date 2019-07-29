@@ -31,10 +31,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Created by Adrián on 27/07/2019.
 //
 
-#ifndef INC_UTIL_ALTERNATIVE_CODE_HPP
-#define INC_UTIL_ALTERNATIVE_CODE_HPP
+#ifndef INC_CODES_ALTERNATIVE_CODE_HPP
+#define INC_CODES_ALTERNATIVE_CODE_HPP
 
-namespace util {
+namespace codes {
 
     class alternative_code {
 
@@ -45,7 +45,8 @@ namespace util {
         }
 
         static int64_t decode(uint64_t value){
-            return  (value & 0x00000001) ? -(value >> 1) : (value >> 1);
+            const bool negate = value & 0x00000001;
+            return  ((value >> 1) ^ -negate) + negate;
         }
     };
 }

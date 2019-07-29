@@ -307,6 +307,30 @@ namespace karp_rabin {
 
         }
 
+        void copy(const kr_roll_adjacent_list_v2 &o){
+            m_block_size = o.m_block_size;
+            m_prime = o.m_prime;
+            m_asize = o.m_asize;
+            m_total_shifts = o.m_total_shifts;
+
+            m_hash = o.m_hash;
+            m_col = o.m_col;
+            m_row = o.m_row;
+
+            m_iterator_list = o.m_iterator_list;
+            m_end_list = o.m_end_list;
+            m_iterators_end_first_block = o.m_iterators_end_first_block;
+            m_iterators = o.m_iterators;
+
+            m_h_in_right = o.m_h_in_right;
+            m_h_out_right= o.m_h_out_right;
+            m_heap_in = o.m_heap_in;
+            m_heap_out = o.m_heap_out;
+
+            m_prev_hash = o.m_prev_hash;
+            m_prev_kr = o.m_prev_kr;
+        }
+
     public:
 
         const hash_type &hash = m_hash;
@@ -330,7 +354,76 @@ namespace karp_rabin {
             init_hs();
         }
 
+        //! Copy constructor
+        kr_roll_adjacent_list_v2(const kr_roll_adjacent_list_v2& o)
+        {
+            copy(o);
+        }
 
+        //! Move constructor
+        kr_roll_adjacent_list_v2(kr_roll_adjacent_list_v2&& o)
+        {
+            *this = std::move(o);
+        }
+
+
+        kr_roll_adjacent_list_v2 &operator=(const kr_roll_adjacent_list_v2 &o) {
+            if (this != &o) {
+                copy(o);
+            }
+            return *this;
+        }
+        kr_roll_adjacent_list_v2 &operator=(kr_roll_adjacent_list_v2 &&o) {
+            if (this != &o) {
+                m_block_size = std::move(o.m_block_size);
+                m_prime = std::move(o.m_prime);
+                m_asize = std::move(o.m_asize);
+                m_total_shifts = std::move(o.m_total_shifts);
+
+                m_hash = std::move(o.m_hash);
+                m_col = std::move(o.m_col);
+                m_row = std::move(o.m_row);
+
+                m_iterator_list = std::move(o.m_iterator_list);
+                m_end_list = std::move(o.m_end_list);
+                m_iterators_end_first_block = std::move(o.m_iterators_end_first_block);
+                m_iterators = std::move(o.m_iterators);
+
+                m_h_in_right = std::move(o.m_h_in_right);
+                m_h_out_right= std::move(o.m_h_out_right);
+                m_heap_in = std::move(o.m_heap_in);
+                m_heap_out = std::move(o.m_heap_out);
+
+                m_prev_hash = std::move(o.m_prev_hash);
+                m_prev_kr = std::move(o.m_prev_kr);
+            }
+            return *this;
+        }
+
+        void swap(kr_roll_adjacent_list_v2 &o) {
+            // m_bp.swap(bp_support.m_bp); use set_vector to set the supported bit_vector
+            std::swap(m_block_size, o.m_block_size);
+            std::swap(m_prime, o.m_prime);
+            std::swap(m_asize, o.m_asize);
+            std::swap(m_total_shifts, o.m_total_shifts);
+
+            std::swap(m_hash, o.m_hash);
+            std::swap(m_col, o.m_col);
+            std::swap(m_row, o.m_row);
+
+            std::swap(m_iterator_list, o.m_iterator_list);
+            std::swap(m_end_list, o.m_end_list);
+            std::swap(m_iterators_end_first_block, o.m_iterators_end_first_block);
+            std::swap(m_iterators, o.m_iterators);
+
+            std::swap(m_h_in_right, o.m_h_in_right);
+            std::swap(m_h_out_right, o.m_h_out_right);
+            std::swap(m_heap_in, o.m_heap_in);
+            std::swap(m_heap_out, o.m_heap_out);
+
+            std::swap(m_prev_hash, o.m_prev_hash);
+            std::swap(m_prev_kr, o.m_prev_kr);
+        }
 
         bool next(){
             if(m_row == -1){

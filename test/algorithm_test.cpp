@@ -41,11 +41,11 @@ int main(int argc, char **argv) {
     typedef uint64_t hash_type;
     typedef hash_table::hash_table_chainning <hash_type, uint64_t> htc_type;
 
-    uint64_t dimensions = 1024;
+    uint64_t dimensions = 10240;
     //uint64_t freq = atoi(argv[2]);
     uint64_t rep = atoi(argv[1]);
 
-    std::vector<uint64_t> freqs = {20};
+    std::vector<uint64_t> freqs = {100};
     for(const auto &freq : freqs) {
         for (uint64_t i = 0; i < rep; ++i) {
             std::vector<std::vector<uint64_t>> adjacency_lists(dimensions, std::vector<uint64_t>());

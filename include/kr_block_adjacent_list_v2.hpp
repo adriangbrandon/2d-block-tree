@@ -68,6 +68,7 @@ namespace karp_rabin {
             m_asize = p.m_asize;
             m_hash = p.m_hash;
             m_row = p.m_row;
+            m_col = p.m_col;
             m_iterator_list = p.m_iterator_list;
             m_end_list = p.m_end_list;
             m_iterators_value = p.m_iterators_value;
@@ -167,6 +168,57 @@ namespace karp_rabin {
             init_iterators_first_row(iterator);
             //m_hash = compute_hash_block();
         }*/
+
+        //! Copy constructor
+        kr_block_adjacent_list_v2(const kr_block_adjacent_list_v2& o)
+        {
+            copy(o);
+        }
+
+        //! Move constructor
+        kr_block_adjacent_list_v2(kr_block_adjacent_list_v2&& o)
+        {
+            *this = std::move(o);
+        }
+
+
+        kr_block_adjacent_list_v2 &operator=(const kr_block_adjacent_list_v2 &o) {
+            if (this != &o) {
+                copy(o);
+            }
+            return *this;
+        }
+        kr_block_adjacent_list_v2 &operator=(kr_block_adjacent_list_v2 &&o) {
+            if (this != &o) {
+
+                m_asize = std::move(o.m_asize);
+                m_block_size = std::move(o.m_block_size);
+                m_prime = std::move(o.m_prime);
+                m_hash = std::move(o.m_hash);
+                m_row = std::move(o.m_row);
+                m_col = std::move(o.m_col);
+
+                m_iterator_list = std::move(o.m_iterator_list);
+                m_end_list = std::move(o.m_end_list);
+                m_iterators_value = std::move(o.m_iterators_value);
+
+            }
+            return *this;
+        }
+
+        void swap(kr_block_adjacent_list_v2 &o) {
+            // m_bp.swap(bp_support.m_bp); use set_vector to set the supported bit_vector
+            std::swap(m_asize, o.m_asize);
+            std::swap(m_block_size, o.m_block_size);
+            std::swap(m_prime, o.m_prime);
+            std::swap(m_hash, o.m_hash);
+            std::swap(m_row, o.m_row);
+            std::swap(m_col, o.m_col);
+
+            std::swap(m_iterator_list, o.m_iterator_list);
+            std::swap(m_end_list, o.m_end_list);
+            std::swap(m_iterators_value, o.m_iterators_value);
+        }
 
 
         bool next(){

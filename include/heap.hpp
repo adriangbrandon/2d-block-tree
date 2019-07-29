@@ -49,6 +49,11 @@ namespace util {
         container_type m_values;
         value_compare  m_comp;
 
+        void copy(const heap &p){
+            m_values = p.m_values;
+            m_comp = p.m_comp;
+        }
+
 
     public:
 
@@ -81,6 +86,40 @@ namespace util {
 
         bool empty(){
             return m_values.empty();
+        }
+
+        //! Copy constructor
+        heap(const heap& o)
+        {
+            copy(o);
+        }
+
+        //! Move constructor
+        heap(heap&& o)
+        {
+            *this = std::move(o);
+        }
+
+
+        heap &operator=(const heap &o) {
+            if (this != &o) {
+                copy(o);
+            }
+            return *this;
+        }
+
+        heap &operator=(heap &&o) {
+            if (this != &o) {
+                m_values = std::move(o.m_values);
+                m_comp = std::move(o.m_comp);
+            }
+            return *this;
+        }
+
+        void swap(heap &o) {
+            // m_bp.swap(bp_support.m_bp); use set_vector to set the supported bit_vector
+            std::swap(m_values, o.m_values);
+            std::swap(m_comp, o.m_comp);
         }
 
     };
