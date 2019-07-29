@@ -40,10 +40,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace karp_rabin {
 
-    template <class t_input = std::vector<std::vector<uint64_t>>>
+    template <class t_input = std::vector<std::vector<int64_t>>>
     class kr_block_adjacent_list_v2 {
 
     public:
+        typedef int64_t value_type;
         typedef uint64_t size_type;
         typedef uint64_t hash_type;
         typedef t_input  input_type;
@@ -56,8 +57,8 @@ namespace karp_rabin {
         size_type m_block_size;
         size_type m_prime;
         hash_type m_hash;
-        size_type m_row = 0;
-        size_type m_col = 0;
+        value_type m_row = 0;
+        value_type m_col = 0;
         iterator_list_type m_iterator_list;
         iterator_list_type m_end_list;
         std::vector<iterator_value_type> m_iterators_value;
@@ -148,8 +149,8 @@ namespace karp_rabin {
 
         std::vector<iterator_value_type > &iterators = m_iterators_value;
         const hash_type &hash = m_hash;
-        const size_type &row = m_row;
-        const size_type &col = m_col;
+        const value_type &row = m_row;
+        const value_type &col = m_col;
 
         kr_block_adjacent_list_v2() = default;
 

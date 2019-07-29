@@ -41,43 +41,43 @@ int main(int argc, char **argv) {
     typedef uint64_t hash_type;
     typedef hash_table::hash_table_chainning<hash_type, uint64_t> htc_type;
 
-    /*std::list<uint64_t> row0 = {1, 3, 5, 7};
-    std::list<uint64_t> row1 = {};
-    std::list<uint64_t> row2 = {2, 6};
-    std::list<uint64_t> row3 = {};
-    std::list<uint64_t> row4 = {4, 5};
-    std::list<uint64_t> row5 = {2};
-    std::list<uint64_t> row6 = {1};
-    std::list<uint64_t> row7 = {1, 5};*/
+    /*std::vector<int64_t> row0 = {1, 3, 5, 7};
+    std::vector<int64_t> row1 = {};
+    std::vector<int64_t> row2 = {2, 6};
+    std::vector<int64_t> row3 = {};
+    std::vector<int64_t> row4 = {4, 5};
+    std::vector<int64_t> row5 = {2};
+    std::vector<int64_t> row6 = {1};
+    std::vector<int64_t> row7 = {1, 5};*/
 
-    /*std::list<uint64_t> row0 = {7};
-    std::list<uint64_t> row1 = {3};
-    std::list<uint64_t> row2 = {0, 3, 6};
-    std::list<uint64_t> row3 = {};
-    std::list<uint64_t> row4 = {3};
-    std::list<uint64_t> row5 = {0,6};
-    std::list<uint64_t> row6 = {2};
-    std::list<uint64_t> row7 = {3};*/
+    std::vector<int64_t> row0 = {7};
+    std::vector<int64_t> row1 = {3};
+    std::vector<int64_t> row2 = {0, 3, 6};
+    std::vector<int64_t> row3 = {};
+    std::vector<int64_t> row4 = {3};
+    std::vector<int64_t> row5 = {0,6};
+    std::vector<int64_t> row6 = {2};
+    std::vector<int64_t> row7 = {3};
 
-    /*std::list<uint64_t> row0 = {};
-    std::list<uint64_t> row1 = {1};
-    std::list<uint64_t> row2 = {2};
-    std::list<uint64_t> row3 = {};
-    std::list<uint64_t> row4 = {4};
-    std::list<uint64_t> row5 = {5};
-    std::list<uint64_t> row6 = {};
-    std::list<uint64_t> row7 = {7};*/
+    /*std::vector<int64_t> row0 = {};
+    std::vector<int64_t> row1 = {1};
+    std::vector<int64_t> row2 = {2};
+    std::vector<int64_t> row3 = {};
+    std::vector<int64_t> row4 = {4};
+    std::vector<int64_t> row5 = {5};
+    std::vector<int64_t> row6 = {};
+    std::vector<int64_t> row7 = {7};*/
 
-    std::list<uint64_t> row0 = {1,4,6};
-    std::list<uint64_t> row1 = {6};
-    std::list<uint64_t> row2 = {3};
-    std::list<uint64_t> row3 = {3,4};
-    std::list<uint64_t> row4 = {};
-    std::list<uint64_t> row5 = {};
-    std::list<uint64_t> row6 = {};
-    std::list<uint64_t> row7 = {};
+    /*std::vector<int64_t> row0 = {1,4,6};
+    std::vector<int64_t> row1 = {6};
+    std::vector<int64_t> row2 = {3};
+    std::vector<int64_t> row3 = {3,4};
+    std::vector<int64_t> row4 = {};
+    std::vector<int64_t> row5 = {};
+    std::vector<int64_t> row6 = {};
+    std::vector<int64_t> row7 = {};*/
 
-    std::vector<std::list<uint64_t>> matrix8_8;
+    std::vector< std::vector<int64_t>> matrix8_8;
     matrix8_8.push_back(row0);
     matrix8_8.push_back(row1);
     matrix8_8.push_back(row2);
@@ -122,7 +122,7 @@ int main(int argc, char **argv) {
         }
         std::cout << "----------------------------------------------------------" << std::endl;
         ++level;
-        block_tree_2d::algorithm::prepare_next_level(bitmap, hash, k_pow_2, nodes);
+        block_tree_2d::algorithm::prepare_next_level(matrix8_8, bitmap, hash, k_pow_2, nodes);
         block_size = block_size / k;
     }
 

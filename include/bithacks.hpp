@@ -28,29 +28,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 //
-// Created by Adrián on 27/07/2019.
+// Created by Adrián on 29/07/2019.
 //
 
-#ifndef INC_CODES_ALTERNATIVE_CODE_HPP
-#define INC_CODES_ALTERNATIVE_CODE_HPP
+#ifndef INC_UTIL_BITHACKS_HPP
+#define INC_UTIL_BITHACKS_HPP
 
-#include <stdint.h>
+namespace util {
 
-namespace codes {
+    namespace bithacks {
 
-    class alternative_code {
-
-    public:
-        static uint64_t encode(int64_t value){
-            const int64_t mask  = value >> 63;
-            return ((uint64_t) (( value + mask ) ^ mask) << 1) | ((uint64_t) value >> 63);
+        template <class T>
+        T abs(const T &v){
+            const T mask = v >> (sizeof(T) * CHAR_BIT - 1);
+            return ((v ^ mask) - mask);
         }
-
-        static int64_t decode(uint64_t value){
-            const bool negate = value & 0x00000001;
-            return  ((value >> 1) ^ -negate) + negate;
-        }
-    };
+        
+    }
 }
 
-#endif //INC_2D_BLOCK_TREE_UTIL_HPP
+#endif //INC_2D_BLOCK_TREE_BITHACKS_HPP

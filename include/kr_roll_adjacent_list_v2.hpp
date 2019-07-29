@@ -49,6 +49,7 @@ namespace karp_rabin {
 
 
     public:
+        typedef int64_t value_type;
         typedef uint64_t size_type;
         typedef uint64_t hash_type;
         typedef t_input  input_type;
@@ -76,8 +77,8 @@ namespace karp_rabin {
         size_type m_total_shifts;
 
         hash_type m_hash;
-        size_type m_col = 0;
-        size_type m_row = -1;
+        value_type m_col = 0;
+        value_type m_row = -1;
 
         iterator_list_type m_iterator_list;
         iterator_list_type m_end_list;
@@ -139,12 +140,22 @@ namespace karp_rabin {
 
             std::vector<pq_element_type> v_in, v_out;
             for(size_type i = 0; i < m_block_size; ++i){
-                if(m_iterator_list[m_row+i].begin() != m_iterator_list[m_row+i].end()){
-                    v_out.emplace_back(m_iterator_list[m_row+i].begin(), i);
+                auto it_out = m_iterator_list[m_row+i].begin();
+                while(it_out != m_iterator_list[m_row+i].end() && *it_out < 0){
+                    ++it_out;
                 }
+                if(it_out != m_iterator_list[m_row+i].end()){
+                    v_out.emplace_back(it_out, i);
+                }
+
+
                 auto cyclic_i = (m_row + i) % m_block_size;
-                if(m_iterators_end_first_block[cyclic_i] != m_iterator_list[m_row+i].end()){
-                    v_in.emplace_back(m_iterators_end_first_block[cyclic_i],  i);
+                auto it_in = m_iterators_end_first_block[cyclic_i];
+                while(it_in != m_iterator_list[m_row+i].end() && *it_in < 0){
+                    ++it_in;
+                }
+                if(it_in != m_iterator_list[m_row+i].end()){
+                    v_in.emplace_back(it_in,  i);
                 }
             }
             m_heap_in = heap_type(v_in);
@@ -177,7 +188,7 @@ namespace karp_rabin {
                 //1.2. Iterate over the elements of an adjacent list
                 auto &it_element = m_iterators_end_first_block[list_id];
                 size_type hash_row = 0;
-                while(it_element != it_list->end() && (*it_element) < m_block_size){
+                while(it_element != it_list->end() && (*it_element) >= 0 && (*it_element) < m_block_size){
                     //2.1 Compute hash_value with 0s
                     for(auto v = prev_value+1; v < (*it_element); ++v){
                         hash_row = (hash_row * m_asize) % m_prime;
@@ -230,6 +241,11 @@ namespace karp_rabin {
                 hash += (m_prime - m_h_out_right[out_top.second]) % m_prime;
                 //m_heap_out.pop();
                 ++out_top.first;
+                //Skip deleted elements
+                while(out_top.first != (m_iterator_list + m_row + out_top.second)->end() && *out_top.first < 0){
+                    ++out_top.first;
+                }
+
                 if(out_top.first != (m_iterator_list + m_row + out_top.second)->end()){
                     m_heap_out.update_top({out_top.first, out_top.second});
                 }else{
@@ -242,7 +258,13 @@ namespace karp_rabin {
                 auto in_top = m_heap_in.top();
                 hash = (hash + m_h_in_right[in_top.second]) % m_prime;
                 //m_heap_in.pop();
-                m_iterators[(m_row + in_top.second) % m_block_size] = ++in_top.first;
+                ++in_top.first;
+                //Skip deleted elements
+                while(in_top.first != (m_iterator_list + m_row + in_top.second)->end() && *in_top.first < 0){
+                    ++in_top.first;
+                }
+
+                m_iterators[(m_row + in_top.second) % m_block_size] = in_top.first;
                 if(in_top.first != (m_iterator_list + m_row + in_top.second)->end()){
                     m_heap_in.update_top({in_top.first, in_top.second});
                 }else{
@@ -271,7 +293,7 @@ namespace karp_rabin {
             size_type last_row = m_row + m_block_size-1;
             auto prev_value = (size_type) -1;
             auto it_element = (m_iterator_list + last_row)->begin();
-            while(it_element != (m_iterator_list + last_row)->end() && (*it_element) < m_block_size){
+            while(it_element != (m_iterator_list + last_row)->end() && (*it_element) >= 0 && (*it_element) < m_block_size){
                 // Compute hash_value with 0s
                 for(auto v = prev_value+1; v < (*it_element); ++v){
                     hash_row = (hash_row * m_asize) % m_prime;
@@ -334,8 +356,8 @@ namespace karp_rabin {
     public:
 
         const hash_type &hash = m_hash;
-        const size_type &row = m_row;
-        const size_type &col = m_col;
+        const value_type &row = m_row;
+        const value_type &col = m_col;
         std::vector<iterator_value_type > &iterators = m_iterators;
         heap_type &heap_in = m_heap_in;
         heap_type &heap_out = m_heap_out;

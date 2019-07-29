@@ -41,6 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <zeta_order.hpp>
 #include <unordered_map>
 #include <iostream>
+#include <bithacks.hpp>
 
 #define NODE_EMPTY 0
 #define NODE_LEAF 1
@@ -51,6 +52,7 @@ namespace block_tree_2d {
     class algorithm {
 
     public:
+        typedef int64_t value_type;
         typedef uint64_t size_type;
         typedef std::unordered_map<size_type, size_type > hash_type;
         typedef struct {
@@ -61,11 +63,17 @@ namespace block_tree_2d {
             size_type ptr = 0;
             size_type hash = 0;
         } node_type;
+        class compare_abs_value {
+        public:
+            bool operator()(const int64_t &x, const int64_t &y){
+                return util::bithacks::abs(x) < util::bithacks::abs(y);
+            }
+        };
 
     private:
 
         static void range_block(size_type id_b,
-                                size_type &start_x, size_type &end_x, size_type &start_y, size_type &end_y,
+                                value_type &start_x, value_type &end_x, value_type &start_y, value_type &end_y,
                                 const size_type block_size){
             auto pos_b = codes::zeta_order::decode(id_b);
             start_x = pos_b.first * block_size;
@@ -77,12 +85,12 @@ namespace block_tree_2d {
         template <class input_type, class iterators_type>
         static bool are_identical(input_type &adjacent_lists,
                                   const size_type id_b1,
-                                  const size_type sx_b2, const size_type ex_b2,
-                                  const size_type sy_b2, const size_type ey_b2,
+                                  const value_type sx_b2, const value_type ex_b2,
+                                  const value_type sy_b2, const value_type ey_b2,
                                   const iterators_type &iterators_b2,
                                   const size_type block_size,
-                                  size_type &sx_b1, size_type &sy_b1,
-                                  size_type &ex_b1, size_type &ey_b1,
+                                  value_type &sx_b1, value_type &sy_b1,
+                                  value_type &ex_b1, value_type &ey_b1,
                                   iterators_type &iterators_b1){
 
             //Compute the range of z-block
@@ -96,12 +104,11 @@ namespace block_tree_2d {
                 auto beg_list_b1 = (adjacent_lists.begin() + sy_b1 + row)->begin();
                 auto beg_list_b2 = (adjacent_lists.begin() + sy_b2 + row)->begin();
                 auto it_b2 = iterators_b2[(sy_b2 + row) % block_size];
-                auto it_b1 = std::upper_bound(beg_list_b1, (adjacent_lists.begin()+sy_b1+row)->end(), ex_b1);
+                auto it_b1 = std::upper_bound(beg_list_b1, (adjacent_lists.begin()+sy_b1+row)->end(), ex_b1, compare_abs_value());
                 iterators_b1[(sy_b1 + row) % block_size] = it_b1;
                 while(it_b2 != beg_list_b2 && *(--it_b2) >= sx_b2){
                     size_type d2 = *it_b2 - sx_b2;
-                    if(it_b1 == beg_list_b1) return false;
-                    --it_b1;
+                    if(it_b1 == beg_list_b1 || *(--it_b1) < sx_b1) return false;
                     size_type d1 = *it_b1 - sx_b1;
                     if(d1 != d2) return false;
                 }
@@ -117,13 +124,13 @@ namespace block_tree_2d {
 
         template <class input_type, class list_hash_values_type, class iterators_type>
         static bool exist_identical(input_type &adjacent_lists,
-                                  const size_type sx_b2, const size_type sy_b2,
-                                  const size_type ex_b2, const size_type ey_b2,
+                                  const value_type sx_b2, const value_type sy_b2,
+                                  const value_type ex_b2, const value_type ey_b2,
                                   const iterators_type &current_iterators,
                                   list_hash_values_type &hash_values,
                                   const size_type block_size,
-                                  size_type &sx_b1, size_type &sy_b1,
-                                  size_type &ex_b1, size_type &ey_b1,
+                                  value_type &sx_b1, value_type &sy_b1,
+                                  value_type &ex_b1, value_type &ey_b1,
                                   iterators_type &iterators_b1,
                                   typename list_hash_values_type::iterator &result){
 
@@ -143,10 +150,10 @@ namespace block_tree_2d {
 
         template <class input_type, class iterators_type, class heap_type>
         static void delete_info_shift(input_type &adjacent_lists,
-                                      const size_type sx_b2, const size_type sy_b2,
-                                      const size_type ex_b2, const size_type ey_b2,
+                                      const value_type sx_b2, const value_type sy_b2,
+                                      const value_type ex_b2, const value_type ey_b2,
                                       const iterators_type &iterators_b2,
-                                      const size_type sy_b1,
+                                      const value_type sy_b1,
                                       iterators_type &kr_iterators,
                                       heap_type &heap_in,
                                       heap_type &heap_out,
@@ -156,27 +163,27 @@ namespace block_tree_2d {
             while(row < block_size){
                 auto beg_list_b2 = (adjacent_lists.begin() + sy_b2 + row)->begin();
                 auto it_b2 = iterators_b2[(sy_b2 + row) % block_size];
+                auto last = it_b2;
+                auto count = 0;
                 while(!(adjacent_lists.begin() + sy_b2 + row)->empty() &&
-                       it_b2 != beg_list_b2 && *(--it_b2) >= sx_b2){
-                    auto new_it = (adjacent_lists.begin() + sy_b2 + row)->erase(it_b2);
-                    //Update pointers of karp_rabin blocks
-                    auto cyclic_b1 = (sy_b1 + row) % block_size;
-                    if(it_b2 == kr_iterators[cyclic_b1]){
-                        kr_iterators[cyclic_b1] = new_it;
-                        std::cout << "Row: " << sy_b2 + row << std::endl;
-                        std::cout << "Deleted " << *it_b2 << std::endl;
-                        std::cout << "New pointer to " << *(kr_iterators[cyclic_b1]) << std::endl;
-                    }
-                    if(!heap_in.empty() && it_b2 == heap_in.top().first){
-                        if(new_it != (adjacent_lists.begin() + sy_b2 + row)->end()){
-                            heap_in.update_top({new_it, heap_in.top().second});
-                        }else{
-                            heap_in.pop();
-                        }
-                    }
-                    it_b2 = new_it;
+                       it_b2 != beg_list_b2 && *(--it_b2) >= sx_b2) {
+                    //auto new_it = (adjacent_lists.begin() + sy_b2 + row)->erase(it_b2);
+                    *it_b2 = -(*it_b2);
+                    last = it_b2;
+                    ++count;
+                }
 
-
+                //IMPORTANT: what happen when the next 1 is going to be deleted?
+                //- We have to update the iterator of kr_iterator to the next one
+                //- We have to update the heap with the new kr_iterator (if it is pointing to a number)
+                auto cyclic_b1 = (sy_b1 + row) % block_size;
+                if(count > 0 && last == kr_iterators[cyclic_b1]){
+                    kr_iterators[cyclic_b1] = last + count;
+                    if(kr_iterators[cyclic_b1] != (adjacent_lists.begin() + sy_b2 + row)->end()){
+                        heap_in.update_top({kr_iterators[cyclic_b1], heap_in.top().second});
+                    }else{
+                        heap_in.pop();
+                    }
                 }
                 ++row;
             }
@@ -186,28 +193,30 @@ namespace block_tree_2d {
 
         template <class input_type, class iterators_type>
         static void delete_info_block(input_type &adjacent_lists,
-                                      const size_type sx_b2, const size_type sy_b2,
-                                      const size_type ex_b2, const size_type ey_b2,
+                                      const value_type sx_b2, const value_type sy_b2,
+                                      const value_type ex_b2, const value_type ey_b2,
                                       iterators_type &iterators_b2,
                                       const size_type block_size){
 
             size_type row = 0;
             while(row < block_size){
                 auto beg_list_b2 = (adjacent_lists.begin() + sy_b2 + row)->begin();
-                auto &it_b2 = iterators_b2[(sy_b2 + row) % block_size];
+                auto it_b2 = iterators_b2[(sy_b2 + row) % block_size];
+                //++iterators_b2[(sy_b2 + row) % block_size];
                 while(!(adjacent_lists.begin() + sy_b2 + row)->empty() &&
                       it_b2 != beg_list_b2 && *(--it_b2) >= sx_b2){
-                    it_b2 = (adjacent_lists.begin() + sy_b2 + row)->erase(it_b2);
-                    std::cout << "Row: " << sy_b2 + row << std::endl;
-                    std::cout << "Deleted " << *it_b2 << std::endl;
-                    std::cout << "New pointer to " << *(iterators_b2[(sy_b2 + row) % block_size]) << std::endl;
+                    //it_b2 = (adjacent_lists.begin() + sy_b2 + row)->erase(it_b2);
+                    *it_b2 = -(*it_b2);
+                    //std::cout << "Row: " << sy_b2 + row << std::endl;
+                   // std::cout << "Deleted " << *it_b2 << std::endl;
+                   // std::cout << "New pointer to " << *(iterators_b2[(sy_b2 + row) % block_size]) << std::endl;
                 }
                 ++row;
             }
 
         }
 
-        static inline void compute_topleft_and_offsets(const size_type col, const size_type row, const size_type block_size,
+        static inline void compute_topleft_and_offsets(const value_type col, const value_type row, const size_type block_size,
                                                        size_type &c, size_type &r, size_type &off_x, size_type &off_y){
 
             c = col/block_size;
@@ -249,9 +258,21 @@ namespace block_tree_2d {
         static constexpr uint64_t prime = 3355443229;
 
 
-        static void prepare_next_level(sdsl::bit_vector &bv, hash_type &hash,
+        template <class input_type>
+        static void prepare_next_level(input_type &adjacency_lists, sdsl::bit_vector &bv, hash_type &hash,
                                        const size_type k_pow_2,
                                        std::vector<node_type> &nodes){
+
+            for(auto &a : adjacency_lists){
+                auto write = 0;
+                for(auto i = 0; i < a.size(); ++i){
+                    if(a[i]>=0){
+                        a[write] = a[i];
+                        ++write;
+                    }
+                }
+                a.resize(write);
+            }
 
             size_type n = hash.size();
             hash.clear();
@@ -296,11 +317,11 @@ namespace block_tree_2d {
                 auto z_order_target = codes::zeta_order::encode(kr_block.col, kr_block.row);
                 auto pos_target = hash.find(z_order_target)->second;
                 if(ht.hash_collision(kr_block.hash, it_table, it_hash)){
-                    size_type sx_source, sy_source, ex_source, ey_source;
-                    size_type sx_target = kr_block.col * block_size;
-                    size_type sy_target = kr_block.row * block_size;
-                    size_type ex_target = sx_target + block_size-1;
-                    size_type ey_target = sy_target + block_size-1;
+                    value_type sx_source, sy_source, ex_source, ey_source;
+                    value_type sx_target = kr_block.col * block_size;
+                    value_type sy_target = kr_block.row * block_size;
+                    value_type ex_target = sx_target + block_size-1;
+                    value_type ey_target = sy_target + block_size-1;
                     iterator_hash_value_type source;
                     if(exist_identical(adjacent_lists, sx_target, sy_target, ex_target, ey_target,
                                        kr_block.iterators, it_hash->second, block_size,
@@ -360,9 +381,9 @@ namespace block_tree_2d {
                 std::cout << "Hash: " << kr_roll.hash << std::endl;
                 //check if kr_block.hash exists in map
                 if(ht.hash_collision(kr_roll.hash, it_table, it_hash)){
-                    size_type sx_target, sy_target, ex_target, ey_target;
-                    size_type ex_source = kr_roll.col + block_size-1;
-                    size_type ey_source = kr_roll.row + block_size-1;
+                    value_type sx_target, sy_target, ex_target, ey_target;
+                    value_type ex_source = kr_roll.col + block_size-1;
+                    value_type ey_source = kr_roll.row + block_size-1;
                     iterator_hash_value_type target;
                     if(exist_identical(adjacent_lists, kr_roll.col, kr_roll.row, ex_source, ey_source,
                                              kr_roll.iterators, it_hash->second, block_size,
