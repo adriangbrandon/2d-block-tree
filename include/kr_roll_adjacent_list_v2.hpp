@@ -79,6 +79,7 @@ namespace karp_rabin {
         hash_type m_hash;
         value_type m_col = 0;
         value_type m_row = -1;
+        value_type m_next_block_row = 0;
 
         iterator_list_type m_iterator_list;
         iterator_list_type m_end_list;
@@ -180,6 +181,7 @@ namespace karp_rabin {
         bool compute_initial_hash_block(){
 
             m_row = 0;
+            m_next_block_row = (m_row / m_block_size+1) * m_block_size;
             size_type list_id = 0;
             hash_type hash_value = 0;
             //1. Iterate over adjacency lists
@@ -238,7 +240,7 @@ namespace karp_rabin {
             //Delete previous part
             while(!m_heap_out.empty() && *(m_heap_out.top().first) == m_col-1){
                 auto out_top = m_heap_out.top();
-                hash += (m_prime - m_h_out_right[out_top.second]) % m_prime;
+                hash += (m_prime - m_h_out_right[out_top.second]);
                 //m_heap_out.pop();
                 ++out_top.first;
                 //Skip deleted elements
@@ -281,12 +283,13 @@ namespace karp_rabin {
         bool next_row(){
             if(m_iterator_list + m_row + m_block_size == m_end_list) return false;
             ++m_row;
+            m_next_block_row = (m_row / m_block_size+1) * m_block_size;
             m_col = 0;
             auto hash = m_prev_hash;
             //Delete previous part
             auto cyclic_i = (m_row-1) % m_block_size;
             auto first_row = (m_prev_kr[cyclic_i] * m_h_in_right[0]) % m_prime;
-            hash += (m_prime - first_row) % m_prime;
+            hash += (m_prime - first_row);
             hash = (hash * m_h_in_right[m_block_size-2]) % m_prime;
             // Compute hash of last row
             hash_type hash_row = 0;
@@ -358,6 +361,7 @@ namespace karp_rabin {
         const hash_type &hash = m_hash;
         const value_type &row = m_row;
         const value_type &col = m_col;
+        const value_type &next_block_row = m_next_block_row;
         std::vector<iterator_value_type > &iterators = m_iterators;
         heap_type &heap_in = m_heap_in;
         heap_type &heap_out = m_heap_out;
@@ -452,6 +456,16 @@ namespace karp_rabin {
                 return compute_initial_hash_block();
             }else{
                 return shift_right();
+            }
+        }
+
+        void update_prev_hash(){
+            auto last = m_row % m_block_size;
+            auto k = m_block_size - last;
+            for(auto cyclic_i = 0; cyclic_i < last; ++cyclic_i){
+                auto row_delete = (m_prev_kr[cyclic_i] * m_h_in_right[k + cyclic_i]) % m_prime;
+                m_prev_hash = (m_prev_hash + (m_prime - row_delete)) % m_prime;
+                m_prev_kr[cyclic_i] = 0;
             }
         }
 

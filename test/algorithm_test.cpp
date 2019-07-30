@@ -41,14 +41,14 @@ int main(int argc, char **argv) {
     typedef uint64_t hash_type;
     typedef hash_table::hash_table_chainning <hash_type, uint64_t> htc_type;
 
-    uint64_t dimensions = 10240;
+    uint64_t dimensions = 8;
     //uint64_t freq = atoi(argv[2]);
     uint64_t rep = atoi(argv[1]);
 
-    std::vector<uint64_t> freqs = {100};
+    std::vector<uint64_t> freqs = {10};
     for(const auto &freq : freqs) {
         for (uint64_t i = 0; i < rep; ++i) {
-            std::vector<std::vector<uint64_t>> adjacency_lists(dimensions, std::vector<uint64_t>());
+            std::vector<std::vector<int64_t>> adjacency_lists(dimensions, std::vector<int64_t>());
             for (auto &list : adjacency_lists) {
                 int64_t last = rand() % freq;
                 while (last < dimensions) {
@@ -66,9 +66,6 @@ int main(int argc, char **argv) {
             uint64_t block_size = dimensions / k;
 
             std::vector<block_tree_2d::algorithm::node_type> nodes(blocks);
-            sdsl::bit_vector bitmap(blocks, 1);
-            sdsl::bit_vector::rank_1_type rank;
-            sdsl::util::init_support(rank, &bitmap);
             block_tree_2d::algorithm::hash_type hash = {{0, 0},
                                                         {1, 1},
                                                         {2, 2},
@@ -91,7 +88,7 @@ int main(int argc, char **argv) {
                 }
                 std::cout << "----------------------------------------------------------" << std::endl;
                 ++level;
-                block_tree_2d::algorithm::prepare_next_level(bitmap, hash, k_pow_2, nodes);
+                block_tree_2d::algorithm::prepare_next_level(adjacency_lists, hash, k_pow_2, nodes);
                 block_size = block_size / k;
             }
         }

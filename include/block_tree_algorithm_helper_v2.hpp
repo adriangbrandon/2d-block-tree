@@ -58,8 +58,8 @@ namespace block_tree_2d {
         typedef struct {
             size_type z_order = 0;
             size_type type = NODE_EMPTY;
-            size_type offset_x = 0;
-            size_type offset_y = 0;
+            value_type offset_x = 0;
+            value_type offset_y = 0;
             size_type ptr = 0;
             size_type hash = 0;
         } node_type;
@@ -76,10 +76,12 @@ namespace block_tree_2d {
                                 value_type &start_x, value_type &end_x, value_type &start_y, value_type &end_y,
                                 const size_type block_size){
             auto pos_b = codes::zeta_order::decode(id_b);
+            //start_x = pos_b.first * block_size;
             start_x = pos_b.first * block_size;
-            end_x = start_x + block_size-1;
+            end_x = start_x + block_size;
+            //start_y = pos_b.second * block_size+1;
             start_y = pos_b.second * block_size;
-            end_y = start_y + block_size-1;
+            end_y = start_y + block_size;
         }
 
         template <class input_type, class iterators_type>
@@ -168,7 +170,7 @@ namespace block_tree_2d {
                 while(!(adjacent_lists.begin() + sy_b2 + row)->empty() &&
                        it_b2 != beg_list_b2 && *(--it_b2) >= sx_b2) {
                     //auto new_it = (adjacent_lists.begin() + sy_b2 + row)->erase(it_b2);
-                    *it_b2 = -(*it_b2);
+                    *it_b2 = -(*it_b2+1);
                     last = it_b2;
                     ++count;
                 }
@@ -206,7 +208,7 @@ namespace block_tree_2d {
                 while(!(adjacent_lists.begin() + sy_b2 + row)->empty() &&
                       it_b2 != beg_list_b2 && *(--it_b2) >= sx_b2){
                     //it_b2 = (adjacent_lists.begin() + sy_b2 + row)->erase(it_b2);
-                    *it_b2 = -(*it_b2);
+                    *it_b2 = -(*it_b2+1);
                     //std::cout << "Row: " << sy_b2 + row << std::endl;
                    // std::cout << "Deleted " << *it_b2 << std::endl;
                    // std::cout << "New pointer to " << *(iterators_b2[(sy_b2 + row) % block_size]) << std::endl;
@@ -259,7 +261,7 @@ namespace block_tree_2d {
 
 
         template <class input_type>
-        static void prepare_next_level(input_type &adjacency_lists, sdsl::bit_vector &bv, hash_type &hash,
+        static void prepare_next_level(input_type &adjacency_lists, hash_type &hash,
                                        const size_type k_pow_2,
                                        std::vector<node_type> &nodes){
 
@@ -293,7 +295,7 @@ namespace block_tree_2d {
         template <class input_type, class hash_table_type>
         static void get_fingerprint_blocks(input_type &adjacent_lists, hash_table_type &ht,
                                            const size_type dimensions, const size_type block_size,
-                                           const hash_type &hash, std::vector<node_type> &nodes){
+                                           hash_type &hash, std::vector<node_type> &nodes){
 
             typedef karp_rabin::kr_block_adjacent_list_v2<input_type> kr_type;
             typedef typename kr_type::hash_type hash_type;
@@ -329,11 +331,13 @@ namespace block_tree_2d {
                         std::cout << "Pointer to source in z-order: " << (source->first) << " offset: <0,0>" << std::endl;
 
                         //Add pointer and offset [<p, <x,y>>]
+                        //hash.erase(it);
                         auto pos_source = hash.find(source->first)->second;
                         nodes[pos_target].type = NODE_LEAF;
                         nodes[pos_target].ptr = pos_source;
                         nodes[pos_target].hash = kr_block.hash;
                         nodes[pos_target].z_order = z_order_target;
+                        hash.erase(z_order_target);
                         //Delete info of <target> from adjacency list
                         delete_info_block(adjacent_lists, sx_target, sy_target, ex_target, ey_target, kr_block.iterators,  block_size);
                     }else{
@@ -362,7 +366,7 @@ namespace block_tree_2d {
         template <class input_type, class hash_table_type>
         static void get_type_of_nodes(input_type &adjacent_lists, hash_table_type &ht,
                                const size_type dimensions, const size_type block_size,
-                               const hash_type &hash, std::vector<node_type> &nodes){
+                               hash_type &hash, std::vector<node_type> &nodes){
 
             typedef karp_rabin::kr_roll_adjacent_list_v2<input_type> kr_type;
             typedef typename kr_type::hash_type hash_type;
@@ -447,8 +451,18 @@ namespace block_tree_2d {
                         //Delete info of <target> from adjacency list
                         delete_info_shift(adjacent_lists, sx_target, sy_target, ex_target, ey_target, iterators_target,
                                 kr_roll.row, kr_roll.iterators, kr_roll.heap_in, kr_roll.heap_out, block_size);
+
+                        //IMPORTANT: What happen if we delete the first block of the next row?
+                        // - We have to update the prev_hash by removing from it those values of the
+                        //   first block in the next row
+                        if(sx_target == 0 && sy_target == kr_roll.next_block_row){
+                            kr_roll.update_prev_hash();
+                        }
+
                         auto z_order_target = codes::zeta_order::encode(sx_target / block_size, sy_target / block_size);
-                        auto pos_target = hash.find(z_order_target)->second;
+                        auto it = hash.find(z_order_target);
+                        hash.erase(it);
+                        auto pos_target = it->second;
                         nodes[pos_target].type = NODE_LEAF;
                         nodes[pos_target].ptr = source_ptr;
                         nodes[pos_target].offset_x = source_off_x;

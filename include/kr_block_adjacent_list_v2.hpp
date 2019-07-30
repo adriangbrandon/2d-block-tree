@@ -87,6 +87,9 @@ namespace karp_rabin {
             if(m_iterator_list == m_end_list) return false;
             for(auto list_id = 0; list_id < m_block_size; ++list_id){
                 m_iterators_value[list_id] = (m_iterator_list+list_id)->begin();
+                while(m_iterators_value[list_id] != (m_iterator_list+list_id)->end() && *m_iterators_value[list_id] < 0){
+                    ++m_iterators_value[list_id];
+                }
             }
             ++m_row;
             return true;
