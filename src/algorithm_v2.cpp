@@ -35,20 +35,21 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <hash_table_chainning.hpp>
 #include <iostream>
 #include <vector>
+#include <block_tree.hpp>
 
 int main(int argc, char **argv) {
 
     typedef uint64_t hash_type;
     typedef hash_table::hash_table_chainning<hash_type, uint64_t> htc_type;
 
-    std::vector<int64_t> row0 = {1, 3, 5, 7};
+    /*std::vector<int64_t> row0 = {1, 3, 5, 7};
     std::vector<int64_t> row1 = {};
     std::vector<int64_t> row2 = {2, 6};
     std::vector<int64_t> row3 = {};
     std::vector<int64_t> row4 = {4, 5};
     std::vector<int64_t> row5 = {2};
     std::vector<int64_t> row6 = {1};
-    std::vector<int64_t> row7 = {1, 5};
+    std::vector<int64_t> row7 = {1, 5};*/
 
     /*td::vector<int64_t> row0 = {7};
     std::vector<int64_t> row1 = {3};
@@ -77,33 +78,54 @@ int main(int argc, char **argv) {
     std::vector<int64_t> row6 = {};
     std::vector<int64_t> row7 = {};*/
 
+    std::vector<int64_t> row0 = {};
+    std::vector<int64_t> row1 = {};
+    std::vector<int64_t> row2 = {0, 7};
+    std::vector<int64_t> row3 = {};
+    std::vector<int64_t> row4 = {1,8};
+    std::vector<int64_t> row5 = {};
+    std::vector<int64_t> row6 = {2};
+    std::vector<int64_t> row7 = {};
+
     std::vector< std::vector<int64_t>> matrix8_8;
-    matrix8_8.push_back(row0);
+    /*matrix8_8.push_back(row0);
     matrix8_8.push_back(row1);
     matrix8_8.push_back(row2);
     matrix8_8.push_back(row3);
     matrix8_8.push_back(row4);
     matrix8_8.push_back(row5);
     matrix8_8.push_back(row6);
-    matrix8_8.push_back(row7);
+    matrix8_8.push_back(row7);*/
+    matrix8_8.resize(16);
+    matrix8_8[2] = row2;
+    matrix8_8[4] = row4;
+    matrix8_8[5] = row5;
+    matrix8_8[6] = row6;
+
 
 
 
     uint64_t k = 2;
     uint64_t k_pow_2 = 4;
-    uint64_t dimensions = 8;
+    uint64_t dimensions = 16;
     uint64_t levels = 2;
 
 
     uint64_t level = 0;
-    uint64_t blocks = k_pow_2;
     uint64_t block_size = dimensions / k;
+    std::cout << "Block Size: " << block_size << std::endl;
+    uint64_t blocks = k_pow_2;
+    std::cout << "Blocks: " << blocks << std::endl;
 
     std::vector<block_tree_2d::algorithm::node_type> nodes(blocks);
     sdsl::bit_vector bitmap(blocks, 1);
     sdsl::bit_vector::rank_1_type rank;
     sdsl::util::init_support(rank, &bitmap);
-    block_tree_2d::algorithm::hash_type hash = {{0,0}, {1,1}, {2,2}, {3,3}};
+
+    block_tree_2d::algorithm::hash_type hash;
+    for(uint64_t i = 0; i < k_pow_2; ++i){
+        hash.insert({i,i});
+    }
     while(block_size > 1){
         htc_type m_htc(nodes.size());
         block_tree_2d::algorithm::get_fingerprint_blocks(matrix8_8, m_htc, dimensions, block_size, hash, nodes);

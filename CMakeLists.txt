@@ -69,6 +69,9 @@ target_link_libraries(karp_rabin_test sdsl divsufsort divsufsort64)
 add_executable(algorithm_test test/algorithm_test.cpp)
 target_link_libraries(algorithm_test sdsl divsufsort divsufsort64)
 
+add_executable(block_tree_test test/block_tree_test.cpp)
+target_link_libraries(block_tree_test sdsl divsufsort divsufsort64)
+
 add_executable(hash_table src/hash_table.cpp)
 target_link_libraries(hash_table sdsl divsufsort divsufsort64)
 

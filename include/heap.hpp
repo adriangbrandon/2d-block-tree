@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define UTIL_HEAP_HPP
 
 #include <vector>
+#include <iostream>
 
 namespace util {
 
@@ -65,27 +66,31 @@ namespace util {
             std::make_heap(m_values.begin(), m_values.end(), m_comp);
         }
 
-        _Tp top(){
+        inline _Tp top(){
             return m_values.front();
         }
 
-        void pop(){
+        inline void pop(){
             std::pop_heap(m_values.begin(), m_values.end(), m_comp);
             m_values.pop_back();
         }
 
-        void push(const _Tp &v){
+        inline void push(const _Tp &v){
             m_values.push_back(v);
             std::push_heap(m_values.begin(), m_values.end(), m_comp);
         }
 
-        void update_top(const _Tp &v){
+        inline void update_top(const _Tp &v){
             m_values[0]=v;
             std::__sift_down(m_values.begin(), m_values.end(), m_comp, m_values.size(), m_values.begin());
         }
 
-        bool empty(){
+        inline bool empty(){
             return m_values.empty();
+        }
+
+        inline uint64_t size(){
+            return m_values.size();
         }
 
         //! Copy constructor

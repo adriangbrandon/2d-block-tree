@@ -31,10 +31,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Created by Adrián on 26/07/2019.
 //
 
-#include <block_tree_algorithm_helper_v2.hpp>
-#include <hash_table_chainning.hpp>
 #include <iostream>
 #include <vector>
+#include <block_tree.hpp>
 
 #define VERBOSE 1
 
@@ -53,6 +52,7 @@ int main(int argc, char **argv) {
 
     uint64_t dimensions = 1024;
     //uint64_t freq = atoi(argv[2]);
+    uint64_t k = 2;
     uint64_t rep = atoi(argv[1]);
 
     uint64_t freq = 100;
@@ -73,45 +73,9 @@ int main(int argc, char **argv) {
                 }
             }
 
-
-            uint64_t k = 2;
-            uint64_t k_pow_2 = 4;
-            uint64_t levels = 2;
-            uint64_t level = 0;
-            uint64_t blocks = k_pow_2;
-            uint64_t block_size = dimensions / k;
-
-            std::vector<block_tree_2d::algorithm::node_type> nodes(blocks);
-            block_tree_2d::algorithm::hash_type hash = {{0, 0},
-                                                        {1, 1},
-                                                        {2, 2},
-                                                        {3, 3}};
-            std::cout << "Total number of ones=" << number_of_ones(adjacency_lists) << std::endl;
-            while (block_size > 1) {
-                htc_type m_htc(2*nodes.size());
-                block_tree_2d::algorithm::get_fingerprint_blocks(adjacency_lists, m_htc, dimensions, block_size, hash, nodes);
-                block_tree_2d::algorithm::get_type_of_nodes(adjacency_lists, m_htc, dimensions, block_size, hash, nodes);
-                /*auto n_i = 0;
-                std::cout << "--------- Nodes at level: " << level << " ---------------" << std::endl;
-                for (const auto &n : nodes) {
-                    std::cout << "Node: " << n_i << std::endl;
-                    std::cout << "z_order: " << n.z_order << std::endl;
-                    std::cout << "type   : " << n.type << std::endl;
-                    std::cout << "offset : <" << n.offset_x << ", " << n.offset_y << ">" << std::endl;
-                    std::cout << "ptr    : " << n.ptr << std::endl;
-                    std::cout << "hash   : " << n.hash << std::endl;
-                    std::cout << std::endl;
-                    ++n_i;
-                }
-                std::cout << "----------------------------------------------------------" << std::endl;*/
-
-                ++level;
-                block_tree_2d::algorithm::prepare_next_level(adjacency_lists, hash, k_pow_2, nodes);
-                block_size = block_size / k;
-                std::cout << "Number of ones=" << number_of_ones(adjacency_lists) << " after level=" << level-1 << std::endl;
-
-            }
-            std::cout << std::endl;
+            
+            block_tree_2d::block_tree<> m_block_tree(adjacency_lists, dimensions, k);
+            
         }
     }
 
