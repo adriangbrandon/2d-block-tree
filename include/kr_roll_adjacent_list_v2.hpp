@@ -79,7 +79,7 @@ namespace karp_rabin {
         value_type m_row = -1;
         value_type m_next_block_row = 0;
         value_type m_prev_block_row = 0;
-        
+
 
         iterator_list_type m_iterator_list;
         iterator_list_type m_end_list;
@@ -470,12 +470,29 @@ namespace karp_rabin {
 
         void update_prev_hash_prev_row(){
             auto start = m_row % m_block_size;
-            auto last = m_block_size - start;
-            for(auto cyclic_i = start; cyclic_i <= last; ++cyclic_i){
+            //auto last = m_block_size - start;
+            for(auto cyclic_i = start; cyclic_i < m_block_size; ++cyclic_i){
                 auto row_delete = (m_prev_kr[cyclic_i] * m_h_in_right[cyclic_i]) % m_prime;
                 m_prev_hash = (m_prev_hash + (m_prime - row_delete)) % m_prime;
                 m_prev_kr[cyclic_i] = 0;
             }
+        }
+
+        void redo_heap_in(){
+            std::vector<pq_element_type> v_in;
+            for(size_type i = 0; i < m_block_size; ++i){
+                auto cyclic_i = (m_row + i) % m_block_size;
+                auto it_in = m_iterators[cyclic_i];
+                while(it_in != m_iterator_list[m_row+i].end() && *it_in < 0){
+                    ++it_in;
+                }
+                if(it_in != m_iterator_list[m_row+i].end()) {
+                    v_in.emplace_back(it_in, i);
+                }
+            }
+            m_heap_in.clear();
+            m_heap_in = heap_type(v_in);
+
         }
 
         void update_prev_hash_next_row(){

@@ -9,7 +9,7 @@ set(PROJECT_CONTACT "adrian.gbrandon@udc.es")
 
 
 #Change to "Debug" when you need it
-set(CMAKE_BUILD_TYPE "Debug")
+set(CMAKE_BUILD_TYPE "Release")
 
 # C++11 compiler Check
 if(NOT CMAKE_CXX_COMPILER_VERSION) # work around for cmake versions smaller than 2.8.10
@@ -80,3 +80,6 @@ target_link_libraries(algorithm sdsl divsufsort divsufsort64)
 
 add_executable(algorithm_v2 src/algorithm_v2.cpp)
 target_link_libraries(algorithm_v2 sdsl divsufsort divsufsort64)
+
+add_executable(block_tree src/block_tree.cpp)
+target_link_libraries(block_tree sdsl divsufsort divsufsort64)

@@ -35,8 +35,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <block_tree.hpp>
 
-#define VERBOSE 1
-
 uint64_t number_of_ones(const std::vector<std::vector<int64_t>> &adjacency_lists) {
     uint64_t n_ones = 0;
     for (auto &list : adjacency_lists) {
@@ -47,36 +45,111 @@ uint64_t number_of_ones(const std::vector<std::vector<int64_t>> &adjacency_lists
 
 int main(int argc, char **argv) {
 
+
+    if(argc != 4){
+        std::cout << argv[0] << " <k> <dimensions> <rep>" << std::endl;
+        return 0;
+    }
     typedef uint64_t hash_type;
     typedef hash_table::hash_table_chainning <hash_type, uint64_t> htc_type;
 
-    uint64_t dimensions = 1024;
+    uint64_t dimensions = atoi(argv[2]);
     //uint64_t freq = atoi(argv[2]);
-    uint64_t k = 2;
-    uint64_t rep = atoi(argv[1]);
+    uint64_t k = atoi(argv[1]);
+    uint64_t rep = atoi(argv[3]);
 
-    uint64_t freq = 100;
+    uint64_t freq = dimensions/4;
     std::vector<uint64_t> freqs = {freq};
     while(freq < dimensions){
         freq *= 2;
         freqs.push_back(freq);
     }
 
-    for(const auto &freq : freqs) {
-        for (uint64_t i = 0; i < rep; ++i) {
+    for(const auto &f : freqs) {
+        for (uint64_t r = 0; r < rep; ++r) {
             std::vector<std::vector<int64_t>> adjacency_lists(dimensions, std::vector<int64_t>());
             for (auto &list : adjacency_lists) {
-                int64_t last = rand() % freq;
+                int64_t last = rand() % f;
                 while (last < dimensions) {
                     list.push_back(last);
-                    last = last + (rand() % freq + 1);
+                    last = last + (rand() % f + 1);
                 }
             }
 
-            
+            const auto copy_lists = adjacency_lists;
+            /*std::cout << "---------------------Input--------------------" << std::endl;
+            block_tree_2d::algorithm::print_ajdacent_list(adjacency_lists);
+            std::cout << "----------------------------------------------" << std::endl;*/
+
+            std::cout << "Building Block-tree rep=" << r << " freq="<< f << " dimensions=" << dimensions << "....";
             block_tree_2d::block_tree<> m_block_tree(adjacency_lists, dimensions, k);
-            
+            std::cout << "Done." << std::endl;
+            //m_block_tree.print();
+            std::cout << "Retrieving adjacency lists...";
+            std::vector<std::vector<int64_t >> result;
+            m_block_tree.access_region(0, 0, dimensions - 1, dimensions - 1, result);
+            std::cout << "Done." << std::endl;
+
+            /*std::cout << "--------------------Result--------------------" << std::endl;
+            block_tree_2d::algorithm::print_ajdacent_list(result);
+            std::cout << "----------------------------------------------" << std::endl;*/
+
+            std::cout << "Checking results." << std::endl;
+            if (result.size() != copy_lists.size()) {
+                std::cout << "Error: the number of lists is incorrect." << std::endl;
+                std::cout << "Expected: " << copy_lists.size() << std::endl;
+                std::cout << "Obtained: " << result.size() << std::endl;
+                exit(10);
+            }
+            bool error = false;
+            for (auto i = 0; i < result.size(); ++i) {
+                if (result[i].size() != copy_lists[i].size()) {
+                    std::cout << "Error: the size of list " << i << " is incorrect." << std::endl;
+                    std::cout << "Expected: " << copy_lists[i].size() << std::endl;
+                    std::cout << "Obtained: " << result[i].size() << std::endl;
+                    //m_block_tree.access_region(10, 2, 11, 3, result);
+                    error = true;
+                }
+            }
+            if (error){
+                std::cout << "---------------------Input--------------------" << std::endl;
+                block_tree_2d::algorithm::print_ajdacent_list(copy_lists);
+                std::cout << "----------------------------------------------" << std::endl;
+                std::cout << "--------------------Result--------------------" << std::endl;
+                block_tree_2d::algorithm::print_ajdacent_list(result);
+                std::cout << "----------------------------------------------" << std::endl;
+                exit(10);
+            }else{
+                for (auto i = 0; i < result.size(); ++i) {
+                    for (auto j = 0; j < result[i].size(); ++j) {
+                        if (result[i][j] != copy_lists[i][j]) {
+                            std::cout << "Error: the " << j << "-th value of list " << i << " is incorrect." << std::endl;
+                            std::cout << "Expected: " << copy_lists[i][j] << std::endl;
+                            std::cout << "Obtained: " << result[i][j] << std::endl;
+                            error = true;
+                        }
+                    }
+                }
+                if (!error) {
+                    std::cout << "Everything is OK!" << std::endl;
+                }else{
+                    std::cout << "---------------------Input--------------------" << std::endl;
+                    block_tree_2d::algorithm::print_ajdacent_list(copy_lists);
+                    std::cout << "----------------------------------------------" << std::endl;
+                    std::cout << "--------------------Result--------------------" << std::endl;
+                    block_tree_2d::algorithm::print_ajdacent_list(result);
+                    std::cout << "----------------------------------------------" << std::endl;
+                    exit(10);
+                }
+            }
+            std::cout << std::endl;
+
+
+            /*m_block_tree.access_region(2, 2, 5, 5, result);
+            block_tree_2d::algorithm::print_ajdacent_list(result);*/
+
         }
+
     }
 
 }

@@ -128,8 +128,8 @@ int main(int argc, char **argv) {
     }
     while(block_size > 1){
         htc_type m_htc(nodes.size());
-        block_tree_2d::algorithm::get_fingerprint_blocks(matrix8_8, m_htc, dimensions, block_size, hash, nodes);
-        block_tree_2d::algorithm::get_type_of_nodes(matrix8_8, m_htc, dimensions, block_size, hash, nodes);
+        block_tree_2d::algorithm::get_fingerprint_blocks(matrix8_8, k, m_htc, dimensions, block_size, hash, nodes);
+        block_tree_2d::algorithm::get_type_of_nodes(matrix8_8, k, m_htc, dimensions, block_size, hash, nodes);
         auto i = 0;
         std::cout << "--------- Nodes at level: " << level << " ---------------" << std::endl;
         for(const auto &n : nodes){

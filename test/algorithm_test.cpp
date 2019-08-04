@@ -89,8 +89,8 @@ int main(int argc, char **argv) {
             std::cout << "Total number of ones=" << number_of_ones(adjacency_lists) << std::endl;
             while (block_size > 1) {
                 htc_type m_htc(2*nodes.size());
-                block_tree_2d::algorithm::get_fingerprint_blocks(adjacency_lists, m_htc, dimensions, block_size, hash, nodes);
-                block_tree_2d::algorithm::get_type_of_nodes(adjacency_lists, m_htc, dimensions, block_size, hash, nodes);
+                block_tree_2d::algorithm::get_fingerprint_blocks(adjacency_lists, k, m_htc, dimensions, block_size, hash, nodes);
+                block_tree_2d::algorithm::get_type_of_nodes(adjacency_lists, k, m_htc, dimensions, block_size, hash, nodes);
                 /*auto n_i = 0;
                 std::cout << "--------- Nodes at level: " << level << " ---------------" << std::endl;
                 for (const auto &n : nodes) {

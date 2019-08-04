@@ -85,12 +85,24 @@ namespace util {
             std::__sift_down(m_values.begin(), m_values.end(), m_comp, m_values.size(), m_values.begin());
         }
 
+        inline void clear(){
+            m_values.clear();
+        }
+
         inline bool empty(){
             return m_values.empty();
         }
 
         inline uint64_t size(){
             return m_values.size();
+        }
+
+        inline void re_heap(){
+            std::make_heap(m_values.begin(), m_values.end(), m_comp);
+        }
+
+        inline bool is_heap(){
+            return std::is_heap(m_values.begin(), m_values.end());
         }
 
         //! Copy constructor

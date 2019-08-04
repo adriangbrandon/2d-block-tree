@@ -94,7 +94,7 @@ namespace hash_table {
                 }
                 ++it_table;
             }
-            m_table.clear();
+            //m_table.clear();
             m_table = std::move(aux_table);
         }
 
