@@ -164,6 +164,14 @@ namespace block_tree_2d {
                                      const size_type block_size, input_type &result,
                                      const bool taking_pointer=false, const size_type level_taking_pointer = 0){
 
+#if BT_VERBOSE
+            std::cout << "at position: " << idx << std::endl;
+            std::cout << "x=" << x << " y=" << y << std::endl;
+            std::cout << "block_size: " << block_size << std::endl;
+            std::cout << "current_level: " << level << std::endl;
+            std::cout << "height: " << height << std::endl;
+            std::cout << std::endl;
+#endif
             if(level == m_height){
                 if(m_topology[idx]){
                     //Adding result
@@ -172,7 +180,7 @@ namespace block_tree_2d {
             }else{
                 if(m_topology[idx]){
                     size_type new_min_x, new_max_x, new_min_y, new_max_y;
-                    size_type start_children =  m_topology_rank(idx + 1) * m_k*m_k;
+                    size_type start_children =  m_topology_rank(idx + 1) * m_k2;
                     size_type new_block_size = block_size / m_k;
                     size_type disp_x = 0;
                     for (size_type i = min_x / new_block_size; i <= max_x / new_block_size; i++) {
@@ -194,14 +202,11 @@ namespace block_tree_2d {
                             if (j == max_y / new_block_size) {
                                 new_max_y = max_y % new_block_size;
                             }
-#if MY_DEBUG
-                            std::cout << "min(" << new_min_x << ", " << new_min_y << ")max(" << new_max_x
-                            << ", " << new_max_y << ")" << std::endl;
-#endif
                             recursive_access_region(new_min_x, new_max_x, new_min_y, new_max_y,
                                                     x + (new_block_size * i - min_x) * disp_x,
                                                     y + (new_block_size * j - min_y) * disp_y,
-                                                    start_children + m_k * j + i, level + 1,
+                                                    start_children + codes::zeta_order::encode(i, j),
+                                                    level + 1,
                                                     new_block_size, result, taking_pointer, level_taking_pointer);
                             disp_y = 1;
                         }
@@ -245,8 +250,9 @@ namespace block_tree_2d {
             auto l = level;
             while(new_min_x < 0 || new_min_y < 0 || new_min_x + length_x >= block_size || new_min_y + length_y >= block_size){
                 auto zth = ptr % m_k2;
-                new_min_x += (zth % m_k) * block_size;
-                new_min_y += (zth / m_k) * block_size;
+                auto p = codes::zeta_order::decode(zth);
+                new_min_x += p.first * block_size;
+                new_min_y += p.second * block_size;
                 block_size *= m_k;
                 l--;
                 ptr = m_topology_select(ptr / m_k2);
@@ -272,11 +278,15 @@ namespace block_tree_2d {
         //Pre: adjacency_lists have to contain at least one 1
         block_tree(input_type &adjacency_lists, const size_type d, const size_type kparam){
             m_k = kparam;
-
             m_dimensions = d;
             m_k2 = m_k*m_k;
+            auto h = std::ceil(std::log(m_dimensions)/std::log(m_k));
             size_type blocks = m_k2;
-            size_type block_size = m_dimensions / m_k;
+            auto total_size = (size_type) std::pow(m_k, h);
+            if(adjacency_lists.size() < total_size){
+                adjacency_lists.resize(total_size);
+            }
+            size_type block_size = total_size/m_k;
             std::vector<node_type> nodes(blocks);
             //Init map between z_order and position in vector nodes
             block_tree_2d::algorithm::hash_type hash;
@@ -290,6 +300,7 @@ namespace block_tree_2d {
             m_offsets[0].resize(0);
             m_pointers[0].resize(0);
             while (block_size > 1) {
+                //std::cout << "Block size at level " << level << ": " << block_size << std::endl;
                 ++level;
                 htc_type m_htc(2*nodes.size()); //2* nodes, in order to reduce resize operations
                 block_tree_2d::algorithm::get_fingerprint_blocks(adjacency_lists, k, m_htc, dimensions, block_size, hash, nodes);
@@ -299,6 +310,7 @@ namespace block_tree_2d {
                 block_tree_2d::algorithm::prepare_next_level(adjacency_lists, hash, m_k2, nodes);
                 //std::cout << "Level: " << level << std::endl;
                 block_size = block_size / k;
+
             }
             block_tree_2d::algorithm::compute_last_level(adjacency_lists, hash, nodes);
             compact_last_level(nodes, topology_index);
@@ -334,7 +346,8 @@ namespace block_tree_2d {
             size_type size_vector = max_y - min_y+1;
             result = input_type(size_vector);
             //result = std::vector<sdsl::bit_vector>(size_vector, sdsl::bit_vector(size_bit_vector, 0));
-            size_type block_size = std::pow(m_k, m_height);
+            auto block_size = (size_type) std::pow(m_k, m_height);
+            std::cout << "Block size: " << block_size << std::endl;
             recursive_access_region(min_x, max_x, min_y, max_y, 0, 0, 0, 0, block_size, result);
 
         }

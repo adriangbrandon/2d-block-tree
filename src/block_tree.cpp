@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
 
 
 
-    uint64_t k = 2;
+    uint64_t k =4;
     uint64_t dimensions = 8;
     //for(size_t i = 0; i < 100; ++i){
         std::vector< std::vector<int64_t>> matrix8_8;
@@ -66,7 +66,7 @@ int main(int argc, char **argv) {
         std::cout << "Building Block-tree dimensions=" << dimensions;
         block_tree_2d::block_tree<> m_block_tree(matrix8_8, dimensions, k);
         std::cout << "Done." << std::endl;
-        //m_block_tree.print();
+        m_block_tree.print();
         std::cout << "Retrieving adjacency lists...";
         std::vector<std::vector<int64_t >> result;
         m_block_tree.access_region(0, 0, dimensions - 1, dimensions - 1, result);
