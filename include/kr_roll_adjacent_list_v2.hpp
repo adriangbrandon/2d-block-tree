@@ -39,6 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <queue>
 #include <heap.hpp>
 #include <iostream>
+#include <bithacks.hpp>
 
 namespace karp_rabin {
 
@@ -116,6 +117,10 @@ namespace karp_rabin {
             m_iterator_list = iterator;
             for(auto list_id = 0; list_id < m_block_size; ++list_id){
                 m_iterators_end_first_block[list_id] = (m_iterator_list+list_id)->begin();
+                /*auto &it_in = m_iterators_end_first_block[list_id];
+                while(it_in != (m_iterator_list+ list_id)->end() && *it_in < 0){
+                    ++it_in;
+                }*/
             }
 
         }
@@ -169,7 +174,10 @@ namespace karp_rabin {
             while(row < m_block_size){
                 auto beg_list = (m_iterator_list + m_row + row)->begin();
                 auto it = m_iterators[(m_row + row) % m_block_size];
-                if(it != beg_list && *(--it) >= m_col){
+                while(it != beg_list && *(--it) < 0){
+                    //Skipping deleted values
+                }
+                if(it != beg_list && *it >= m_col){
                     return false;
                 }
                 ++row;
@@ -191,15 +199,17 @@ namespace karp_rabin {
                 //1.2. Iterate over the elements of an adjacent list
                 auto &it_element = m_iterators_end_first_block[list_id];
                 size_type hash_row = 0;
-                while(it_element != it_list->end() && (*it_element) >= 0 && (*it_element) < m_block_size){
-                    //2.1 Compute hash_value with 0s
-                    for(auto v = prev_value+1; v < (*it_element); ++v){
-                        hash_row = (hash_row * m_asize) % m_prime;
+                while(it_element != it_list->end() && util::bithacks::abs(*it_element) < m_block_size){
+                    if((*it_element) >= 0){
+                        //2.1 Compute hash_value with 0s
+                        for(auto v = prev_value+1; v < (*it_element); ++v){
+                            hash_row = (hash_row * m_asize) % m_prime;
+                        }
+                        //1.2.2 Compute hash_value with 1
+                        hash_row = (hash_row * m_asize + 1) % m_prime;
+                        //1.2.3 Next element of adjacent list
+                        prev_value = (*it_element);
                     }
-                    //1.2.2 Compute hash_value with 1
-                    hash_row = (hash_row * m_asize + 1) % m_prime;
-                    //1.2.3 Next element of adjacent list
-                    prev_value = (*it_element);
                     ++it_element;
                 }
                 //1.3. Check the last element and compute hash_value with 0s
@@ -207,6 +217,12 @@ namespace karp_rabin {
                 for(auto i = prev_value + 1; i < m_block_size; ++i){
                     hash_row = (hash_row * m_asize) % m_prime;
                 }
+
+
+               while(it_element != it_list->end() && (*it_element) < 0){
+                    ++it_element;
+               }
+
                 //1.4 Init the hash value per row and compute the hash of the submatrix
                 m_prev_kr[list_id] = hash_row;
                 hash_value += (hash_row * m_h_in_right[list_id]) % m_prime;
@@ -297,16 +313,19 @@ namespace karp_rabin {
             size_type last_row = m_row + m_block_size-1;
             auto prev_value = (size_type) -1;
             auto it_element = (m_iterator_list + last_row)->begin();
-            while(it_element != (m_iterator_list + last_row)->end() && (*it_element) >= 0 && (*it_element) < m_block_size){
+            while(it_element != (m_iterator_list + last_row)->end() && util::bithacks::abs(*it_element) < m_block_size){
                 // Compute hash_value with 0s
-                for(auto v = prev_value+1; v < (*it_element); ++v){
-                    hash_row = (hash_row * m_asize) % m_prime;
+                if(*it_element >= 0){
+                    for(auto v = prev_value+1; v < (*it_element); ++v){
+                        hash_row = (hash_row * m_asize) % m_prime;
+                    }
+                    // Compute hash_value with 1
+                    hash_row = (hash_row * m_asize + 1) % m_prime;
+                    // Next element of adjacent list
+                    prev_value = (*it_element);
                 }
-                // Compute hash_value with 1
-                hash_row = (hash_row * m_asize + 1) % m_prime;
-                // Next element of adjacent list
-                prev_value = (*it_element);
                 ++it_element;
+
             }
             // Check the last element and compute hash_value with 0s
             //prev_value is always smaller than block_size
@@ -318,6 +337,9 @@ namespace karp_rabin {
             m_hash = hash;
             m_prev_hash = m_hash;
 
+            while(it_element != (m_iterator_list + last_row)->end() && (*it_element) < 0){
+                ++it_element;
+            }
             //1.5 Store prev hash and position of next one
             m_prev_kr[cyclic_i] = hash_row;
             m_iterators_end_first_block[cyclic_i] = it_element;

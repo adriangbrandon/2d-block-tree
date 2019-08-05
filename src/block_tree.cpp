@@ -34,35 +34,34 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <block_tree.hpp>
 #include <vector>
+#include <adjacency_list_helper.hpp>
 
 int main(int argc, char **argv) {
 
     typedef uint64_t hash_type;
+
+
     typedef hash_table::hash_table_chainning<hash_type, uint64_t> htc_type;
-    std::vector<int64_t> row0 = {2, 3, 4, 7};
-    std::vector<int64_t> row1 = {0, 4};
-    std::vector<int64_t> row2 = {2, 3, 5, 7};
-    std::vector<int64_t> row3 = {3, 5};
-    std::vector<int64_t> row4 = {2, 6};
-    std::vector<int64_t> row5 = {1, 3, 6};
-    std::vector<int64_t> row6 = {2, 3, 5};
-    std::vector<int64_t> row7 = {1, 5};
+    std::vector<int64_t> row0 = {1, 2, 4, 5, 7};
+    std::vector<int64_t> row1 = {0, 1, 3, 4, 6};
+    std::vector<int64_t> row2 = {0, 1, 2, 4, 5, 6, 7};
+    std::vector<int64_t> row3 = {1, 2, 3, 4, 6};
+    std::vector<int64_t> row4 = {1, 3, 4, 5, 7};
+    std::vector<int64_t> row5 = {0, 2, 4, 6, 7};
+    std::vector<int64_t> row6 = {0, 1, 3, 4, 6, 7};
+    std::vector<int64_t> row7 = {1, 2, 4, 6, 7};
 
 
 
 
-    uint64_t k =4;
+
+    uint64_t k =2;
     uint64_t dimensions = 8;
     //for(size_t i = 0; i < 100; ++i){
         std::vector< std::vector<int64_t>> matrix8_8;
-        matrix8_8.push_back(row0);
-        matrix8_8.push_back(row1);
-        matrix8_8.push_back(row2);
-        matrix8_8.push_back(row3);
-        matrix8_8.push_back(row4);
-        matrix8_8.push_back(row5);
-        matrix8_8.push_back(row6);
-        matrix8_8.push_back(row7);
+        util::adjacency_list::read(matrix8_8, "adjacency_lists.txt");
+        std::cout << matrix8_8.size() << std::endl;
+
         std::cout << "Building Block-tree dimensions=" << dimensions;
         block_tree_2d::block_tree<> m_block_tree(matrix8_8, dimensions, k);
         std::cout << "Done." << std::endl;

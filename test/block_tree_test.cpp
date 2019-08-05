@@ -34,6 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <vector>
 #include <block_tree.hpp>
+#include <adjacency_list_helper.hpp>
 
 uint64_t number_of_ones(const std::vector<std::vector<int64_t>> &adjacency_lists) {
     uint64_t n_ones = 0;
@@ -118,6 +119,7 @@ int main(int argc, char **argv) {
                 std::cout << "--------------------Result--------------------" << std::endl;
                 block_tree_2d::algorithm::print_ajdacent_list(result);
                 std::cout << "----------------------------------------------" << std::endl;
+                util::adjacency_list::write(copy_lists, "adjacency_lists.txt");
                 exit(10);
             }else{
                 for (auto i = 0; i < result.size(); ++i) {
@@ -139,6 +141,7 @@ int main(int argc, char **argv) {
                     std::cout << "--------------------Result--------------------" << std::endl;
                     block_tree_2d::algorithm::print_ajdacent_list(result);
                     std::cout << "----------------------------------------------" << std::endl;
+                    util::adjacency_list::write(copy_lists, "adjacency_lists.txt");
                     exit(10);
                 }
             }

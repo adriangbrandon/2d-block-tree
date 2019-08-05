@@ -198,11 +198,13 @@ namespace block_tree_2d {
                 auto it_b2 = iterators_b2[(sy_b2 + row) % block_size];
                 auto it_b1 = std::upper_bound(beg_list_b1, (adjacent_lists.begin()+sy_b1+row)->end(), ex_b1, compare_abs_value());
                 iterators_b1[(sy_b1 + row) % block_size] = it_b1;
-                while(it_b2 != beg_list_b2 && *(--it_b2) >= sx_b2){
-                    size_type d2 = *it_b2 - sx_b2;
-                    if(it_b1 == beg_list_b1 || *(--it_b1) < sx_b1) return false;
-                    size_type d1 = *it_b1 - sx_b1;
-                    if(d1 != d2) return false;
+                while(it_b2 != beg_list_b2 && util::bithacks::abs(*(--it_b2)) >= sx_b2){
+                    if(*it_b2 >= 0){
+                        size_type d2 = *it_b2 - sx_b2;
+                        if(it_b1 == beg_list_b1 || *(--it_b1) < sx_b1) return false;
+                        size_type d1 = *it_b1 - sx_b1;
+                        if(d1 != d2) return false;
+                    }
                 }
                 if(it_b1 != beg_list_b1 && *(--it_b1) >= sx_b1){
                     return false;
@@ -273,7 +275,8 @@ namespace block_tree_2d {
                 //- We have to update the iterator of kr_iterator to the next one
                 //- We have to update the heap with the new kr_iterator (if it is pointing to a number)
                 if(sy_b1 <= sy_b2+row && sy_b2+row <= ey_b1 && count > 0 && last == kr_iterators[cyclic_b2]){
-                    kr_iterators[cyclic_b2] = last + count;
+                    auto it = last + count;
+                    kr_iterators[cyclic_b2] = it;
                     redo_heap_in = true;
                 }
                 ++row;
@@ -562,7 +565,9 @@ namespace block_tree_2d {
 
                         //IMPORTANT: some elements inside the heap (heap_in) were removed
                         // - Update heap_in
-                        kr_roll.redo_heap_in();
+                        if(redo_heap_in){
+                            kr_roll.redo_heap_in();
+                        }
 
                         //IMPORTANT: we delete the first block of the same row
                         // - We have to update the prev_hash to 0
@@ -581,16 +586,12 @@ namespace block_tree_2d {
                         auto z_order_target = codes::zeta_order::encode(sx_target / block_size, sy_target / block_size);
                         auto it = hash.find(z_order_target);
                         size_type pos_target = it->second;
-                        if(hash.end() == it){
-                            std::cout << "Cagada" << std::endl;
-                        }else{
-                            hash.erase(it);
-                            nodes[pos_target].type = NODE_LEAF;
-                            nodes[pos_target].ptr = source_ptr;
-                            nodes[pos_target].offset_x = source_off_x;
-                            nodes[pos_target].offset_y = source_off_y;
-                            nodes[pos_target].z_order = z_order_target;
-                        }
+                        hash.erase(it);
+                        nodes[pos_target].type = NODE_LEAF;
+                        nodes[pos_target].ptr = source_ptr;
+                        nodes[pos_target].offset_x = source_off_x;
+                        nodes[pos_target].offset_y = source_off_y;
+                        nodes[pos_target].z_order = z_order_target;
                     }
                 }
 #if BT_VERBOSE
