@@ -62,6 +62,8 @@ int main(int argc, char **argv) {
         util::adjacency_list::read(matrix8_8, "adjacency_lists.txt");
         std::cout << matrix8_8.size() << std::endl;
 
+        block_tree_2d::algorithm::print_ajdacent_list(matrix8_8);
+
         std::cout << "Building Block-tree dimensions=" << dimensions;
         block_tree_2d::block_tree<> m_block_tree(matrix8_8, k);
         std::cout << "Done." << std::endl;

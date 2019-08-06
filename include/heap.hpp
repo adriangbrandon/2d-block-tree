@@ -47,6 +47,9 @@ namespace util {
     public:
         typedef _Container                               container_type;
         typedef _Compare                                 value_compare;
+        typedef typename _Container::iterator            iterator_type;
+        typedef typename _Container::difference_type     difference_type;
+        typedef typename _Container::value_type          value_type;
     private:
         container_type m_values;
         value_compare  m_comp;
@@ -56,6 +59,56 @@ namespace util {
             m_comp = p.m_comp;
         }
 
+        void sift_down(iterator_type __first, iterator_type /*__last*/,
+                    value_compare __comp,
+                    difference_type __len,
+                    iterator_type __start)
+        {
+            // left-child of __start is at 2 * __start + 1
+            // right-child of __start is at 2 * __start + 2
+            difference_type __child = __start - __first;
+
+            if (__len < 2 || (__len - 2) / 2 < __child)
+                return;
+
+            __child = 2 * __child + 1;
+            iterator_type __child_i = __first + __child;
+
+            if ((__child + 1) < __len && __comp(*__child_i, *(__child_i + 1))) {
+                // right-child exists and is greater than left-child
+                ++__child_i;
+                ++__child;
+            }
+
+            // check if we are in heap-order
+            if (__comp(*__child_i, *__start))
+                // we are, __start is larger than it's largest child
+                return;
+
+            value_type __top(_VSTD::move(*__start));
+            do
+            {
+                // we are not in heap-order, swap the parent with it's largest child
+                *__start = _VSTD::move(*__child_i);
+                __start = __child_i;
+
+                if ((__len - 2) / 2 < __child)
+                    break;
+
+                // recompute the child based off of the updated parent
+                __child = 2 * __child + 1;
+                __child_i = __first + __child;
+
+                if ((__child + 1) < __len && __comp(*__child_i, *(__child_i + 1))) {
+                    // right-child exists and is greater than left-child
+                    ++__child_i;
+                    ++__child;
+                }
+
+                // check if we are in heap-order
+            } while (!__comp(*__child_i, __top));
+            *__start = _VSTD::move(__top);
+        }
 
     public:
 
@@ -83,7 +136,7 @@ namespace util {
 
         inline void update_top(const _Tp &v){
             m_values[0]=v;
-            std::__sift_down(m_values.begin(), m_values.end(), m_comp, m_values.size(), m_values.begin());
+            sift_down(m_values.begin(), m_values.end(), m_comp, m_values.size(), m_values.begin());
         }
 
         inline void clear(){

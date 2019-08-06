@@ -57,6 +57,8 @@ vector
 -
 iostream
 -
+algorithm
+-
 
 ../include/kr_block_adjacent_list_v2.hpp
 cstdint
