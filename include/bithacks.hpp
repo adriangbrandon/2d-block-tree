@@ -40,7 +40,7 @@ namespace util {
 
         template <class T>
         T abs(const T &v){
-            const T mask = v >> (sizeof(T) * CHAR_BIT - 1);
+            const T mask = v >> (sizeof(T) * 8 -1);
             return ((v ^ mask) - mask);
         }
         
