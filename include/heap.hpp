@@ -85,11 +85,11 @@ namespace util {
                 // we are, __start is larger than it's largest child
                 return;
 
-            value_type __top(_VSTD::move(*__start));
+            value_type __top(std::move(*__start));
             do
             {
                 // we are not in heap-order, swap the parent with it's largest child
-                *__start = _VSTD::move(*__child_i);
+                *__start = std::move(*__child_i);
                 __start = __child_i;
 
                 if ((__len - 2) / 2 < __child)
@@ -107,7 +107,7 @@ namespace util {
 
                 // check if we are in heap-order
             } while (!__comp(*__child_i, __top));
-            *__start = _VSTD::move(__top);
+            *__start = std::move(__top);
         }
 
     public:
