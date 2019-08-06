@@ -83,3 +83,6 @@ target_link_libraries(algorithm_v2 sdsl divsufsort divsufsort64)
 
 add_executable(block_tree src/block_tree.cpp)
 target_link_libraries(block_tree sdsl divsufsort divsufsort64)
+
+add_executable(build_webgraph src/build_webgraph.cpp)
+target_link_libraries(build_webgraph sdsl divsufsort divsufsort64)

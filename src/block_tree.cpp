@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
         std::cout << matrix8_8.size() << std::endl;
 
         std::cout << "Building Block-tree dimensions=" << dimensions;
-        block_tree_2d::block_tree<> m_block_tree(matrix8_8, dimensions, k);
+        block_tree_2d::block_tree<> m_block_tree(matrix8_8, k);
         std::cout << "Done." << std::endl;
         m_block_tree.print();
         std::cout << "Retrieving adjacency lists...";

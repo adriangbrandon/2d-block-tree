@@ -40,6 +40,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <block_tree_algorithm_helper_v2.hpp>
 #include "alternative_code.hpp"
+#include <logger.hpp>
 
 namespace block_tree_2d {
 
@@ -276,11 +277,11 @@ namespace block_tree_2d {
 
         const size_type &dimensions = m_dimensions;
         //Pre: adjacency_lists have to contain at least one 1
-        block_tree(input_type &adjacency_lists, const size_type d, const size_type kparam){
+        block_tree(input_type &adjacency_lists, const size_type kparam){
             m_k = kparam;
-            m_dimensions = d;
+            m_dimensions = adjacency_lists.size();
             m_k2 = m_k*m_k;
-            auto h = std::ceil(std::log(m_dimensions)/std::log(m_k));
+            size_type h = std::ceil(std::log(m_dimensions)/std::log(m_k));
             size_type blocks = m_k2;
             auto total_size = (size_type) std::pow(m_k, h);
             if(adjacency_lists.size() < total_size){
@@ -300,21 +301,30 @@ namespace block_tree_2d {
             m_offsets[0].resize(0);
             m_pointers[0].resize(0);
             while (block_size > 1) {
-                //std::cout << "Block size at level " << level << ": " << block_size << std::endl;
                 ++level;
+                util::logger::log("Processing level " + std::to_string(level) + " of " + std::to_string(h));
+                util::logger::log("Block size: " + std::to_string(block_size));
                 htc_type m_htc(2*nodes.size()); //2* nodes, in order to reduce resize operations
+                util::logger::log("Computing fingerprint of blocks at level=" + std::to_string(level));
                 block_tree_2d::algorithm::get_fingerprint_blocks(adjacency_lists, k, m_htc, dimensions, block_size, hash, nodes);
+                util::logger::log("Computing fingerprint of shifts at level=" + std::to_string(level));
                 block_tree_2d::algorithm::get_type_of_nodes(adjacency_lists, k, m_htc, dimensions, block_size, hash, nodes);
+                util::logger::log("Clearing adjacency lists at level=" + std::to_string(level));
                 block_tree_2d::algorithm::clear_adjacency_lists(adjacency_lists);
+                util::logger::log("Compacting level=" + std::to_string(level));
                 compact_current_level(nodes, level, topology_index, is_pointer_index);
+                util::logger::log("Preparing next level");
                 block_tree_2d::algorithm::prepare_next_level(adjacency_lists, hash, m_k2, nodes);
                 //std::cout << "Level: " << level << std::endl;
                 block_size = block_size / k;
 
             }
+            ++level;
+            util::logger::log("Processing last level (" + std::to_string(level) + ")");
             block_tree_2d::algorithm::compute_last_level(adjacency_lists, hash, nodes);
+            util::logger::log("Compacting last level (" + std::to_string(level) + ")");
             compact_last_level(nodes, topology_index);
-            m_height = level+1;
+            m_height = level;
             m_topology.resize(topology_index);
             m_is_pointer.resize(is_pointer_index);
             m_level_ones.resize(2*m_height);
@@ -322,6 +332,8 @@ namespace block_tree_2d {
             sdsl::util::init_support(m_topology_select, &m_topology);
             sdsl::util::init_support(m_is_pointer_rank, &m_is_pointer);
             sdsl::util::bit_compress(m_level_ones);
+            util::logger::log("2D Block Tree DONE!!!");
+
             //std::cout << std::endl;
         }
 
@@ -345,12 +357,123 @@ namespace block_tree_2d {
                            input_type &result){
             size_type size_vector = max_y - min_y+1;
             result = input_type(size_vector);
-            //result = std::vector<sdsl::bit_vector>(size_vector, sdsl::bit_vector(size_bit_vector, 0));
             auto block_size = (size_type) std::pow(m_k, m_height);
-            std::cout << "Block size: " << block_size << std::endl;
             recursive_access_region(min_x, max_x, min_y, max_y, 0, 0, 0, 0, block_size, result);
 
         }
+
+        //! Copy constructor
+        block_tree(const block_tree &p) {
+            copy(p);
+        }
+
+        //! Move constructor
+        block_tree(block_tree &&p) {
+            *this = std::move(p);
+        }
+
+        //! Assignment move operation
+        block_tree &operator=(block_tree &&p) {
+            if (this != &p) {
+                m_k = std::move(p.m_k);
+                m_k2 = m_k * m_k;
+                m_height = std::move(p.m_height);
+                m_dimensions = std::move(p.m_dimensions);
+                m_topology = std::move(p.m_topology);
+                m_topology_rank = std::move(p.m_topology_rank);
+                m_topology_rank.set_vector(&m_topology);
+                m_topology_select = std::move(p.m_topology_select);
+                m_topology_select.set_vector(&m_topology);
+                m_is_pointer = std::move(p.m_is_pointer);
+                m_is_pointer_rank = std::move(p.m_is_pointer_rank);
+                m_is_pointer_rank.set_vector(&m_is_pointer);
+                m_level_ones = std::move(p.m_level_ones);
+                m_pointers = std::move(p.m_pointers);
+                m_offsets = std::move(p.m_offsets);
+
+            }
+            return *this;
+        }
+
+        //! Assignment operator
+        block_tree &operator=(const block_tree &p) {
+            if (this != &p) {
+                copy(p);
+            }
+            return *this;
+        }
+
+        //! Swap method
+        /*! Swaps the content of the two data structure.
+        *  You have to use set_vector to adjust the supported bit_vector.
+        *  \param bp_support Object which is swapped.
+        */
+        void swap(block_tree &p) {
+            std::swap(m_k, p.m_k);
+            std::swap(m_k2, p.m_k2);
+            std::swap(m_dimensions, p.m_dimensions);
+            std::swap(m_level_ones, p.m_level_ones);
+            std::swap(m_height, p.m_height);
+            std::swap(m_topology, p.m_topology);
+            sdsl::util::swap_support(m_topology_rank, p.m_topology_rank, &m_topology, &(p.m_topology));
+            sdsl::util::swap_support(m_topology_select, p.m_topology_select, &m_topology, &(p.m_topology));
+            std::swap(m_is_pointer, p.m_is_pointer);
+            sdsl::util::swap_support(m_is_pointer_rank, p.m_is_pointer_rank, &m_is_pointer, &(p.m_is_pointer));
+            std::swap(m_pointers, p.m_pointers);
+            std::swap(m_offsets, p.m_offsets);
+        }
+
+        //! Serializes the data structure into the given ostream
+        size_type serialize(std::ostream& out, sdsl::structure_tree_node* v=nullptr,
+                            std::string name="")const
+        {
+            sdsl::structure_tree_node* child = sdsl::structure_tree::add_child(
+                    v, name, sdsl::util::class_name(*this));
+            size_type written_bytes = 0;
+            written_bytes += sdsl::write_member(m_k, out, child, "k");
+            written_bytes += sdsl::write_member(m_height, out, child, "height");
+            written_bytes += sdsl::write_member(m_dimensions, out, child, "dimensions");
+            written_bytes += m_topology.serialize(out, child, "topology");
+            written_bytes += m_topology_rank.serialize(out, child, "topology_rank");
+            written_bytes += m_topology_select.serialize(out, child, "topology_select");
+            written_bytes += m_level_ones.serialize(out, child, "level_ones");
+            written_bytes += m_is_pointer.serialize(out, child, "is_pointer");
+            written_bytes += m_is_pointer_rank.serialize(out, child, "is_pointer_rank");
+            uint64_t m_pointers_size = m_pointers.size();
+            sdsl::write_member(m_pointers_size, out, child, "pointers_size");
+            written_bytes += sdsl::serialize_vector(m_pointers, out, child, "pointers");
+            uint64_t m_offsets_size = m_offsets.size();
+            sdsl::write_member(m_offsets_size, out, child, "offsets_size");
+            written_bytes += sdsl::serialize_vector(m_offsets, out, child, "offsets");
+            sdsl::structure_tree::add_size(child, written_bytes);
+            return written_bytes;
+        }
+
+        //! Loads the data structure from the given istream.
+        void load(std::istream& in)
+        {
+            sdsl::read_member(m_k, in);
+            sdsl::read_member(m_height, in);
+            sdsl::read_member(m_dimensions, in);
+            m_topology.load(in);
+            m_topology_rank.load(in);
+            m_topology_rank.set_vector(&m_topology);
+            m_topology_select.load(in);
+            m_topology_select.set_vector(&m_topology);
+            m_level_ones.load(in);
+            m_is_pointer.load(in);
+            m_is_pointer_rank.load(in);
+            m_is_pointer_rank.set_vector(&m_is_pointer);
+            uint64_t m_pointers_size = 0;
+            sdsl::read_member(m_pointers_size, in);
+            m_pointers.resize(m_pointers_size);
+            sdsl::load_vector(m_pointers, in);
+            uint64_t m_offsets_size = 0;
+            sdsl::read_member(m_offsets_size, in);
+            m_offsets.resize(m_offsets_size);
+            sdsl::load_vector(m_offsets, in);
+        }
+
     };
 }
 
