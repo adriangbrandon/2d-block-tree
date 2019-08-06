@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/alternative_code.hpp
+
+../include/time_util.hpp
+cstdint
+-
+sys/resource.h
+-
+
+/Users/adrian/CLionProjects/2d-block-tree/src/algorithm.cpp
+iostream
+-
+vector
+-
+list
+-
+time_util.hpp
+-
+alternative_code.hpp
+-
+
