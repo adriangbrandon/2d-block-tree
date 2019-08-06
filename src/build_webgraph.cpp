@@ -33,6 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <dataset_reader.hpp>
 #include <block_tree.hpp>
 #include <adjacency_list_helper.hpp>
+#include <sdsl/io.hpp>
 
 int main(int argc, char **argv) {
 
@@ -51,6 +52,7 @@ int main(int argc, char **argv) {
     std::cout << "Building Block-tree..." << std::endl;
     block_tree_2d::block_tree<> m_block_tree(adjacency_lists, k);
     std::cout << "The Block-tree was built." << std::endl;
+    sdsl::store_to_file(m_block_tree, dataset + ".2dbt");
     //m_block_tree.print();
     std::cout << "Retrieving adjacency lists..." << std::flush;
     std::vector<std::vector<int64_t >> result;

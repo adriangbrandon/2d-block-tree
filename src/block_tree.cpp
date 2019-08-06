@@ -74,6 +74,7 @@ int main(int argc, char **argv) {
         std::cout << "Done." << std::endl;
 
         block_tree_2d::algorithm::print_ajdacent_list(result);
+        sdsl::store_to_file(m_block_tree, "test.2dbt");
     //}
 
 }
