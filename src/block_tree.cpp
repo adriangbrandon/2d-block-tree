@@ -69,12 +69,20 @@ int main(int argc, char **argv) {
         std::cout << "Done." << std::endl;
         m_block_tree.print();
         std::cout << "Retrieving adjacency lists...";
-        std::vector<std::vector<int64_t >> result;
+        std::vector<std::vector<int64_t >> result, result2;
         m_block_tree.access_region(0, 0, dimensions - 1, dimensions - 1, result);
         std::cout << "Done." << std::endl;
 
         block_tree_2d::algorithm::print_ajdacent_list(result);
         sdsl::store_to_file(m_block_tree, "test.2dbt");
+
+        block_tree_2d::block_tree<> m_block_tree2;
+        sdsl::load_from_file(m_block_tree2, "test.2dbt");
+
+        m_block_tree.access_region(0, 0, dimensions - 1, dimensions - 1, result2);
+        std::cout << "Done." << std::endl;
+
+        block_tree_2d::algorithm::print_ajdacent_list(result2);
     //}
 
 }

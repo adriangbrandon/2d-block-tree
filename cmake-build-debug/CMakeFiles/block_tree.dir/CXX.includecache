@@ -43,6 +43,8 @@ iostream
 -
 bithacks.hpp
 -
+progress_bar.hpp
+-
 
 ../include/hash_table_chainning.hpp
 stdint.h
@@ -88,6 +90,12 @@ iostream
 string
 -
 time.h
+-
+
+../include/progress_bar.hpp
+iostream
+-
+stdint.h
 -
 
 ../include/zeta_order.hpp

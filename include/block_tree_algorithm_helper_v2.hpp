@@ -42,6 +42,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <unordered_map>
 #include <iostream>
 #include <bithacks.hpp>
+#include <progress_bar.hpp>
 
 #define NODE_EMPTY 0
 #define NODE_LEAF 1
@@ -407,6 +408,11 @@ namespace block_tree_2d {
             iterator_table_type it_table;
             iterator_hash_type it_hash;
             iterators_value_type iterators_source = iterators_value_type(block_size);
+
+            auto blocks_per_row = adjacent_lists.size() / block_size;
+            //Total number of blocks
+            auto total_blocks = blocks_per_row * blocks_per_row;
+            util::progress_bar m_progress_bar(total_blocks);
             //IMPORTANT: kr_block, skips every empty block. For this reason, every node of the current level has to be
             //           initialized as empty node.
             while(kr_block.next()){
@@ -417,6 +423,7 @@ namespace block_tree_2d {
                 //check if kr_block.hash exists in map
                 //Target z-order
                 auto z_order_target = codes::zeta_order::encode(kr_block.col, kr_block.row);
+                auto processed_blocks = kr_block.row * blocks_per_row + kr_block.col+1;
                 auto it_target = hash.find(z_order_target);
                 auto pos_target = it_target->second;
                 if(ht.hash_collision(kr_block.hash, it_table, it_hash)){
@@ -461,12 +468,14 @@ namespace block_tree_2d {
                     nodes[pos_target].hash = kr_block.hash;
                     nodes[pos_target].z_order = z_order_target;
                 }
+                m_progress_bar.update(processed_blocks);
 #if BT_VERBOSE
                 std::cout << std::endl;
 #endif
             }
             //Delete sources of hash_table
             ht.remove_marked();
+            m_progress_bar.done();
             //print_ajdacent_list(adjacent_lists);
         }
 
@@ -483,6 +492,11 @@ namespace block_tree_2d {
             typedef typename hash_table_type::iterator_hash_type  iterator_hash_type;
             typedef typename hash_table_type::iterator_value_type iterator_hash_value_type;
 
+            auto rolls_per_row = adjacent_lists.size() - block_size + 1;
+            //Total number of blocks
+            auto total_rolls = rolls_per_row * rolls_per_row;
+            util::progress_bar m_progress_bar(total_rolls);
+
             kr_type kr_roll(block_size, prime, adjacent_lists);
             iterator_table_type it_table;
             iterator_hash_type it_hash;
@@ -492,6 +506,7 @@ namespace block_tree_2d {
                 std::cout << "Source: (" << kr_roll.col << ", " << kr_roll.row << ")" << std::endl;
                 std::cout << "Hash: " << kr_roll.hash << std::endl;
 #endif
+                auto processed_rolls = kr_roll.row * rolls_per_row + kr_roll.col+1;
                 //check if kr_block.hash exists in map
                 if(ht.hash_collision(kr_roll.hash, it_table, it_hash)){
                     value_type sx_target, sy_target, ex_target, ey_target;
@@ -597,8 +612,9 @@ namespace block_tree_2d {
 #if BT_VERBOSE
                 std::cout << std::endl;
 #endif
+                m_progress_bar.update(processed_rolls);
             }
-
+            m_progress_bar.done();
             //print_ajdacent_list(adjacent_lists);
         }
 

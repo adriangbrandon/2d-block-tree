@@ -1540,13 +1540,23 @@ clean: external/sdsl-lite/test/CMakeFiles/sorted_int_stack_test.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test.dir
 
 # All Build rule for target.
+external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_bit-vec.CRAFTED-BLOCK-0.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_bit-vec.CRAFTED-32.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.32.1.r.111.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_bit-vec.CRAFTED-BLOCK-1.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.64.1.r.222.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.9.1.1.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.0.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_bit-vec.CRAFTED-SPARSE-0.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_bit-vec.CRAFTED-MAT-SELECT.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.r.815.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_bit-vec.CRAFTED-SPARSE-1.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.14.1.0.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.11.1.1.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1024.1.r.898.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.7.1.1.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8.1.0.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.4096.1.r.793.dir/all
-external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_bit-vec.CRAFTED-BLOCK-0.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.2048.1.r.5432.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.512.1.r.432.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.256.1.r.4887.dir/all
@@ -1561,16 +1571,6 @@ external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-li
 external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1.1.0.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.0.1.0.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.13.1.1.dir/all
-external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_bit-vec.CRAFTED-32.dir/all
-external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.32.1.r.111.dir/all
-external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_bit-vec.CRAFTED-BLOCK-1.dir/all
-external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.64.1.r.222.dir/all
-external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.9.1.1.dir/all
-external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.0.dir/all
-external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_bit-vec.CRAFTED-SPARSE-0.dir/all
-external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_bit-vec.CRAFTED-MAT-SELECT.dir/all
-external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.r.815.dir/all
-external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test_bit-vec.CRAFTED-SPARSE-1.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target select-support-test"
@@ -1668,8 +1668,8 @@ clean: external/sdsl-lite/test/CMakeFiles/select-support-test_bit-vec.CRAFTED-BL
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.2048.1.r.5432.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.2048.1.r.5432.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.2048.1.r.5432.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.2048.1.r.5432.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.2048.1.r.5432.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.2048.1.r.5432.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.2048.1.r.5432.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.2048.1.r.5432.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target select-support-test_int-vec.2048.1.r.5432"
@@ -1701,8 +1701,8 @@ clean: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.2048.1.r.5
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.512.1.r.432.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.512.1.r.432.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.512.1.r.432.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.512.1.r.432.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.512.1.r.432.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.512.1.r.432.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.512.1.r.432.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.512.1.r.432.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=90 "Built target select-support-test_int-vec.512.1.r.432"
@@ -1767,8 +1767,8 @@ clean: external/sdsl-lite/test/CMakeFiles/rank-support-test_bit-vec.CRAFTED-SPAR
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.15.1.1.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.15.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.15.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.15.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.15.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.15.1.1.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.15.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.15.1.1.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=57 "Built target rank-support-test_int-vec.15.1.1"
@@ -1800,8 +1800,8 @@ clean: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.15.1.1.dir/c
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.256.1.r.4887.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.256.1.r.4887.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.256.1.r.4887.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.256.1.r.4887.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.256.1.r.4887.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.256.1.r.4887.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.256.1.r.4887.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.256.1.r.4887.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target select-support-test_int-vec.256.1.r.4887"
@@ -1865,8 +1865,8 @@ clean: external/sdsl-lite/test/CMakeFiles/search-bidirectional-test_zarathustra.
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.128.1.r.73.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.128.1.r.73.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.128.1.r.73.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.128.1.r.73.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.128.1.r.73.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.128.1.r.73.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.128.1.r.73.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.128.1.r.73.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=86 "Built target select-support-test_int-vec.128.1.r.73"
@@ -1898,8 +1898,8 @@ clean: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.128.1.r.73
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.16.1.r.42.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.16.1.r.42.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.16.1.r.42.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.16.1.r.42.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.16.1.r.42.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.16.1.r.42.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.16.1.r.42.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.16.1.r.42.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=88 "Built target select-support-test_int-vec.16.1.r.42"
@@ -1931,8 +1931,8 @@ clean: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.16.1.r.42.
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.16.1.r.42.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.16.1.r.42.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.16.1.r.42.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.16.1.r.42.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.16.1.r.42.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.16.1.r.42.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.16.1.r.42.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.16.1.r.42.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target bit-vector-test_int-vec.16.1.r.42"
@@ -1996,8 +1996,8 @@ clean: external/sdsl-lite/test/CMakeFiles/k2-tree-test.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8.1.r.17.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8.1.r.17.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8.1.r.17.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8.1.r.17.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8.1.r.17.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8.1.r.17.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8.1.r.17.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8.1.r.17.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=92 "Built target select-support-test_int-vec.8.1.r.17"
@@ -2029,8 +2029,8 @@ clean: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8.1.r.17.d
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.15.1.1.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.15.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.15.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.15.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.15.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.15.1.1.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.15.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.15.1.1.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target select-support-test_int-vec.15.1.1"
@@ -2062,8 +2062,8 @@ clean: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.15.1.1.dir
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.10.1.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.10.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.10.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.10.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.10.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.10.1.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.10.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.10.1.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target select-support-test_int-vec.10.1.0"
@@ -2095,8 +2095,8 @@ clean: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.10.1.0.dir
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8192.1.r.1043.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8192.1.r.1043.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8192.1.r.1043.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8192.1.r.1043.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8192.1.r.1043.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8192.1.r.1043.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8192.1.r.1043.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8192.1.r.1043.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target select-support-test_int-vec.8192.1.r.1043"
@@ -2128,8 +2128,8 @@ clean: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8192.1.r.1
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.1.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.1.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.1.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target select-support-test_int-vec.1000000.1.1"
@@ -2228,8 +2228,8 @@ clean: external/sdsl-lite/test/CMakeFiles/cst-byte-test_empty.txt.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.12.1.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.12.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.12.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.12.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.12.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.12.1.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.12.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.12.1.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target select-support-test_int-vec.12.1.0"
@@ -2261,8 +2261,8 @@ clean: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.12.1.0.dir
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1.1.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1.1.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1.1.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=82 "Built target select-support-test_int-vec.1.1.0"
@@ -2294,8 +2294,8 @@ clean: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1.1.0.dir/
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.0.1.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.0.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.0.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.0.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.0.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.0.1.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.0.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.0.1.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target select-support-test_int-vec.0.1.0"
@@ -2362,11 +2362,11 @@ clean: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/search-bidirectional-test.dir
 
 # All Build rule for target.
+external/sdsl-lite/test/CMakeFiles/search-bidirectional-test.dir/all: external/sdsl-lite/test/CMakeFiles/search-bidirectional-test_empty.txt.dir/all
 external/sdsl-lite/test/CMakeFiles/search-bidirectional-test.dir/all: external/sdsl-lite/test/CMakeFiles/search-bidirectional-test_zarathustra.txt.dir/all
 external/sdsl-lite/test/CMakeFiles/search-bidirectional-test.dir/all: external/sdsl-lite/test/CMakeFiles/search-bidirectional-test_faust.txt.dir/all
 external/sdsl-lite/test/CMakeFiles/search-bidirectional-test.dir/all: external/sdsl-lite/test/CMakeFiles/search-bidirectional-test_100a.txt.dir/all
 external/sdsl-lite/test/CMakeFiles/search-bidirectional-test.dir/all: external/sdsl-lite/test/CMakeFiles/search-bidirectional-test_example01.txt.dir/all
-external/sdsl-lite/test/CMakeFiles/search-bidirectional-test.dir/all: external/sdsl-lite/test/CMakeFiles/search-bidirectional-test_empty.txt.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/search-bidirectional-test.dir/build.make external/sdsl-lite/test/CMakeFiles/search-bidirectional-test.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/search-bidirectional-test.dir/build.make external/sdsl-lite/test/CMakeFiles/search-bidirectional-test.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target search-bidirectional-test"
@@ -2494,8 +2494,8 @@ clean: external/sdsl-lite/test/CMakeFiles/sa-construct-test_100a.txt.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.13.1.1.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.13.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.13.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.13.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.13.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.13.1.1.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.13.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.13.1.1.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target select-support-test_int-vec.13.1.1"
@@ -2527,8 +2527,8 @@ clean: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.13.1.1.dir
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.32.1.r.111.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.32.1.r.111.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.32.1.r.111.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.32.1.r.111.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.32.1.r.111.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.32.1.r.111.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.32.1.r.111.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.32.1.r.111.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=12 "Built target bit-vector-test_int-vec.32.1.r.111"
@@ -2656,8 +2656,8 @@ clean: external/sdsl-lite/test/CMakeFiles/lcp-construct-test_faust.txt.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.r.815.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.r.815.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.r.815.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.r.815.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.r.815.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.r.815.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.r.815.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.r.815.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target rank-support-test_int-vec.1000000.1.r.815"
@@ -2988,8 +2988,8 @@ clean: external/sdsl-lite/test/CMakeFiles/rmq-test_int-vec.1000000.64.i.17.dir/c
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.32.1.r.111.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.32.1.r.111.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.32.1.r.111.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.32.1.r.111.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.32.1.r.111.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.32.1.r.111.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.32.1.r.111.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.32.1.r.111.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=59 "Built target rank-support-test_int-vec.32.1.r.111"
@@ -3087,8 +3087,8 @@ clean: external/sdsl-lite/test/CMakeFiles/rank-support-test_bit-vec.CRAFTED-32.d
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.32.1.r.111.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.32.1.r.111.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.32.1.r.111.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.32.1.r.111.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.32.1.r.111.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.32.1.r.111.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.32.1.r.111.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.32.1.r.111.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=89 "Built target select-support-test_int-vec.32.1.r.111"
@@ -3120,8 +3120,8 @@ clean: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.32.1.r.111
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.512.1.r.432.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.512.1.r.432.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.512.1.r.432.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.512.1.r.432.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.512.1.r.432.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.512.1.r.432.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.512.1.r.432.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.512.1.r.432.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=60 "Built target rank-support-test_int-vec.512.1.r.432"
@@ -3186,8 +3186,8 @@ clean: external/sdsl-lite/test/CMakeFiles/select-support-test_bit-vec.CRAFTED-BL
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.128.1.r.73.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.128.1.r.73.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.128.1.r.73.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.128.1.r.73.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.128.1.r.73.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.128.1.r.73.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.128.1.r.73.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.128.1.r.73.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target rank-support-test_int-vec.128.1.r.73"
@@ -3251,8 +3251,8 @@ clean: external/sdsl-lite/test/CMakeFiles/search-bidirectional-test_empty.txt.di
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.64.1.r.222.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.64.1.r.222.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.64.1.r.222.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.64.1.r.222.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.64.1.r.222.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.64.1.r.222.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.64.1.r.222.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.64.1.r.222.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target rank-support-test_int-vec.64.1.r.222"
@@ -3284,8 +3284,8 @@ clean: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.64.1.r.222.d
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.11.1.1.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.11.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.11.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.11.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.11.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.11.1.1.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.11.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.11.1.1.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target rank-support-test_int-vec.11.1.1"
@@ -3317,8 +3317,8 @@ clean: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.11.1.1.dir/c
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.10.1.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.10.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.10.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.10.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.10.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.10.1.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.10.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.10.1.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target rank-support-test_int-vec.10.1.0"
@@ -3382,8 +3382,8 @@ clean: external/sdsl-lite/test/CMakeFiles/sorted-stack-support-test.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.9.1.1.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.9.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.9.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.9.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.9.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.9.1.1.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.9.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.9.1.1.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target rank-support-test_int-vec.9.1.1"
@@ -3415,8 +3415,8 @@ clean: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.9.1.1.dir/cl
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.64.1.r.222.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.64.1.r.222.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.64.1.r.222.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.64.1.r.222.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.64.1.r.222.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.64.1.r.222.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.64.1.r.222.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.64.1.r.222.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target select-support-test_int-vec.64.1.r.222"
@@ -3448,12 +3448,12 @@ clean: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.64.1.r.222
 # Target rules for target external/sdsl-lite/test/CMakeFiles/cst-int-test.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/cst-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/cst-int-test_keeper.int_8.dir/all
 external/sdsl-lite/test/CMakeFiles/cst-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/cst-int-test_faust.txt_1.dir/all
 external/sdsl-lite/test/CMakeFiles/cst-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/cst-int-test_int-vec-sa.100000.18.r_0.dir/all
 external/sdsl-lite/test/CMakeFiles/cst-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/cst-int-test_moby.int_8.dir/all
 external/sdsl-lite/test/CMakeFiles/cst-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/cst-int-test_example01.txt_1.dir/all
 external/sdsl-lite/test/CMakeFiles/cst-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/cst-int-test_100a.txt_1.dir/all
+external/sdsl-lite/test/CMakeFiles/cst-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/cst-int-test_keeper.int_8.dir/all
 external/sdsl-lite/test/CMakeFiles/cst-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/cst-int-test_empty.txt_1.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/cst-int-test.dir/build.make external/sdsl-lite/test/CMakeFiles/cst-int-test.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/cst-int-test.dir/build.make external/sdsl-lite/test/CMakeFiles/cst-int-test.dir/build
@@ -3518,8 +3518,8 @@ clean: external/sdsl-lite/test/CMakeFiles/sa-construct-test_faust.txt.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8.1.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8.1.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8.1.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target rank-support-test_int-vec.8.1.0"
@@ -3551,8 +3551,8 @@ clean: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8.1.0.dir/cl
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.9.1.1.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.9.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.9.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.9.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.9.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.9.1.1.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.9.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.9.1.1.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=93 "Built target select-support-test_int-vec.9.1.1"
@@ -3584,8 +3584,8 @@ clean: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.9.1.1.dir/
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.7.1.1.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.7.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.7.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.7.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.7.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.7.1.1.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.7.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.7.1.1.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=61 "Built target rank-support-test_int-vec.7.1.1"
@@ -3617,8 +3617,8 @@ clean: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.7.1.1.dir/cl
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1.1.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1.1.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1.1.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=52 "Built target rank-support-test_int-vec.1.1.0"
@@ -3683,8 +3683,8 @@ clean: external/sdsl-lite/test/CMakeFiles/k2-treap-test_k2-100.16.r.42100.16.r.2
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.256.1.r.4887.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.256.1.r.4887.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.256.1.r.4887.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.256.1.r.4887.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.256.1.r.4887.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.256.1.r.4887.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.256.1.r.4887.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.256.1.r.4887.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target bit-vector-test_int-vec.256.1.r.4887"
@@ -3716,8 +3716,8 @@ clean: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.256.1.r.4887.d
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8192.1.r.1043.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8192.1.r.1043.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8192.1.r.1043.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8192.1.r.1043.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8192.1.r.1043.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8192.1.r.1043.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8192.1.r.1043.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8192.1.r.1043.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target bit-vector-test_int-vec.8192.1.r.1043"
@@ -3749,8 +3749,8 @@ clean: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8192.1.r.1043.
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.0.1.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.0.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.0.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.0.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.0.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.0.1.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.0.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.0.1.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target rank-support-test_int-vec.0.1.0"
@@ -3782,11 +3782,11 @@ clean: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.0.1.0.dir/cl
 # Target rules for target external/sdsl-lite/test/CMakeFiles/lcp-construct-test.dir
 
 # All Build rule for target.
+external/sdsl-lite/test/CMakeFiles/lcp-construct-test.dir/all: external/sdsl-lite/test/CMakeFiles/lcp-construct-test_zarathustra.txt.dir/all
+external/sdsl-lite/test/CMakeFiles/lcp-construct-test.dir/all: external/sdsl-lite/test/CMakeFiles/lcp-construct-test_100a.txt.dir/all
+external/sdsl-lite/test/CMakeFiles/lcp-construct-test.dir/all: external/sdsl-lite/test/CMakeFiles/lcp-construct-test_empty.txt.dir/all
 external/sdsl-lite/test/CMakeFiles/lcp-construct-test.dir/all: external/sdsl-lite/test/CMakeFiles/lcp-construct-test_example01.txt.dir/all
 external/sdsl-lite/test/CMakeFiles/lcp-construct-test.dir/all: external/sdsl-lite/test/CMakeFiles/lcp-construct-test_faust.txt.dir/all
-external/sdsl-lite/test/CMakeFiles/lcp-construct-test.dir/all: external/sdsl-lite/test/CMakeFiles/lcp-construct-test_zarathustra.txt.dir/all
-external/sdsl-lite/test/CMakeFiles/lcp-construct-test.dir/all: external/sdsl-lite/test/CMakeFiles/lcp-construct-test_empty.txt.dir/all
-external/sdsl-lite/test/CMakeFiles/lcp-construct-test.dir/all: external/sdsl-lite/test/CMakeFiles/lcp-construct-test_100a.txt.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/lcp-construct-test.dir/build.make external/sdsl-lite/test/CMakeFiles/lcp-construct-test.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/lcp-construct-test.dir/build.make external/sdsl-lite/test/CMakeFiles/lcp-construct-test.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target lcp-construct-test"
@@ -3850,8 +3850,8 @@ clean: external/sdsl-lite/test/CMakeFiles/lcp-construct-test_zarathustra.txt.dir
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=53 "Built target rank-support-test_int-vec.1000000.1.0"
@@ -3915,8 +3915,8 @@ clean: external/sdsl-lite/test/CMakeFiles/lcp-construct-test_100a.txt.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=83 "Built target select-support-test_int-vec.1000000.1.0"
@@ -3981,8 +3981,8 @@ clean: external/sdsl-lite/test/CMakeFiles/bit-vector-test_bit-vec.CRAFTED-MAT-SE
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.16.1.r.42.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.16.1.r.42.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.16.1.r.42.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.16.1.r.42.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.16.1.r.42.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.16.1.r.42.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.16.1.r.42.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.16.1.r.42.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target rank-support-test_int-vec.16.1.r.42"
@@ -4449,6 +4449,16 @@ clean: external/sdsl-lite/test/CMakeFiles/cst-int-test_int-vec-sa.100000.18.r_0.
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir
 
 # All Build rule for target.
+external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_bit-vec.CRAFTED-BLOCK-0.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.256.1.r.4887.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8192.1.r.1043.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_bit-vec.CRAFTED-MAT-SELECT.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.r.815.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.12.1.0.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.64.1.r.222.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.13.1.1.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8.1.0.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.10.1.0.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_bit-vec.CRAFTED-BLOCK-1.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.7.1.1.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_bit-vec.CRAFTED-SPARSE-0.dir/all
@@ -4470,16 +4480,6 @@ external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/t
 external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.11.1.1.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.16.1.r.42.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.32.1.r.111.dir/all
-external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_bit-vec.CRAFTED-BLOCK-0.dir/all
-external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.256.1.r.4887.dir/all
-external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8192.1.r.1043.dir/all
-external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_bit-vec.CRAFTED-MAT-SELECT.dir/all
-external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.r.815.dir/all
-external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.12.1.0.dir/all
-external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.64.1.r.222.dir/all
-external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.13.1.1.dir/all
-external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8.1.0.dir/all
-external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/all: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.10.1.0.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target bit-vector-test"
@@ -4613,8 +4613,8 @@ clean: external/sdsl-lite/test/CMakeFiles/search_bidirectional_test.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.r.815.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.r.815.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.r.815.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.r.815.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.r.815.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.r.815.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.r.815.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.r.815.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=84 "Built target select-support-test_int-vec.1000000.1.r.815"
@@ -4646,10 +4646,10 @@ clean: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1000000.1.
 # Target rules for target external/sdsl-lite/test/CMakeFiles/wt-int-test.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/wt-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/wt-int-test_int-vec.1023.1.0.dir/all
 external/sdsl-lite/test/CMakeFiles/wt-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/wt-int-test_int-vec.100000.18.r.dir/all
 external/sdsl-lite/test/CMakeFiles/wt-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/wt-int-test_int-vec.100023.1.0.dir/all
 external/sdsl-lite/test/CMakeFiles/wt-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/wt-int-test_int-vec.0.1.0.dir/all
+external/sdsl-lite/test/CMakeFiles/wt-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/wt-int-test_int-vec.1023.1.0.dir/all
 external/sdsl-lite/test/CMakeFiles/wt-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/wt-int-test_int-vec.64.2.0.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/wt-int-test.dir/build.make external/sdsl-lite/test/CMakeFiles/wt-int-test.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/wt-int-test.dir/build.make external/sdsl-lite/test/CMakeFiles/wt-int-test.dir/build
@@ -4714,8 +4714,8 @@ clean: external/sdsl-lite/test/CMakeFiles/dac-vector-test.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.r.815.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.r.815.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.r.815.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.r.815.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.r.815.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.r.815.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.r.815.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.r.815.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=7 "Built target bit-vector-test_int-vec.1000000.1.r.815"
@@ -4913,8 +4913,8 @@ clean: external/sdsl-lite/test/CMakeFiles/cst-int-test_example01.txt_1.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8192.1.r.1043.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8192.1.r.1043.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8192.1.r.1043.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8192.1.r.1043.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8192.1.r.1043.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8192.1.r.1043.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8192.1.r.1043.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8192.1.r.1043.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=62 "Built target rank-support-test_int-vec.8192.1.r.1043"
@@ -5013,8 +5013,8 @@ clean: external/sdsl-lite/test/CMakeFiles/cst_int_test.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.12.1.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.12.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.12.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.12.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.12.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.12.1.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.12.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.12.1.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=8 "Built target bit-vector-test_int-vec.12.1.0"
@@ -5280,12 +5280,12 @@ clean: external/sdsl-lite/test/CMakeFiles/csa-int-test_moby.int_8.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/csa-int-test.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/csa-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/csa-int-test_faust.txt_1.dir/all
 external/sdsl-lite/test/CMakeFiles/csa-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/csa-int-test_100a.txt_1.dir/all
 external/sdsl-lite/test/CMakeFiles/csa-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/csa-int-test_keeper.int_8.dir/all
 external/sdsl-lite/test/CMakeFiles/csa-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/csa-int-test_moby.int_8.dir/all
 external/sdsl-lite/test/CMakeFiles/csa-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/csa-int-test_example01.txt_1.dir/all
 external/sdsl-lite/test/CMakeFiles/csa-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/csa-int-test_empty.txt_1.dir/all
+external/sdsl-lite/test/CMakeFiles/csa-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/csa-int-test_faust.txt_1.dir/all
 external/sdsl-lite/test/CMakeFiles/csa-int-test.dir/all: external/sdsl-lite/test/CMakeFiles/csa-int-test_zarathustra.txt_1.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/csa-int-test.dir/build.make external/sdsl-lite/test/CMakeFiles/csa-int-test.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/csa-int-test.dir/build.make external/sdsl-lite/test/CMakeFiles/csa-int-test.dir/build
@@ -5382,8 +5382,8 @@ clean: external/sdsl-lite/test/CMakeFiles/csa-int-test_example01.txt_1.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.64.1.r.222.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.64.1.r.222.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.64.1.r.222.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.64.1.r.222.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.64.1.r.222.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.64.1.r.222.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.64.1.r.222.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.64.1.r.222.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target bit-vector-test_int-vec.64.1.r.222"
@@ -5579,8 +5579,8 @@ clean: external/sdsl-lite/test/CMakeFiles/rank-support-test_bit-vec.CRAFTED-BLOC
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.13.1.1.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.13.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.13.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.13.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.13.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.13.1.1.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.13.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.13.1.1.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=9 "Built target bit-vector-test_int-vec.13.1.1"
@@ -5813,8 +5813,8 @@ clean: external/sdsl-lite/test/CMakeFiles/csa-byte-test_100a.txt.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/k2-treap-test_k2-1000000.52.r.421000000.57.r.231000000.45.r.81.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/k2-treap-test_k2-1000000.52.r.421000000.57.r.231000000.45.r.81.dir/all: external/sdsl-lite/test/CMakeFiles/k2-1000000.52.r.421000000.57.r.231000000.45.r.81.dir/all
 external/sdsl-lite/test/CMakeFiles/k2-treap-test_k2-1000000.52.r.421000000.57.r.231000000.45.r.81.dir/all: external/sdsl-lite/test/CMakeFiles/k2_treap_test.dir/all
+external/sdsl-lite/test/CMakeFiles/k2-treap-test_k2-1000000.52.r.421000000.57.r.231000000.45.r.81.dir/all: external/sdsl-lite/test/CMakeFiles/k2-1000000.52.r.421000000.57.r.231000000.45.r.81.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/k2-treap-test_k2-1000000.52.r.421000000.57.r.231000000.45.r.81.dir/build.make external/sdsl-lite/test/CMakeFiles/k2-treap-test_k2-1000000.52.r.421000000.57.r.231000000.45.r.81.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/k2-treap-test_k2-1000000.52.r.421000000.57.r.231000000.45.r.81.dir/build.make external/sdsl-lite/test/CMakeFiles/k2-treap-test_k2-1000000.52.r.421000000.57.r.231000000.45.r.81.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target k2-treap-test_k2-1000000.52.r.421000000.57.r.231000000.45.r.81"
@@ -5942,8 +5942,8 @@ clean: external/sdsl-lite/test/CMakeFiles/compile-test.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8.1.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8.1.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8.1.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target bit-vector-test_int-vec.8.1.0"
@@ -6077,8 +6077,8 @@ clean: external/sdsl-lite/test/CMakeFiles/coder_test.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.4096.1.r.793.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.4096.1.r.793.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.4096.1.r.793.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.4096.1.r.793.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.4096.1.r.793.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.4096.1.r.793.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.4096.1.r.793.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.4096.1.r.793.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target rank-support-test_int-vec.4096.1.r.793"
@@ -6177,8 +6177,8 @@ clean: external/sdsl-lite/test/CMakeFiles/bits-test.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.10.1.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.10.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.10.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.10.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.10.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.10.1.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.10.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.10.1.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target bit-vector-test_int-vec.10.1.0"
@@ -6210,8 +6210,8 @@ clean: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.10.1.0.dir/cle
 # Target rules for target external/sdsl-lite/test/CMakeFiles/k2-treap-test_k2-0.1.0.00.1.0.00.1.0.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/k2-treap-test_k2-0.1.0.00.1.0.00.1.0.0.dir/all: external/sdsl-lite/test/CMakeFiles/k2-0.1.0.00.1.0.00.1.0.0.dir/all
 external/sdsl-lite/test/CMakeFiles/k2-treap-test_k2-0.1.0.00.1.0.00.1.0.0.dir/all: external/sdsl-lite/test/CMakeFiles/k2_treap_test.dir/all
+external/sdsl-lite/test/CMakeFiles/k2-treap-test_k2-0.1.0.00.1.0.00.1.0.0.dir/all: external/sdsl-lite/test/CMakeFiles/k2-0.1.0.00.1.0.00.1.0.0.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/k2-treap-test_k2-0.1.0.00.1.0.00.1.0.0.dir/build.make external/sdsl-lite/test/CMakeFiles/k2-treap-test_k2-0.1.0.00.1.0.00.1.0.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/k2-treap-test_k2-0.1.0.00.1.0.00.1.0.0.dir/build.make external/sdsl-lite/test/CMakeFiles/k2-treap-test_k2-0.1.0.00.1.0.00.1.0.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target k2-treap-test_k2-0.1.0.00.1.0.00.1.0.0"
@@ -6310,8 +6310,8 @@ clean: external/sdsl-lite/test/CMakeFiles/nn_dict_dynamic_test.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.13.1.1.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.13.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.13.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.13.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.13.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.13.1.1.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.13.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.13.1.1.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=56 "Built target rank-support-test_int-vec.13.1.1"
@@ -6375,10 +6375,10 @@ clean: external/sdsl-lite/test/CMakeFiles/k2-0.1.0.00.1.0.00.1.0.0.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/cst-byte-test.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/cst-byte-test.dir/all: external/sdsl-lite/test/CMakeFiles/cst-byte-test_100a.txt.dir/all
-external/sdsl-lite/test/CMakeFiles/cst-byte-test.dir/all: external/sdsl-lite/test/CMakeFiles/cst-byte-test_empty.txt.dir/all
 external/sdsl-lite/test/CMakeFiles/cst-byte-test.dir/all: external/sdsl-lite/test/CMakeFiles/cst-byte-test_faust.txt.dir/all
 external/sdsl-lite/test/CMakeFiles/cst-byte-test.dir/all: external/sdsl-lite/test/CMakeFiles/cst-byte-test_example01.txt.dir/all
+external/sdsl-lite/test/CMakeFiles/cst-byte-test.dir/all: external/sdsl-lite/test/CMakeFiles/cst-byte-test_100a.txt.dir/all
+external/sdsl-lite/test/CMakeFiles/cst-byte-test.dir/all: external/sdsl-lite/test/CMakeFiles/cst-byte-test_empty.txt.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/cst-byte-test.dir/build.make external/sdsl-lite/test/CMakeFiles/cst-byte-test.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/cst-byte-test.dir/build.make external/sdsl-lite/test/CMakeFiles/cst-byte-test.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target cst-byte-test"
@@ -6475,8 +6475,8 @@ clean: external/sdsl-lite/test/CMakeFiles/bit-vector-test_bit-vec.CRAFTED-BLOCK-
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.7.1.1.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.7.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.7.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.7.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.7.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.7.1.1.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.7.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.7.1.1.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=14 "Built target bit-vector-test_int-vec.7.1.1"
@@ -6608,8 +6608,8 @@ clean: external/sdsl-lite/test/CMakeFiles/nn-dict-dynamic-test.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.14.1.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.14.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.14.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.14.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.14.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.14.1.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.14.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.14.1.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=87 "Built target select-support-test_int-vec.14.1.0"
@@ -6641,8 +6641,8 @@ clean: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.14.1.0.dir
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.1.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.1.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.1.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target rank-support-test_int-vec.1000000.1.1"
@@ -6674,8 +6674,8 @@ clean: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.1.
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1024.1.r.898.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1024.1.r.898.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1024.1.r.898.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1024.1.r.898.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1024.1.r.898.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1024.1.r.898.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1024.1.r.898.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1024.1.r.898.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=54 "Built target rank-support-test_int-vec.1024.1.r.898"
@@ -6774,8 +6774,8 @@ clean: external/sdsl-lite/test/CMakeFiles/zarathustra.txt.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.11.1.1.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.11.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.11.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.11.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.11.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.11.1.1.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.11.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.11.1.1.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=85 "Built target select-support-test_int-vec.11.1.1"
@@ -6807,8 +6807,8 @@ clean: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.11.1.1.dir
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.256.1.r.4887.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.256.1.r.4887.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.256.1.r.4887.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.256.1.r.4887.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.256.1.r.4887.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.256.1.r.4887.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.256.1.r.4887.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.256.1.r.4887.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target rank-support-test_int-vec.256.1.r.4887"
@@ -6840,8 +6840,8 @@ clean: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.256.1.r.4887
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1024.1.r.898.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1024.1.r.898.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1024.1.r.898.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1024.1.r.898.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1024.1.r.898.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1024.1.r.898.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1024.1.r.898.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.1024.1.r.898.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target select-support-test_int-vec.1024.1.r.898"
@@ -6906,8 +6906,8 @@ clean: external/sdsl-lite/test/CMakeFiles/bit-vector-test_bit-vec.CRAFTED-SPARSE
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.2048.1.r.5432.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.2048.1.r.5432.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.2048.1.r.5432.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.2048.1.r.5432.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.2048.1.r.5432.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.2048.1.r.5432.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.2048.1.r.5432.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.2048.1.r.5432.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=11 "Built target bit-vector-test_int-vec.2048.1.r.5432"
@@ -7006,8 +7006,8 @@ clean: external/sdsl-lite/test/CMakeFiles/csa-int-test_faust.txt_1.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.512.1.r.432.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.512.1.r.432.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.512.1.r.432.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.512.1.r.432.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.512.1.r.432.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.512.1.r.432.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.512.1.r.432.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.512.1.r.432.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=13 "Built target bit-vector-test_int-vec.512.1.r.432"
@@ -7039,8 +7039,8 @@ clean: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.512.1.r.432.di
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.7.1.1.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.7.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.7.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.7.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.7.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.7.1.1.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.7.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.7.1.1.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=91 "Built target select-support-test_int-vec.7.1.1"
@@ -7072,19 +7072,6 @@ clean: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.7.1.1.dir/
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.13.1.1.dir/all
-external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.1.dir/all
-external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1024.1.r.898.dir/all
-external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.256.1.r.4887.dir/all
-external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_bit-vec.CRAFTED-MAT-SELECT.dir/all
-external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_bit-vec.CRAFTED-SPARSE-1.dir/all
-external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8.1.r.17.dir/all
-external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.2048.1.r.5432.dir/all
-external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.14.1.0.dir/all
-external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_bit-vec.CRAFTED-BLOCK-1.dir/all
-external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_bit-vec.CRAFTED-SPARSE-0.dir/all
-external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.15.1.1.dir/all
-external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.r.815.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.32.1.r.111.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_bit-vec.CRAFTED-32.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.512.1.r.432.dir/all
@@ -7102,7 +7089,20 @@ external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite
 external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8192.1.r.1043.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_bit-vec.CRAFTED-BLOCK-0.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.4096.1.r.793.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.13.1.1.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.1.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1024.1.r.898.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.256.1.r.4887.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_bit-vec.CRAFTED-MAT-SELECT.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_bit-vec.CRAFTED-SPARSE-1.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8.1.r.17.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.2048.1.r.5432.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.14.1.0.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_bit-vec.CRAFTED-BLOCK-1.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.12.1.0.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_bit-vec.CRAFTED-SPARSE-0.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.15.1.1.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.1000000.1.r.815.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target rank-support-test"
@@ -7264,8 +7264,8 @@ clean: external/sdsl-lite/test/CMakeFiles/cst-int-test_keeper.int_8.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.128.1.r.73.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.128.1.r.73.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.128.1.r.73.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.128.1.r.73.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.128.1.r.73.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.128.1.r.73.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.128.1.r.73.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.128.1.r.73.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target bit-vector-test_int-vec.128.1.r.73"
@@ -7297,8 +7297,8 @@ clean: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.128.1.r.73.dir
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.4096.1.r.793.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.4096.1.r.793.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.4096.1.r.793.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.4096.1.r.793.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.4096.1.r.793.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.4096.1.r.793.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.4096.1.r.793.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.4096.1.r.793.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target bit-vector-test_int-vec.4096.1.r.793"
@@ -7400,8 +7400,8 @@ clean: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.0.1.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.0.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.0.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.0.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.0.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.0.1.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.0.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.0.1.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target bit-vector-test_int-vec.0.1.0"
@@ -7469,8 +7469,8 @@ clean: external/sdsl-lite/test/CMakeFiles/wt-byte-test.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8.1.r.17.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8.1.r.17.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8.1.r.17.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8.1.r.17.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8.1.r.17.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8.1.r.17.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8.1.r.17.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8.1.r.17.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=15 "Built target bit-vector-test_int-vec.8.1.r.17"
@@ -7502,8 +7502,8 @@ clean: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.8.1.r.17.dir/c
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8.1.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8.1.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8.1.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target select-support-test_int-vec.8.1.0"
@@ -7535,8 +7535,8 @@ clean: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.8.1.0.dir/
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8.1.r.17.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8.1.r.17.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8.1.r.17.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8.1.r.17.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8.1.r.17.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8.1.r.17.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8.1.r.17.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8.1.r.17.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target rank-support-test_int-vec.8.1.r.17"
@@ -7568,8 +7568,8 @@ clean: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.8.1.r.17.dir
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.15.1.1.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.15.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.15.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.15.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.15.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.15.1.1.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.15.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.15.1.1.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=10 "Built target bit-vector-test_int-vec.15.1.1"
@@ -7601,8 +7601,8 @@ clean: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.15.1.1.dir/cle
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.14.1.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.14.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.14.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.14.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.14.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.14.1.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.14.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.14.1.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target bit-vector-test_int-vec.14.1.0"
@@ -7634,8 +7634,8 @@ clean: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.14.1.0.dir/cle
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.2048.1.r.5432.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.2048.1.r.5432.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.2048.1.r.5432.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.2048.1.r.5432.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.2048.1.r.5432.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.2048.1.r.5432.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.2048.1.r.5432.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.2048.1.r.5432.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=58 "Built target rank-support-test_int-vec.2048.1.r.5432"
@@ -7667,8 +7667,8 @@ clean: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.2048.1.r.543
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1024.1.r.898.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1024.1.r.898.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1024.1.r.898.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1024.1.r.898.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1024.1.r.898.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1024.1.r.898.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1024.1.r.898.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1024.1.r.898.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target bit-vector-test_int-vec.1024.1.r.898"
@@ -7733,8 +7733,8 @@ clean: external/sdsl-lite/test/CMakeFiles/wt-int-test_int-vec.1023.1.0.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.4096.1.r.793.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.4096.1.r.793.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.4096.1.r.793.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.4096.1.r.793.dir/all: external/sdsl-lite/test/CMakeFiles/select_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.4096.1.r.793.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.4096.1.r.793.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.4096.1.r.793.dir/build.make external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.4096.1.r.793.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target select-support-test_int-vec.4096.1.r.793"
@@ -7766,18 +7766,8 @@ clean: external/sdsl-lite/test/CMakeFiles/select-support-test_int-vec.4096.1.r.7
 # Target rules for target external/sdsl-lite/test/CMakeFiles/test-sdsl.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/cst-byte-test.dir/all
-external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/int-vector-mapper-test.dir/all
-external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/nn-dict-dynamic-test.dir/all
-external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all
-external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/wt-byte-test.dir/all
-external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/inv-perm-support-test.dir/all
-external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/sa-construct-test.dir/all
 external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/sorted-int-stack-test.dir/all
 external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/select-support-test.dir/all
-external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/k2-tree-test.dir/all
-external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/search-bidirectional-test.dir/all
-external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/sd-vector-test.dir/all
 external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/rmq-test.dir/all
 external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/sorted-stack-support-test.dir/all
 external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/cst-int-test.dir/all
@@ -7793,6 +7783,16 @@ external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CM
 external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/int-vector-test.dir/all
 external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/compile-test.dir/all
 external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/bits-test.dir/all
+external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/cst-byte-test.dir/all
+external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/int-vector-mapper-test.dir/all
+external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/nn-dict-dynamic-test.dir/all
+external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/rank-support-test.dir/all
+external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/wt-byte-test.dir/all
+external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/inv-perm-support-test.dir/all
+external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/sa-construct-test.dir/all
+external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/k2-tree-test.dir/all
+external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/search-bidirectional-test.dir/all
+external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/all: external/sdsl-lite/test/CMakeFiles/sd-vector-test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/build.make external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/build.make external/sdsl-lite/test/CMakeFiles/test-sdsl.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target test-sdsl"
@@ -7856,8 +7856,8 @@ clean: external/sdsl-lite/test/CMakeFiles/inv-perm-support-test.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.9.1.1.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.9.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.9.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.9.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.9.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.9.1.1.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.9.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.9.1.1.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target bit-vector-test_int-vec.9.1.1"
@@ -7921,8 +7921,8 @@ clean: external/sdsl-lite/test/CMakeFiles/lcp-construct-test_example01.txt.dir/c
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1.1.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1.1.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1.1.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=5 "Built target bit-vector-test_int-vec.1.1.0"
@@ -7986,8 +7986,8 @@ clean: external/sdsl-lite/test/CMakeFiles/sa-construct-test_one_byte.txt.dir/cle
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=6 "Built target bit-vector-test_int-vec.1000000.1.0"
@@ -8054,8 +8054,8 @@ clean: external/sdsl-lite/test/CMakeFiles/int_vector_buffer_test.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.14.1.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.14.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.14.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.14.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.14.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.14.1.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.14.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.14.1.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target rank-support-test_int-vec.14.1.0"
@@ -8087,8 +8087,8 @@ clean: external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.14.1.0.dir/c
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.1.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.1.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.1.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target bit-vector-test_int-vec.1000000.1.1"
@@ -8120,12 +8120,12 @@ clean: external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.1000000.1.1.di
 # Target rules for target external/sdsl-lite/test/CMakeFiles/sa-construct-test.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/sa-construct-test.dir/all: external/sdsl-lite/test/CMakeFiles/sa-construct-test_example01.txt.dir/all
-external/sdsl-lite/test/CMakeFiles/sa-construct-test.dir/all: external/sdsl-lite/test/CMakeFiles/sa-construct-test_one_byte.txt.dir/all
-external/sdsl-lite/test/CMakeFiles/sa-construct-test.dir/all: external/sdsl-lite/test/CMakeFiles/sa-construct-test_100a.txt.dir/all
 external/sdsl-lite/test/CMakeFiles/sa-construct-test.dir/all: external/sdsl-lite/test/CMakeFiles/sa-construct-test_zarathustra.txt.dir/all
 external/sdsl-lite/test/CMakeFiles/sa-construct-test.dir/all: external/sdsl-lite/test/CMakeFiles/sa-construct-test_empty.txt.dir/all
 external/sdsl-lite/test/CMakeFiles/sa-construct-test.dir/all: external/sdsl-lite/test/CMakeFiles/sa-construct-test_faust.txt.dir/all
+external/sdsl-lite/test/CMakeFiles/sa-construct-test.dir/all: external/sdsl-lite/test/CMakeFiles/sa-construct-test_example01.txt.dir/all
+external/sdsl-lite/test/CMakeFiles/sa-construct-test.dir/all: external/sdsl-lite/test/CMakeFiles/sa-construct-test_one_byte.txt.dir/all
+external/sdsl-lite/test/CMakeFiles/sa-construct-test.dir/all: external/sdsl-lite/test/CMakeFiles/sa-construct-test_100a.txt.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/sa-construct-test.dir/build.make external/sdsl-lite/test/CMakeFiles/sa-construct-test.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/sa-construct-test.dir/build.make external/sdsl-lite/test/CMakeFiles/sa-construct-test.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target sa-construct-test"
@@ -8190,8 +8190,8 @@ clean: external/sdsl-lite/test/CMakeFiles/bit-vector-test_bit-vec.CRAFTED-32.dir
 # Target rules for target external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.11.1.1.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.11.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.11.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.11.1.1.dir/all: external/sdsl-lite/test/CMakeFiles/bit_vector_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.11.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.11.1.1.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.11.1.1.dir/build.make external/sdsl-lite/test/CMakeFiles/bit-vector-test_int-vec.11.1.1.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num= "Built target bit-vector-test_int-vec.11.1.1"
@@ -8454,8 +8454,8 @@ clean: external/sdsl-lite/test/CMakeFiles/replace_int_vector_value.dir/clean
 # Target rules for target external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.12.1.0.dir
 
 # All Build rule for target.
-external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.12.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.12.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/int_vector_generator.dir/all
+external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.12.1.0.dir/all: external/sdsl-lite/test/CMakeFiles/rank_support_test.dir/all
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.12.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.12.1.0.dir/depend
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.12.1.0.dir/build.make external/sdsl-lite/test/CMakeFiles/rank-support-test_int-vec.12.1.0.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles --progress-num=55 "Built target rank-support-test_int-vec.12.1.0"

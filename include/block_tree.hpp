@@ -42,6 +42,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "alternative_code.hpp"
 #include <logger.hpp>
 
+
 namespace block_tree_2d {
 
     template <class input_t = std::vector<std::vector<int64_t>>>
@@ -277,6 +278,8 @@ namespace block_tree_2d {
 
         const size_type &dimensions = m_dimensions;
         //Pre: adjacency_lists have to contain at least one 1
+        block_tree() = default;
+
         block_tree(input_type &adjacency_lists, const size_type kparam){
             m_k = kparam;
             m_dimensions = adjacency_lists.size();
