@@ -50,10 +50,13 @@ namespace util {
         size_type m_width;
         const char bar_char = '=';
         const char empty_char = ' ';
+        size_type m_freq_refresh;
+        std::chrono::steady_clock::time_point m_prev_time = std::chrono::steady_clock::now();
 
         uint64_t m_elements;
 
         void display(){
+
             float progress =  m_elements / (float) m_total;
             auto pos = (size_type) (progress * m_width);
             std::cout << "[";
@@ -68,14 +71,16 @@ namespace util {
             }
             std::cout << "] " << (size_type) (progress * 100) << "% \t (" << m_elements << "/" << m_total << ") \r";
             std::cout.flush();
+
         }
 
     public:
 
-        progress_bar(const size_type t, const size_type w = 50){
+        progress_bar(const size_type t, const size_type w = 50, const size_type freq = 10000){
             m_total = t;
             m_width = w;
             m_elements = 0;
+            m_freq_refresh = freq;
         }
 
         void update_by(const size_type add){
@@ -85,7 +90,12 @@ namespace util {
 
         void update(const size_type v){
             m_elements = v;
-            display();
+            std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
+            auto time_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now-m_prev_time).count();
+            if(time_elapsed > m_freq_refresh) {
+                display();
+                m_prev_time = now;
+            }
         }
 
         void done(){

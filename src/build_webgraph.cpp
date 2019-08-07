@@ -37,21 +37,31 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 int main(int argc, char **argv) {
 
-    if(argc != 3){
-        std::cout << argv[0] << "<dataset> <k>" << std::endl;
+    if(argc != 4 && argc != 3){
+        std::cout << argv[0] << "<dataset> <k> [limit]" << std::endl;
         return 0;
     }
 
     std::string dataset = argv[1];
     uint64_t k = atoi(argv[2]);
+    uint64_t limit = -1;
+    if(argc == 4){
+        limit = atoi(argv[3]);
+    }
+
 
     std::vector<std::vector<int64_t>> adjacency_lists;
-    dataset_reader::web_graph::read(dataset, adjacency_lists);
+    dataset_reader::web_graph::read(dataset, adjacency_lists, limit);
     const auto copy_lists = adjacency_lists;
 
     std::cout << "Building Block-tree..." << std::endl;
     block_tree_2d::block_tree<> m_block_tree(adjacency_lists, k);
     std::cout << "The Block-tree was built." << std::endl;
+    std::string name_file = dataset;
+    if(limit != -1){
+        name_file = name_file + "_" + std::to_string(limit);
+    }
+    name_file = name_file + ".2dbt";
     sdsl::store_to_file(m_block_tree, dataset + ".2dbt");
     //m_block_tree.print();
     std::cout << "Retrieving adjacency lists..." << std::flush;

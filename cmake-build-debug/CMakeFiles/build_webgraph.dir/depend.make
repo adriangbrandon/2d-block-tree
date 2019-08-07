@@ -11,6 +11,8 @@ CMakeFiles/build_webgraph.dir/src/build_webgraph.cpp.o: ../include/hash_table_ch
 CMakeFiles/build_webgraph.dir/src/build_webgraph.cpp.o: ../include/heap.hpp
 CMakeFiles/build_webgraph.dir/src/build_webgraph.cpp.o: ../include/kr_block_adjacent_list_v2.hpp
 CMakeFiles/build_webgraph.dir/src/build_webgraph.cpp.o: ../include/kr_roll_adjacent_list_v2.hpp
+CMakeFiles/build_webgraph.dir/src/build_webgraph.cpp.o: ../include/logger.hpp
+CMakeFiles/build_webgraph.dir/src/build_webgraph.cpp.o: ../include/progress_bar.hpp
 CMakeFiles/build_webgraph.dir/src/build_webgraph.cpp.o: ../include/zeta_order.hpp
 CMakeFiles/build_webgraph.dir/src/build_webgraph.cpp.o: ../src/build_webgraph.cpp
 CMakeFiles/build_webgraph.dir/src/build_webgraph.cpp.o: external/sdsl-lite/include/sdsl/bit_vector_il.hpp

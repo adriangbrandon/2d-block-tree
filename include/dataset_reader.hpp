@@ -62,7 +62,7 @@ namespace dataset_reader{
 
         public:
         static void read(const std::string file_name,
-                         std::vector<std::vector<int64_t>> &adjacency_lists){
+                         std::vector<std::vector<int64_t>> &adjacency_lists, uint64_t limit){
 
             struct stat s;
             const char* file_name_c = file_name.c_str();
@@ -82,15 +82,19 @@ namespace dataset_reader{
             uint64_t len_lists = (s.st_size - sizeof(uint32_t) - sizeof(uint64_t)) / sizeof(int32_t);
             int32_t* data = (int32_t*) std::malloc(sizeof(int32_t) * len_lists);
             fread(data, sizeof(uint32_t), len_lists, file);
-
+            if(limit != -1){
+                number_nodes = limit;
+            }
             adjacency_lists.resize(number_nodes, std::vector<int64_t>());
             uint64_t id = 0, number_ones = 0;
-            for(uint64_t i = 0; i < len_lists; i++){
+            for(uint64_t i = 0; i < len_lists && id < number_nodes; i++){
                 if(data[i]<0){
                     id++;
                 }else{
-                    number_ones++;
-                    adjacency_lists[id].push_back(data[i]-1);
+                    if(data[i]-1 < number_nodes){
+                        number_ones++;
+                        adjacency_lists[id].push_back(data[i]-1);
+                    }
                 }
             }
 

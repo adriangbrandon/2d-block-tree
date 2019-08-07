@@ -12,6 +12,8 @@ CMakeFiles/build_webgraph.dir/src/build_webgraph.cpp.o
  ../include/heap.hpp
  ../include/kr_block_adjacent_list_v2.hpp
  ../include/kr_roll_adjacent_list_v2.hpp
+ ../include/logger.hpp
+ ../include/progress_bar.hpp
  ../include/zeta_order.hpp
  /Users/adrian/CLionProjects/2d-block-tree/src/build_webgraph.cpp
  external/sdsl-lite/include/sdsl/bit_vector_il.hpp
