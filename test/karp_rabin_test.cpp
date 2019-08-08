@@ -39,7 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 
-uint64_t comp_hash(const std::vector<std::vector<uint64_t>> &adjacency_list,
+uint64_t comp_hash(const std::vector<std::vector<int64_t>> &adjacency_list,
              uint64_t prime,
              uint64_t x, uint64_t y,
              uint64_t block_size){
@@ -74,7 +74,7 @@ uint64_t comp_hash(const std::vector<std::vector<uint64_t>> &adjacency_list,
 }
 
 
-void print_adjacency_lists(const std::vector<std::vector<uint64_t>> &adjacency_list){
+void print_adjacency_lists(const std::vector<std::vector<int64_t>> &adjacency_list){
 
     auto i = 0;
     for(const auto &list : adjacency_list){
@@ -101,7 +101,7 @@ int main(int argc, char **argv) {
 
     for(const auto &freq : freqs){
         for(uint64_t i = 0; i < rep; ++i){
-            std::vector<std::vector<uint64_t>> adjacency_lists(size, std::vector<uint64_t>());
+            std::vector<std::vector<int64_t>> adjacency_lists(size, std::vector<int64_t>());
             for(auto &list : adjacency_lists){
                 int64_t last = rand() % freq;
                 while(last < size){

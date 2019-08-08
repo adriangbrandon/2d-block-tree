@@ -41,17 +41,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 int main(int argc, char **argv) {
 
-    std::vector<uint64_t > row0 = {1, 3, 5, 7};
-    std::vector<uint64_t > row1 = {};
-    std::vector<uint64_t > row2 = {2, 6};
-    std::vector<uint64_t > row3 = {};
+    std::vector<int64_t > row0 = {1, 3, 5, 7};
+    std::vector<int64_t > row1 = {};
+    std::vector<int64_t > row2 = {2, 6};
+    std::vector<int64_t > row3 = {};
     //std::vector<uint64_t > row4 = {4,5};
-    std::vector<uint64_t > row4 = {4,5};
-    std::vector<uint64_t > row5 = {};
-    std::vector<uint64_t > row6 = {};
-    std::vector<uint64_t > row7 = {1,5};
+    std::vector<int64_t > row4 = {4,5};
+    std::vector<int64_t > row5 = {};
+    std::vector<int64_t > row6 = {};
+    std::vector<int64_t > row7 = {1,5};
     //std::vector<uint64_t > row7 = {1,5};
-    std::vector<std::vector<uint64_t>> matrix8_8;
+    std::vector<std::vector<int64_t>> matrix8_8;
     matrix8_8.push_back(row0);
     matrix8_8.push_back(row1);
     matrix8_8.push_back(row2);

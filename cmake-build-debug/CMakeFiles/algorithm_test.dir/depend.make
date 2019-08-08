@@ -7,6 +7,7 @@ CMakeFiles/algorithm_test.dir/test/algorithm_test.cpp.o: ../include/hash_table_c
 CMakeFiles/algorithm_test.dir/test/algorithm_test.cpp.o: ../include/heap.hpp
 CMakeFiles/algorithm_test.dir/test/algorithm_test.cpp.o: ../include/kr_block_adjacent_list_v2.hpp
 CMakeFiles/algorithm_test.dir/test/algorithm_test.cpp.o: ../include/kr_roll_adjacent_list_v2.hpp
+CMakeFiles/algorithm_test.dir/test/algorithm_test.cpp.o: ../include/progress_bar.hpp
 CMakeFiles/algorithm_test.dir/test/algorithm_test.cpp.o: ../include/zeta_order.hpp
 CMakeFiles/algorithm_test.dir/test/algorithm_test.cpp.o: ../test/algorithm_test.cpp
 CMakeFiles/algorithm_test.dir/test/algorithm_test.cpp.o: external/sdsl-lite/include/sdsl/bit_vector_il.hpp

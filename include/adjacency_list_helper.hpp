@@ -34,6 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef INC_ADJACENCY_LIST_HELPER_HPP
 #define INC_ADJACENCY_LIST_HELPER_HPP
 
+#include <fstream>
 #include <iostream>
 #include <string>
 

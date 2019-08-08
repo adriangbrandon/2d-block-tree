@@ -17,6 +17,8 @@ block_tree_algorithm_helper_v2.hpp
 -
 alternative_code.hpp
 ../include/alternative_code.hpp
+logger.hpp
+-
 
 ../include/block_tree_algorithm_helper_v2.hpp
 kr_block_adjacent_list_v2.hpp
@@ -35,6 +37,8 @@ iostream
 -
 bithacks.hpp
 -
+progress_bar.hpp
+-
 
 ../include/hash_table_chainning.hpp
 stdint.h
@@ -48,6 +52,8 @@ list
 vector
 -
 iostream
+-
+algorithm
 -
 
 ../include/kr_block_adjacent_list_v2.hpp
@@ -68,6 +74,22 @@ queue
 heap.hpp
 -
 iostream
+-
+bithacks.hpp
+-
+
+../include/logger.hpp
+iostream
+-
+string
+-
+time.h
+-
+
+../include/progress_bar.hpp
+iostream
+-
+stdint.h
 -
 
 ../include/zeta_order.hpp

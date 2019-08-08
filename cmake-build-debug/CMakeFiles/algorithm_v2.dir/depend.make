@@ -9,6 +9,8 @@ CMakeFiles/algorithm_v2.dir/src/algorithm_v2.cpp.o: ../include/hash_table_chainn
 CMakeFiles/algorithm_v2.dir/src/algorithm_v2.cpp.o: ../include/heap.hpp
 CMakeFiles/algorithm_v2.dir/src/algorithm_v2.cpp.o: ../include/kr_block_adjacent_list_v2.hpp
 CMakeFiles/algorithm_v2.dir/src/algorithm_v2.cpp.o: ../include/kr_roll_adjacent_list_v2.hpp
+CMakeFiles/algorithm_v2.dir/src/algorithm_v2.cpp.o: ../include/logger.hpp
+CMakeFiles/algorithm_v2.dir/src/algorithm_v2.cpp.o: ../include/progress_bar.hpp
 CMakeFiles/algorithm_v2.dir/src/algorithm_v2.cpp.o: ../include/zeta_order.hpp
 CMakeFiles/algorithm_v2.dir/src/algorithm_v2.cpp.o: ../src/algorithm_v2.cpp
 CMakeFiles/algorithm_v2.dir/src/algorithm_v2.cpp.o: external/sdsl-lite/include/sdsl/bit_vector_il.hpp

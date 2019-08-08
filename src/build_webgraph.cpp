@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
         name_file = name_file + "_" + std::to_string(limit);
     }
     name_file = name_file + ".2dbt";
-    sdsl::store_to_file(m_block_tree, dataset + ".2dbt");
+    sdsl::store_to_file(m_block_tree, name_file);
     //m_block_tree.print();
     std::cout << "Retrieving adjacency lists..." << std::flush;
     std::vector<std::vector<int64_t >> result;

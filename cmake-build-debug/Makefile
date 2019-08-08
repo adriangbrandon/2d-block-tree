@@ -111,18 +111,6 @@ package_source/fast: package_source
 
 .PHONY : package_source/fast
 
-# Special rule for the target install/local
-install/local: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local
-
-# Special rule for the target install/local
-install/local/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local/fast
-
 # Special rule for the target install/strip
 install/strip: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
@@ -145,6 +133,18 @@ package: preinstall
 package/fast: package
 
 .PHONY : package/fast
+
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -177,6 +177,19 @@ preinstall/fast:
 depend:
 	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
+
+#=============================================================================
+# Target rules for targets named build_k2tree
+
+# Build rule for target.
+build_k2tree: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 build_k2tree
+.PHONY : build_k2tree
+
+# fast build rule for target.
+build_k2tree/fast:
+	$(MAKE) -f CMakeFiles/build_k2tree.dir/build.make CMakeFiles/build_k2tree.dir/build
+.PHONY : build_k2tree/fast
 
 #=============================================================================
 # Target rules for targets named build_webgraph
@@ -3327,6 +3340,33 @@ src/block_tree.cpp.s:
 	$(MAKE) -f CMakeFiles/block_tree.dir/build.make CMakeFiles/block_tree.dir/src/block_tree.cpp.s
 .PHONY : src/block_tree.cpp.s
 
+src/build_k2tree.o: src/build_k2tree.cpp.o
+
+.PHONY : src/build_k2tree.o
+
+# target to build an object file
+src/build_k2tree.cpp.o:
+	$(MAKE) -f CMakeFiles/build_k2tree.dir/build.make CMakeFiles/build_k2tree.dir/src/build_k2tree.cpp.o
+.PHONY : src/build_k2tree.cpp.o
+
+src/build_k2tree.i: src/build_k2tree.cpp.i
+
+.PHONY : src/build_k2tree.i
+
+# target to preprocess a source file
+src/build_k2tree.cpp.i:
+	$(MAKE) -f CMakeFiles/build_k2tree.dir/build.make CMakeFiles/build_k2tree.dir/src/build_k2tree.cpp.i
+.PHONY : src/build_k2tree.cpp.i
+
+src/build_k2tree.s: src/build_k2tree.cpp.s
+
+.PHONY : src/build_k2tree.s
+
+# target to generate assembly for a file
+src/build_k2tree.cpp.s:
+	$(MAKE) -f CMakeFiles/build_k2tree.dir/build.make CMakeFiles/build_k2tree.dir/src/build_k2tree.cpp.s
+.PHONY : src/build_k2tree.cpp.s
+
 src/build_webgraph.o: src/build_webgraph.cpp.o
 
 .PHONY : src/build_webgraph.o
@@ -3527,6 +3567,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... package_source"
+	@echo "... install/strip"
+	@echo "... package"
+	@echo "... build_k2tree"
 	@echo "... build_webgraph"
 	@echo "... algorithm"
 	@echo "... hash_table"
@@ -3534,8 +3577,6 @@ help:
 	@echo "... block_tree_test"
 	@echo "... block_tree"
 	@echo "... algorithm_test"
-	@echo "... install/strip"
-	@echo "... package"
 	@echo "... karp_rabin"
 	@echo "... algorithm_v2"
 	@echo "... karp_rabin_test"
@@ -3775,6 +3816,9 @@ help:
 	@echo "... src/block_tree.o"
 	@echo "... src/block_tree.i"
 	@echo "... src/block_tree.s"
+	@echo "... src/build_k2tree.o"
+	@echo "... src/build_k2tree.i"
+	@echo "... src/build_k2tree.s"
 	@echo "... src/build_webgraph.o"
 	@echo "... src/build_webgraph.i"
 	@echo "... src/build_webgraph.s"

@@ -6,6 +6,8 @@
 
 #IncludeRegexTransform: 
 
+../include/bithacks.hpp
+
 ../include/block_tree_algorithm_helper.hpp
 kr_block_adjacent_list.hpp
 -
@@ -27,6 +29,10 @@ list
 ../include/heap.hpp
 vector
 -
+iostream
+-
+algorithm
+-
 
 ../include/kr_block_adjacent_list.hpp
 cstdint
@@ -39,6 +45,8 @@ cstdint
 -
 vector
 -
+iostream
+-
 
 ../include/kr_roll_adjacent_list_v2.hpp
 cstdint
@@ -46,6 +54,12 @@ cstdint
 vector
 -
 queue
+-
+heap.hpp
+-
+iostream
+-
+bithacks.hpp
 -
 
 ../include/zeta_order.hpp
