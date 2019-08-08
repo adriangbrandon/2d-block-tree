@@ -87,5 +87,8 @@ target_link_libraries(block_tree sdsl divsufsort divsufsort64)
 add_executable(build_webgraph src/build_webgraph.cpp)
 target_link_libraries(build_webgraph sdsl divsufsort divsufsort64)
 
+add_executable(load_webgraph src/load_webgraph.cpp)
+target_link_libraries(load_webgraph sdsl divsufsort divsufsort64)
+
 add_executable(build_k2tree src/build_k2tree.cpp)
 target_link_libraries(build_k2tree sdsl divsufsort divsufsort64)
