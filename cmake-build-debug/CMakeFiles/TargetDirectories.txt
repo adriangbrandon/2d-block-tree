@@ -3,8 +3,6 @@
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/edit_cache.dir
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/rebuild_cache.dir
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/package_source.dir
-/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/install/strip.dir
-/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/package.dir
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/build_k2tree.dir
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/build_webgraph.dir
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/algorithm.dir
@@ -16,6 +14,9 @@
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/karp_rabin.dir
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/algorithm_v2.dir
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/karp_rabin_test.dir
+/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/install/strip.dir
+/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/package.dir
+/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/load_webgraph.dir
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/karp_rabin_v2.dir
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/CMakeFiles/install/local.dir
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/CMakeFiles/install/strip.dir

@@ -75,11 +75,11 @@ target_link_libraries(block_tree_test sdsl divsufsort divsufsort64)
 add_executable(hash_table src/hash_table.cpp)
 target_link_libraries(hash_table sdsl divsufsort divsufsort64)
 
-add_executable(algorithm src/algorithm.cpp)
-target_link_libraries(algorithm sdsl divsufsort divsufsort64)
+#add_executable(algorithm src/algorithm.cpp)
+#target_link_libraries(algorithm sdsl divsufsort divsufsort64)
 
-add_executable(algorithm_v2 src/algorithm_v2.cpp)
-target_link_libraries(algorithm_v2 sdsl divsufsort divsufsort64)
+#add_executable(algorithm_v2 src/algorithm_v2.cpp)
+#target_link_libraries(algorithm_v2 sdsl divsufsort divsufsort64)
 
 add_executable(block_tree src/block_tree.cpp)
 target_link_libraries(block_tree sdsl divsufsort divsufsort64)

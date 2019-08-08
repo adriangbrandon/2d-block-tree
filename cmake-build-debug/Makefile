@@ -111,6 +111,18 @@ package_source/fast: package_source
 
 .PHONY : package_source/fast
 
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
+
 # Special rule for the target install/strip
 install/strip: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
@@ -133,18 +145,6 @@ package: preinstall
 package/fast: package
 
 .PHONY : package/fast
-
-# Special rule for the target install/local
-install/local: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local
-
-# Special rule for the target install/local
-install/local/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -307,6 +307,19 @@ karp_rabin_test: cmake_check_build_system
 karp_rabin_test/fast:
 	$(MAKE) -f CMakeFiles/karp_rabin_test.dir/build.make CMakeFiles/karp_rabin_test.dir/build
 .PHONY : karp_rabin_test/fast
+
+#=============================================================================
+# Target rules for targets named load_webgraph
+
+# Build rule for target.
+load_webgraph: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 load_webgraph
+.PHONY : load_webgraph
+
+# fast build rule for target.
+load_webgraph/fast:
+	$(MAKE) -f CMakeFiles/load_webgraph.dir/build.make CMakeFiles/load_webgraph.dir/build
+.PHONY : load_webgraph/fast
 
 #=============================================================================
 # Target rules for targets named karp_rabin_v2
@@ -3475,6 +3488,33 @@ src/karp_rabin_v2.cpp.s:
 	$(MAKE) -f CMakeFiles/karp_rabin_v2.dir/build.make CMakeFiles/karp_rabin_v2.dir/src/karp_rabin_v2.cpp.s
 .PHONY : src/karp_rabin_v2.cpp.s
 
+src/load_webgraph.o: src/load_webgraph.cpp.o
+
+.PHONY : src/load_webgraph.o
+
+# target to build an object file
+src/load_webgraph.cpp.o:
+	$(MAKE) -f CMakeFiles/load_webgraph.dir/build.make CMakeFiles/load_webgraph.dir/src/load_webgraph.cpp.o
+.PHONY : src/load_webgraph.cpp.o
+
+src/load_webgraph.i: src/load_webgraph.cpp.i
+
+.PHONY : src/load_webgraph.i
+
+# target to preprocess a source file
+src/load_webgraph.cpp.i:
+	$(MAKE) -f CMakeFiles/load_webgraph.dir/build.make CMakeFiles/load_webgraph.dir/src/load_webgraph.cpp.i
+.PHONY : src/load_webgraph.cpp.i
+
+src/load_webgraph.s: src/load_webgraph.cpp.s
+
+.PHONY : src/load_webgraph.s
+
+# target to generate assembly for a file
+src/load_webgraph.cpp.s:
+	$(MAKE) -f CMakeFiles/load_webgraph.dir/build.make CMakeFiles/load_webgraph.dir/src/load_webgraph.cpp.s
+.PHONY : src/load_webgraph.cpp.s
+
 test/algorithm_test.o: test/algorithm_test.cpp.o
 
 .PHONY : test/algorithm_test.o
@@ -3567,8 +3607,6 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... package_source"
-	@echo "... install/strip"
-	@echo "... package"
 	@echo "... build_k2tree"
 	@echo "... build_webgraph"
 	@echo "... algorithm"
@@ -3580,6 +3618,9 @@ help:
 	@echo "... karp_rabin"
 	@echo "... algorithm_v2"
 	@echo "... karp_rabin_test"
+	@echo "... install/strip"
+	@echo "... package"
+	@echo "... load_webgraph"
 	@echo "... karp_rabin_v2"
 	@echo "... uninstall-sdsl"
 	@echo "... uninstall"
@@ -3831,6 +3872,9 @@ help:
 	@echo "... src/karp_rabin_v2.o"
 	@echo "... src/karp_rabin_v2.i"
 	@echo "... src/karp_rabin_v2.s"
+	@echo "... src/load_webgraph.o"
+	@echo "... src/load_webgraph.i"
+	@echo "... src/load_webgraph.s"
 	@echo "... test/algorithm_test.o"
 	@echo "... test/algorithm_test.i"
 	@echo "... test/algorithm_test.s"

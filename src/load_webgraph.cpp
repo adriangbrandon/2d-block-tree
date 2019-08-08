@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
     sdsl::load_from_file(m_block_tree, name_file);
 
     std::cout << "Size in bytes: " << sdsl::size_in_bytes(m_block_tree) << std::endl;
-    sdsl::write_structure<sdsl::JSON_FORMAT>(m_block_tree, name_file + ".json",);
+    sdsl::write_structure<sdsl::JSON_FORMAT>(m_block_tree, name_file + ".json");
     sdsl::write_structure<sdsl::HTML_FORMAT>(m_block_tree, name_file + ".html");
 
 
