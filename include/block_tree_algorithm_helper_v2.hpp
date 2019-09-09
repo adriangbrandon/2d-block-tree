@@ -43,6 +43,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <bithacks.hpp>
 #include <progress_bar.hpp>
+#include <search_util.hpp>
 
 #define NODE_EMPTY 0
 #define NODE_LEAF 1
@@ -128,6 +129,7 @@ namespace block_tree_2d {
 
         }
 
+
         template <class input_type, class iterators_type>
         static size_type bits_subtree(const input_type &adjacent_lists, const value_type sx_b2, const value_type ex_b2,
                                      const value_type sy_b2, const value_type ey_b2, const iterators_type &iterators_b2,
@@ -188,7 +190,7 @@ namespace block_tree_2d {
 
             //Compute the range of z-block
             range_block(id_b1, sx_b1, ex_b1, sy_b1, ey_b1, block_size);
-            //if(sx_b1 == sx_b2 && sy_b1 == sy_b2) return false; //are the same
+            //both blocks are overlapping each other
             if(!(sx_b1 > ex_b2 || ex_b1 < sx_b2 || sy_b1 > ey_b2 || ey_b1 < sy_b2)){
                 return false;
             }
@@ -389,6 +391,111 @@ namespace block_tree_2d {
             nodes.clear();
             nodes = std::vector<node_type>(number_nodes);
 
+        }
+
+
+        template <class input_type, class hash_table_type>
+        static bool contains_identical_blocks(input_type &adjacent_lists, const size_type k, hash_table_type &ht,
+                                           const size_type dimensions, const size_type block_size){
+
+            typedef karp_rabin::kr_block_adjacent_list_v2<input_type> kr_type;
+            typedef typename kr_type::hash_type hash_type;
+            typedef std::vector<typename kr_type::iterator_value_type> iterators_value_type;
+            // typedef uint64_t iterators_type;
+            typedef typename hash_table_type::iterator_table_type iterator_table_type;
+            typedef typename hash_table_type::iterator_hash_type  iterator_hash_type;
+            typedef typename hash_table_type::iterator_value_type iterator_hash_value_type;
+
+            kr_type kr_block(block_size, prime, adjacent_lists);
+            iterator_table_type it_table;
+            iterator_hash_type it_hash;
+            iterators_value_type iterators_source = iterators_value_type(block_size);
+
+            auto blocks_per_row = adjacent_lists.size() / block_size;
+            //Total number of blocks
+            //IMPORTANT: kr_block, skips every empty block. For this reason, every node of the current level has to be
+            //           initialized as empty node.
+            while(kr_block.next()){
+#if BT_VERBOSE
+                std::cout << "Target: (" << kr_block.col << ", " << kr_block.row << ")" << std::endl;
+                std::cout << "Hash: " << kr_block.hash << std::endl;
+#endif
+                //check if kr_block.hash exists in map
+                //Target z-order
+                auto processed_blocks = kr_block.row * blocks_per_row + kr_block.col+1;
+                if(ht.hash_collision(kr_block.hash, it_table, it_hash)){
+                    value_type sx_source, sy_source, ex_source, ey_source;
+                    value_type sx_target = kr_block.col * block_size;
+                    value_type sy_target = kr_block.row * block_size;
+                    value_type ex_target = sx_target + block_size-1;
+                    value_type ey_target = sy_target + block_size-1;
+                    iterator_hash_value_type source;
+                    if(exist_identical(adjacent_lists, sx_target, sy_target, ex_target, ey_target,
+                                       kr_block.iterators, it_hash->second, block_size,
+                                       sx_source, sy_source, ex_source, ey_source, iterators_source, source)){ //check if they are identical
+#if BT_VERBOSE
+                        std::cout << "Pointer to source in z-order: " << (source->first) << " offset: <0,0>" << std::endl;
+#endif
+
+                        return true;
+                    }
+                }
+#if BT_VERBOSE
+                std::cout << std::endl;
+#endif
+            }
+            return false;
+        }
+
+        template <class input_type, class hash_table_type>
+        static bool contains_identical_rolls(input_type &adjacent_lists, const size_type k, hash_table_type &ht,
+                                      const size_type dimensions, const size_type block_size){
+
+            typedef karp_rabin::kr_roll_adjacent_list_v2<input_type> kr_type;
+            typedef typename kr_type::hash_type hash_type;
+            typedef std::vector<typename kr_type::iterator_value_type> iterators_value_type;
+            // typedef uint64_t iterators_type;
+            typedef typename hash_table_type::iterator_table_type iterator_table_type;
+            typedef typename hash_table_type::iterator_hash_type  iterator_hash_type;
+            typedef typename hash_table_type::iterator_value_type iterator_hash_value_type;
+
+            auto rolls_per_row = adjacent_lists.size() - block_size + 1;
+            //Total number of blocks
+            auto total_rolls = rolls_per_row * rolls_per_row;
+            util::progress_bar m_progress_bar(total_rolls);
+
+            kr_type kr_roll(block_size, prime, adjacent_lists);
+            iterator_table_type it_table;
+            iterator_hash_type it_hash;
+            iterators_value_type iterators_target = iterators_value_type(block_size);
+            while(kr_roll.next()){
+#if BT_VERBOSE
+                std::cout << "Source: (" << kr_roll.col << ", " << kr_roll.row << ")" << std::endl;
+                std::cout << "Hash: " << kr_roll.hash << std::endl;
+#endif
+                auto processed_rolls = kr_roll.row * rolls_per_row + kr_roll.col+1;
+                //check if kr_block.hash exists in map
+                if(ht.hash_collision(kr_roll.hash, it_table, it_hash)){
+                    value_type sx_target, sy_target, ex_target, ey_target;
+                    value_type ex_source = kr_roll.col + block_size-1;
+                    value_type ey_source = kr_roll.row + block_size-1;
+                    iterator_hash_value_type target;
+                    if(exist_identical(adjacent_lists, kr_roll.col, kr_roll.row, ex_source, ey_source,
+                                       kr_roll.iterators, it_hash->second, block_size,
+                                       sx_target, sy_target, ex_target, ey_target, iterators_target, target)){ //check if they are identical
+#if BT_VERBOSE
+                        std::cout << "Target: (" << sx_target << ", " << sy_target << ")" << std::endl;
+                        std::cout << "Pointer to source in (x,y): " << kr_roll.col << ", " << kr_roll.row << std::endl;
+#endif
+                        return true;
+                    }
+                }
+#if BT_VERBOSE
+                std::cout << std::endl;
+#endif
+            }
+            return false;
+            //print_ajdacent_list(adjacent_lists);
         }
 
         template <class input_type, class hash_table_type>
@@ -633,6 +740,64 @@ namespace block_tree_2d {
                 ++it;
                 ++y;
             }
+        }
+
+
+
+        template <class input_type>
+        static void build_k2_tree(const input_type &adjacent_lists, const size_type k,
+                                  const size_type height, const size_type block_size_stop,
+                                  sdsl::bit_vector &bits){
+
+
+            typedef std::tuple<size_type , size_type, size_type,size_type> t_part_tuple;
+            auto k_2 = static_cast<size_type >(std::pow(k, 2));
+
+            //1. Edges z-order
+            std::vector<size_type> edges_z_order;
+            for(size_type y = 0; y < adjacent_lists.size(); ++y){
+                for(size_type x : adjacent_lists[y]){
+                    edges_z_order.push_back(codes::zeta_order::encode(x, y));
+                }
+            }
+
+            //2. Sort edges z-order
+            std::sort(edges_z_order.begin(), edges_z_order.end());
+            for(auto edge : edges_z_order){
+                std::cout << edge << ", ";
+            }
+            std::cout << std::endl;
+
+            //4. Init bitmap
+            bits = sdsl::bit_vector(k_2 * height * edges_z_order.size(), 0);
+            bits[0] = 1;
+
+            size_type l = adjacent_lists.size();
+            std::queue<t_part_tuple> q;
+            q.push(t_part_tuple(0, edges_z_order.size()-1, l/k , 0));
+            size_type i, j, z_0;
+            size_type t = k_2;
+
+            //5.
+            while (!q.empty()) {
+                std::tie(i, j, l, z_0) = q.front();
+                q.pop();
+                auto elements = l * l;
+                for(size_type z_parent = 0; z_parent < k_2; ++z_parent){
+                    auto le = util::search::lower_or_equal_search(i, j, edges_z_order, z_0+elements-1);
+                    if(le != -1 && edges_z_order[le] >= z_0){
+                        bits[t] = 1;
+                        if(l > block_size_stop){
+                            q.push(t_part_tuple(i, le, l/k, z_0));
+                        }
+                        i = le + 1;
+                    }
+                    ++t;
+                    z_0 += elements;
+                }
+            }
+            bits.resize(t);
+
         }
     };
 }

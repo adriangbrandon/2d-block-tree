@@ -28,25 +28,38 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 //
-// Created by Adrián on 29/07/2019.
+// Created by Adrián on 09/09/2019.
 //
 
-#ifndef INC_UTIL_BITHACKS_HPP
-#define INC_UTIL_BITHACKS_HPP
+#ifndef INC_2D_BLOCK_TREE_SEARCH_UTIL_HPP
+#define INC_2D_BLOCK_TREE_SEARCH_UTIL_HPP
 
-#define BYTE_2_BITS 8
+#include <stdint.h>
 
 namespace util {
 
-    namespace bithacks {
+    namespace search {
 
-        template <class T>
-        T abs(const T &v){
-            const T mask = v >> (sizeof(T) * BYTE_2_BITS -1);
-            return ((v ^ mask) - mask);
+        template <class Container, class Value>
+        uint64_t lower_or_equal_search(const uint64_t i, const uint64_t j, const Container& cont, const Value &v){
+            if(i > j) return -1;
+            auto l = i - 1;
+            auto r = j + 1;
+            while(l + 1 < r){
+                auto mid = (r - l) / 2 + l;
+                if(cont[mid] < v){
+                    l = mid;
+                }else if (cont[mid] > v){
+                    r = mid;
+                }else{
+                    l = mid;
+                }
+            }
+            return l;
+
         }
-        
+
     }
 }
 
-#endif //INC_2D_BLOCK_TREE_BITHACKS_HPP
+#endif //INC_2D_BLOCK_TREE_SEARCH_UTIL_HPP

@@ -28,25 +28,29 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 //
-// Created by Adrián on 29/07/2019.
+// Created by Adrián on 09/09/2019.
 //
 
-#ifndef INC_UTIL_BITHACKS_HPP
-#define INC_UTIL_BITHACKS_HPP
+#include <stdint.h>
+#include <vector>
+#include <block_tree_algorithm_helper_v2.hpp>
 
-#define BYTE_2_BITS 8
+int main(int argc, char **argv) {
 
-namespace util {
 
-    namespace bithacks {
+    std::vector<std::vector<int64_t>> adjacency_lists(16);
+    adjacency_lists[0] = {0, 1, 4, 7};
+    adjacency_lists[1] = {0, 1, 7};
+    adjacency_lists[2] = {0, 8};
+    adjacency_lists[3] = {1, 9};
+    adjacency_lists[4] = {0, 11};
 
-        template <class T>
-        T abs(const T &v){
-            const T mask = v >> (sizeof(T) * BYTE_2_BITS -1);
-            return ((v ^ mask) - mask);
-        }
-        
+    sdsl::bit_vector t;
+    block_tree_2d::algorithm::build_k2_tree(adjacency_lists, 2, 4, 1, t);
+
+    std::cout << "T: ";
+    for(size_t i = 0; i < t.size(); ++i){
+        std::cout << t[i] << ", ";
     }
+    std::cout << std::endl;
 }
-
-#endif //INC_2D_BLOCK_TREE_BITHACKS_HPP

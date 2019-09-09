@@ -74,7 +74,6 @@ namespace hash_table {
         }
 
         void resize() {
-            std::cout << "resize" << std::endl;
             m_table_size = nearest_prime(m_table_size * 2);
             m_used = 0;
             iterator_table_type aux_it_table;

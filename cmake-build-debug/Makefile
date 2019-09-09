@@ -205,19 +205,6 @@ build_webgraph/fast:
 .PHONY : build_webgraph/fast
 
 #=============================================================================
-# Target rules for targets named algorithm
-
-# Build rule for target.
-algorithm: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 algorithm
-.PHONY : algorithm
-
-# fast build rule for target.
-algorithm/fast:
-	$(MAKE) -f CMakeFiles/algorithm.dir/build.make CMakeFiles/algorithm.dir/build
-.PHONY : algorithm/fast
-
-#=============================================================================
 # Target rules for targets named hash_table
 
 # Build rule for target.
@@ -283,19 +270,6 @@ karp_rabin/fast:
 .PHONY : karp_rabin/fast
 
 #=============================================================================
-# Target rules for targets named algorithm_v2
-
-# Build rule for target.
-algorithm_v2: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 algorithm_v2
-.PHONY : algorithm_v2
-
-# fast build rule for target.
-algorithm_v2/fast:
-	$(MAKE) -f CMakeFiles/algorithm_v2.dir/build.make CMakeFiles/algorithm_v2.dir/build
-.PHONY : algorithm_v2/fast
-
-#=============================================================================
 # Target rules for targets named karp_rabin_test
 
 # Build rule for target.
@@ -333,6 +307,19 @@ karp_rabin_v2: cmake_check_build_system
 karp_rabin_v2/fast:
 	$(MAKE) -f CMakeFiles/karp_rabin_v2.dir/build.make CMakeFiles/karp_rabin_v2.dir/build
 .PHONY : karp_rabin_v2/fast
+
+#=============================================================================
+# Target rules for targets named build_k2_tree_test
+
+# Build rule for target.
+build_k2_tree_test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 build_k2_tree_test
+.PHONY : build_k2_tree_test
+
+# fast build rule for target.
+build_k2_tree_test/fast:
+	$(MAKE) -f CMakeFiles/build_k2_tree_test.dir/build.make CMakeFiles/build_k2_tree_test.dir/build
+.PHONY : build_k2_tree_test/fast
 
 #=============================================================================
 # Target rules for targets named uninstall-sdsl
@@ -3272,60 +3259,6 @@ cst-int-test_empty.txt_1/fast:
 	$(MAKE) -f external/sdsl-lite/test/CMakeFiles/cst-int-test_empty.txt_1.dir/build.make external/sdsl-lite/test/CMakeFiles/cst-int-test_empty.txt_1.dir/build
 .PHONY : cst-int-test_empty.txt_1/fast
 
-src/algorithm.o: src/algorithm.cpp.o
-
-.PHONY : src/algorithm.o
-
-# target to build an object file
-src/algorithm.cpp.o:
-	$(MAKE) -f CMakeFiles/algorithm.dir/build.make CMakeFiles/algorithm.dir/src/algorithm.cpp.o
-.PHONY : src/algorithm.cpp.o
-
-src/algorithm.i: src/algorithm.cpp.i
-
-.PHONY : src/algorithm.i
-
-# target to preprocess a source file
-src/algorithm.cpp.i:
-	$(MAKE) -f CMakeFiles/algorithm.dir/build.make CMakeFiles/algorithm.dir/src/algorithm.cpp.i
-.PHONY : src/algorithm.cpp.i
-
-src/algorithm.s: src/algorithm.cpp.s
-
-.PHONY : src/algorithm.s
-
-# target to generate assembly for a file
-src/algorithm.cpp.s:
-	$(MAKE) -f CMakeFiles/algorithm.dir/build.make CMakeFiles/algorithm.dir/src/algorithm.cpp.s
-.PHONY : src/algorithm.cpp.s
-
-src/algorithm_v2.o: src/algorithm_v2.cpp.o
-
-.PHONY : src/algorithm_v2.o
-
-# target to build an object file
-src/algorithm_v2.cpp.o:
-	$(MAKE) -f CMakeFiles/algorithm_v2.dir/build.make CMakeFiles/algorithm_v2.dir/src/algorithm_v2.cpp.o
-.PHONY : src/algorithm_v2.cpp.o
-
-src/algorithm_v2.i: src/algorithm_v2.cpp.i
-
-.PHONY : src/algorithm_v2.i
-
-# target to preprocess a source file
-src/algorithm_v2.cpp.i:
-	$(MAKE) -f CMakeFiles/algorithm_v2.dir/build.make CMakeFiles/algorithm_v2.dir/src/algorithm_v2.cpp.i
-.PHONY : src/algorithm_v2.cpp.i
-
-src/algorithm_v2.s: src/algorithm_v2.cpp.s
-
-.PHONY : src/algorithm_v2.s
-
-# target to generate assembly for a file
-src/algorithm_v2.cpp.s:
-	$(MAKE) -f CMakeFiles/algorithm_v2.dir/build.make CMakeFiles/algorithm_v2.dir/src/algorithm_v2.cpp.s
-.PHONY : src/algorithm_v2.cpp.s
-
 src/block_tree.o: src/block_tree.cpp.o
 
 .PHONY : src/block_tree.o
@@ -3569,6 +3502,33 @@ test/block_tree_test.cpp.s:
 	$(MAKE) -f CMakeFiles/block_tree_test.dir/build.make CMakeFiles/block_tree_test.dir/test/block_tree_test.cpp.s
 .PHONY : test/block_tree_test.cpp.s
 
+test/build_k2_tree_test.o: test/build_k2_tree_test.cpp.o
+
+.PHONY : test/build_k2_tree_test.o
+
+# target to build an object file
+test/build_k2_tree_test.cpp.o:
+	$(MAKE) -f CMakeFiles/build_k2_tree_test.dir/build.make CMakeFiles/build_k2_tree_test.dir/test/build_k2_tree_test.cpp.o
+.PHONY : test/build_k2_tree_test.cpp.o
+
+test/build_k2_tree_test.i: test/build_k2_tree_test.cpp.i
+
+.PHONY : test/build_k2_tree_test.i
+
+# target to preprocess a source file
+test/build_k2_tree_test.cpp.i:
+	$(MAKE) -f CMakeFiles/build_k2_tree_test.dir/build.make CMakeFiles/build_k2_tree_test.dir/test/build_k2_tree_test.cpp.i
+.PHONY : test/build_k2_tree_test.cpp.i
+
+test/build_k2_tree_test.s: test/build_k2_tree_test.cpp.s
+
+.PHONY : test/build_k2_tree_test.s
+
+# target to generate assembly for a file
+test/build_k2_tree_test.cpp.s:
+	$(MAKE) -f CMakeFiles/build_k2_tree_test.dir/build.make CMakeFiles/build_k2_tree_test.dir/test/build_k2_tree_test.cpp.s
+.PHONY : test/build_k2_tree_test.cpp.s
+
 test/karp_rabin_test.o: test/karp_rabin_test.cpp.o
 
 .PHONY : test/karp_rabin_test.o
@@ -3609,19 +3569,18 @@ help:
 	@echo "... package_source"
 	@echo "... build_k2tree"
 	@echo "... build_webgraph"
-	@echo "... algorithm"
 	@echo "... hash_table"
 	@echo "... install/local"
 	@echo "... block_tree_test"
 	@echo "... block_tree"
 	@echo "... algorithm_test"
 	@echo "... karp_rabin"
-	@echo "... algorithm_v2"
 	@echo "... karp_rabin_test"
 	@echo "... install/strip"
 	@echo "... package"
 	@echo "... load_webgraph"
 	@echo "... karp_rabin_v2"
+	@echo "... build_k2_tree_test"
 	@echo "... uninstall-sdsl"
 	@echo "... uninstall"
 	@echo "... divsufsort64"
@@ -3848,12 +3807,6 @@ help:
 	@echo "... replace_int_vector_value"
 	@echo "... rank-support-test_int-vec.12.1.0"
 	@echo "... cst-int-test_empty.txt_1"
-	@echo "... src/algorithm.o"
-	@echo "... src/algorithm.i"
-	@echo "... src/algorithm.s"
-	@echo "... src/algorithm_v2.o"
-	@echo "... src/algorithm_v2.i"
-	@echo "... src/algorithm_v2.s"
 	@echo "... src/block_tree.o"
 	@echo "... src/block_tree.i"
 	@echo "... src/block_tree.s"
@@ -3881,6 +3834,9 @@ help:
 	@echo "... test/block_tree_test.o"
 	@echo "... test/block_tree_test.i"
 	@echo "... test/block_tree_test.s"
+	@echo "... test/build_k2_tree_test.o"
+	@echo "... test/build_k2_tree_test.i"
+	@echo "... test/build_k2_tree_test.s"
 	@echo "... test/karp_rabin_test.o"
 	@echo "... test/karp_rabin_test.i"
 	@echo "... test/karp_rabin_test.s"
