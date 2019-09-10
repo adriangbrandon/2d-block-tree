@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <block_tree.hpp>
 #include <vector>
 #include <adjacency_list_helper.hpp>
+#include <block_tree_skip_levels.hpp>
 
 int main(int argc, char **argv) {
 
@@ -59,21 +60,22 @@ int main(int argc, char **argv) {
     uint64_t dimensions = 8;
     //for(size_t i = 0; i < 100; ++i){
         std::vector< std::vector<int64_t>> matrix8_8;
-        //util::adjacency_list::read(matrix8_8, "adjacency_lists.txt");std::vector< std::vector<int64_t>> matrix8_8;
-    matrix8_8.push_back(row0);
-    matrix8_8.push_back(row1);
-    matrix8_8.push_back(row2);
-    matrix8_8.push_back(row3);
-    matrix8_8.push_back(row4);
-    matrix8_8.push_back(row5);
-    matrix8_8.push_back(row6);
-    matrix8_8.push_back(row7);
+        matrix8_8.push_back(row0);
+        matrix8_8.push_back(row1);
+        matrix8_8.push_back(row2);
+        matrix8_8.push_back(row3);
+        matrix8_8.push_back(row4);
+        matrix8_8.push_back(row5);
+        matrix8_8.push_back(row6);
+        matrix8_8.push_back(row7);
+        //util::adjacency_list::read(matrix8_8, "adjacency_lists.txt");
+
         std::cout << matrix8_8.size() << std::endl;
 
         block_tree_2d::algorithm::print_ajdacent_list(matrix8_8);
 
-        std::cout << "Building Block-tree dimensions=" << dimensions;
-        block_tree_2d::block_tree<> m_block_tree(matrix8_8, k);
+        std::cout << "Building Block-tree dimensions=" << dimensions << std::endl;
+        block_tree_2d::block_tree_skip_levels<> m_block_tree(matrix8_8, k);
         std::cout << "Done." << std::endl;
         m_block_tree.print();
         std::cout << "Retrieving adjacency lists...";
@@ -82,10 +84,10 @@ int main(int argc, char **argv) {
         std::cout << "Done." << std::endl;
 
         block_tree_2d::algorithm::print_ajdacent_list(result);
-        sdsl::store_to_file(m_block_tree, "test.2dbt");
+       // sdsl::store_to_file(m_block_tree, "test.2dbt");
 
         block_tree_2d::block_tree<> m_block_tree2;
-        sdsl::load_from_file(m_block_tree2, "test.2dbt");
+       // sdsl::load_from_file(m_block_tree2, "test.2dbt");
 
         m_block_tree.access_region(0, 0, dimensions - 1, dimensions - 1, result2);
         std::cout << "Done." << std::endl;

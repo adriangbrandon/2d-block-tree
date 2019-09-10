@@ -72,6 +72,9 @@ target_link_libraries(algorithm_test sdsl divsufsort divsufsort64)
 add_executable(block_tree_test test/block_tree_test.cpp)
 target_link_libraries(block_tree_test sdsl divsufsort divsufsort64)
 
+add_executable(block_tree_skip_levels_test test/block_tree_skip_levels_test.cpp)
+target_link_libraries(block_tree_skip_levels_test sdsl divsufsort divsufsort64)
+
 add_executable(hash_table src/hash_table.cpp)
 target_link_libraries(hash_table sdsl divsufsort divsufsort64)
 
@@ -83,6 +86,9 @@ target_link_libraries(hash_table sdsl divsufsort divsufsort64)
 
 add_executable(block_tree src/block_tree.cpp)
 target_link_libraries(block_tree sdsl divsufsort divsufsort64)
+
+add_executable(block_tree_skip_levels src/block_tree_skip_levels.cpp)
+target_link_libraries(block_tree_skip_levels sdsl divsufsort divsufsort64)
 
 add_executable(build_webgraph src/build_webgraph.cpp)
 target_link_libraries(build_webgraph sdsl divsufsort divsufsort64)

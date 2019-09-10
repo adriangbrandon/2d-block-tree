@@ -40,6 +40,10 @@ namespace util {
 
     namespace search {
 
+        /**
+         * If v exists, returns its last position
+         * If v not exists, returns the position of the max value which is lower than v
+         */
         template <class Container, class Value>
         uint64_t lower_or_equal_search(const uint64_t i, const uint64_t j, const Container& cont, const Value &v){
             if(i > j) return -1;
@@ -56,7 +60,6 @@ namespace util {
                 }
             }
             return l;
-
         }
 
     }

@@ -12,6 +12,7 @@ CMakeFiles/block_tree.dir/src/block_tree.cpp.o: ../include/kr_block_adjacent_lis
 CMakeFiles/block_tree.dir/src/block_tree.cpp.o: ../include/kr_roll_adjacent_list_v2.hpp
 CMakeFiles/block_tree.dir/src/block_tree.cpp.o: ../include/logger.hpp
 CMakeFiles/block_tree.dir/src/block_tree.cpp.o: ../include/progress_bar.hpp
+CMakeFiles/block_tree.dir/src/block_tree.cpp.o: ../include/search_util.hpp
 CMakeFiles/block_tree.dir/src/block_tree.cpp.o: ../include/zeta_order.hpp
 CMakeFiles/block_tree.dir/src/block_tree.cpp.o: ../src/block_tree.cpp
 CMakeFiles/block_tree.dir/src/block_tree.cpp.o: external/sdsl-lite/include/sdsl/bit_vector_il.hpp

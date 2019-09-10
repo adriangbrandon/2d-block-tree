@@ -46,7 +46,8 @@ int main(int argc, char **argv) {
     adjacency_lists[4] = {0, 11};
 
     sdsl::bit_vector t;
-    block_tree_2d::algorithm::build_k2_tree(adjacency_lists, 2, 4, 1, t);
+    std::unordered_map<uint64_t, uint64_t> hash;
+    block_tree_2d::algorithm::build_k2_tree(adjacency_lists, 2, 4, 1, t, hash);
 
     std::cout << "T: ";
     for(size_t i = 0; i < t.size(); ++i){

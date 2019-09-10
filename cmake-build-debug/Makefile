@@ -179,6 +179,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named build_k2_tree_test
+
+# Build rule for target.
+build_k2_tree_test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 build_k2_tree_test
+.PHONY : build_k2_tree_test
+
+# fast build rule for target.
+build_k2_tree_test/fast:
+	$(MAKE) -f CMakeFiles/build_k2_tree_test.dir/build.make CMakeFiles/build_k2_tree_test.dir/build
+.PHONY : build_k2_tree_test/fast
+
+#=============================================================================
 # Target rules for targets named build_k2tree
 
 # Build rule for target.
@@ -205,6 +218,19 @@ build_webgraph/fast:
 .PHONY : build_webgraph/fast
 
 #=============================================================================
+# Target rules for targets named block_tree_skip_levels
+
+# Build rule for target.
+block_tree_skip_levels: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 block_tree_skip_levels
+.PHONY : block_tree_skip_levels
+
+# fast build rule for target.
+block_tree_skip_levels/fast:
+	$(MAKE) -f CMakeFiles/block_tree_skip_levels.dir/build.make CMakeFiles/block_tree_skip_levels.dir/build
+.PHONY : block_tree_skip_levels/fast
+
+#=============================================================================
 # Target rules for targets named hash_table
 
 # Build rule for target.
@@ -216,6 +242,19 @@ hash_table: cmake_check_build_system
 hash_table/fast:
 	$(MAKE) -f CMakeFiles/hash_table.dir/build.make CMakeFiles/hash_table.dir/build
 .PHONY : hash_table/fast
+
+#=============================================================================
+# Target rules for targets named block_tree_skip_levels_test
+
+# Build rule for target.
+block_tree_skip_levels_test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 block_tree_skip_levels_test
+.PHONY : block_tree_skip_levels_test
+
+# fast build rule for target.
+block_tree_skip_levels_test/fast:
+	$(MAKE) -f CMakeFiles/block_tree_skip_levels_test.dir/build.make CMakeFiles/block_tree_skip_levels_test.dir/build
+.PHONY : block_tree_skip_levels_test/fast
 
 #=============================================================================
 # Target rules for targets named block_tree_test
@@ -307,19 +346,6 @@ karp_rabin_v2: cmake_check_build_system
 karp_rabin_v2/fast:
 	$(MAKE) -f CMakeFiles/karp_rabin_v2.dir/build.make CMakeFiles/karp_rabin_v2.dir/build
 .PHONY : karp_rabin_v2/fast
-
-#=============================================================================
-# Target rules for targets named build_k2_tree_test
-
-# Build rule for target.
-build_k2_tree_test: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 build_k2_tree_test
-.PHONY : build_k2_tree_test
-
-# fast build rule for target.
-build_k2_tree_test/fast:
-	$(MAKE) -f CMakeFiles/build_k2_tree_test.dir/build.make CMakeFiles/build_k2_tree_test.dir/build
-.PHONY : build_k2_tree_test/fast
 
 #=============================================================================
 # Target rules for targets named uninstall-sdsl
@@ -3286,6 +3312,33 @@ src/block_tree.cpp.s:
 	$(MAKE) -f CMakeFiles/block_tree.dir/build.make CMakeFiles/block_tree.dir/src/block_tree.cpp.s
 .PHONY : src/block_tree.cpp.s
 
+src/block_tree_skip_levels.o: src/block_tree_skip_levels.cpp.o
+
+.PHONY : src/block_tree_skip_levels.o
+
+# target to build an object file
+src/block_tree_skip_levels.cpp.o:
+	$(MAKE) -f CMakeFiles/block_tree_skip_levels.dir/build.make CMakeFiles/block_tree_skip_levels.dir/src/block_tree_skip_levels.cpp.o
+.PHONY : src/block_tree_skip_levels.cpp.o
+
+src/block_tree_skip_levels.i: src/block_tree_skip_levels.cpp.i
+
+.PHONY : src/block_tree_skip_levels.i
+
+# target to preprocess a source file
+src/block_tree_skip_levels.cpp.i:
+	$(MAKE) -f CMakeFiles/block_tree_skip_levels.dir/build.make CMakeFiles/block_tree_skip_levels.dir/src/block_tree_skip_levels.cpp.i
+.PHONY : src/block_tree_skip_levels.cpp.i
+
+src/block_tree_skip_levels.s: src/block_tree_skip_levels.cpp.s
+
+.PHONY : src/block_tree_skip_levels.s
+
+# target to generate assembly for a file
+src/block_tree_skip_levels.cpp.s:
+	$(MAKE) -f CMakeFiles/block_tree_skip_levels.dir/build.make CMakeFiles/block_tree_skip_levels.dir/src/block_tree_skip_levels.cpp.s
+.PHONY : src/block_tree_skip_levels.cpp.s
+
 src/build_k2tree.o: src/build_k2tree.cpp.o
 
 .PHONY : src/build_k2tree.o
@@ -3475,6 +3528,33 @@ test/algorithm_test.cpp.s:
 	$(MAKE) -f CMakeFiles/algorithm_test.dir/build.make CMakeFiles/algorithm_test.dir/test/algorithm_test.cpp.s
 .PHONY : test/algorithm_test.cpp.s
 
+test/block_tree_skip_levels_test.o: test/block_tree_skip_levels_test.cpp.o
+
+.PHONY : test/block_tree_skip_levels_test.o
+
+# target to build an object file
+test/block_tree_skip_levels_test.cpp.o:
+	$(MAKE) -f CMakeFiles/block_tree_skip_levels_test.dir/build.make CMakeFiles/block_tree_skip_levels_test.dir/test/block_tree_skip_levels_test.cpp.o
+.PHONY : test/block_tree_skip_levels_test.cpp.o
+
+test/block_tree_skip_levels_test.i: test/block_tree_skip_levels_test.cpp.i
+
+.PHONY : test/block_tree_skip_levels_test.i
+
+# target to preprocess a source file
+test/block_tree_skip_levels_test.cpp.i:
+	$(MAKE) -f CMakeFiles/block_tree_skip_levels_test.dir/build.make CMakeFiles/block_tree_skip_levels_test.dir/test/block_tree_skip_levels_test.cpp.i
+.PHONY : test/block_tree_skip_levels_test.cpp.i
+
+test/block_tree_skip_levels_test.s: test/block_tree_skip_levels_test.cpp.s
+
+.PHONY : test/block_tree_skip_levels_test.s
+
+# target to generate assembly for a file
+test/block_tree_skip_levels_test.cpp.s:
+	$(MAKE) -f CMakeFiles/block_tree_skip_levels_test.dir/build.make CMakeFiles/block_tree_skip_levels_test.dir/test/block_tree_skip_levels_test.cpp.s
+.PHONY : test/block_tree_skip_levels_test.cpp.s
+
 test/block_tree_test.o: test/block_tree_test.cpp.o
 
 .PHONY : test/block_tree_test.o
@@ -3565,11 +3645,14 @@ help:
 	@echo "... install"
 	@echo "... list_install_components"
 	@echo "... edit_cache"
-	@echo "... rebuild_cache"
-	@echo "... package_source"
+	@echo "... build_k2_tree_test"
 	@echo "... build_k2tree"
 	@echo "... build_webgraph"
+	@echo "... block_tree_skip_levels"
 	@echo "... hash_table"
+	@echo "... rebuild_cache"
+	@echo "... package_source"
+	@echo "... block_tree_skip_levels_test"
 	@echo "... install/local"
 	@echo "... block_tree_test"
 	@echo "... block_tree"
@@ -3580,7 +3663,6 @@ help:
 	@echo "... package"
 	@echo "... load_webgraph"
 	@echo "... karp_rabin_v2"
-	@echo "... build_k2_tree_test"
 	@echo "... uninstall-sdsl"
 	@echo "... uninstall"
 	@echo "... divsufsort64"
@@ -3810,6 +3892,9 @@ help:
 	@echo "... src/block_tree.o"
 	@echo "... src/block_tree.i"
 	@echo "... src/block_tree.s"
+	@echo "... src/block_tree_skip_levels.o"
+	@echo "... src/block_tree_skip_levels.i"
+	@echo "... src/block_tree_skip_levels.s"
 	@echo "... src/build_k2tree.o"
 	@echo "... src/build_k2tree.i"
 	@echo "... src/build_k2tree.s"
@@ -3831,6 +3916,9 @@ help:
 	@echo "... test/algorithm_test.o"
 	@echo "... test/algorithm_test.i"
 	@echo "... test/algorithm_test.s"
+	@echo "... test/block_tree_skip_levels_test.o"
+	@echo "... test/block_tree_skip_levels_test.i"
+	@echo "... test/block_tree_skip_levels_test.s"
 	@echo "... test/block_tree_test.o"
 	@echo "... test/block_tree_test.i"
 	@echo "... test/block_tree_test.s"

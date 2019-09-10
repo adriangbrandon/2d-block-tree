@@ -13,6 +13,7 @@ CMakeFiles/block_tree.dir/src/block_tree.cpp.o
  ../include/kr_roll_adjacent_list_v2.hpp
  ../include/logger.hpp
  ../include/progress_bar.hpp
+ ../include/search_util.hpp
  ../include/zeta_order.hpp
  /Users/adrian/CLionProjects/2d-block-tree/src/block_tree.cpp
  external/sdsl-lite/include/sdsl/bit_vector_il.hpp

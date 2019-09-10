@@ -439,6 +439,9 @@ namespace block_tree_2d {
 
                         return true;
                     }
+                }else{
+                    size_type z_order = codes::zeta_order::encode(kr_block.col, kr_block.row);
+                    ht.insert_no_hash_collision(it_table, kr_block.hash, z_order);
                 }
 #if BT_VERBOSE
                 std::cout << std::endl;
@@ -744,10 +747,10 @@ namespace block_tree_2d {
 
 
 
-        template <class input_type>
-        static void build_k2_tree(const input_type &adjacent_lists, const size_type k,
+        template <class input_type, class hash_type>
+        static size_type build_k2_tree(const input_type &adjacent_lists, const size_type k,
                                   const size_type height, const size_type block_size_stop,
-                                  sdsl::bit_vector &bits){
+                                  sdsl::bit_vector &bits, hash_type &hash){
 
 
             typedef std::tuple<size_type , size_type, size_type,size_type> t_part_tuple;
@@ -763,10 +766,6 @@ namespace block_tree_2d {
 
             //2. Sort edges z-order
             std::sort(edges_z_order.begin(), edges_z_order.end());
-            for(auto edge : edges_z_order){
-                std::cout << edge << ", ";
-            }
-            std::cout << std::endl;
 
             //4. Init bitmap
             bits = sdsl::bit_vector(k_2 * height * edges_z_order.size(), 0);
@@ -777,26 +776,36 @@ namespace block_tree_2d {
             q.push(t_part_tuple(0, edges_z_order.size()-1, l/k , 0));
             size_type i, j, z_0;
             size_type t = k_2;
+            size_type n_elem = 0, zeroes = k_2 -1;
 
-            //5.
+            //5. Split the front of q into its children
             while (!q.empty()) {
                 std::tie(i, j, l, z_0) = q.front();
                 q.pop();
                 auto elements = l * l;
-                for(size_type z_parent = 0; z_parent < k_2; ++z_parent){
+                for(size_type z_child = 0; z_child < k_2; ++z_child){
                     auto le = util::search::lower_or_equal_search(i, j, edges_z_order, z_0+elements-1);
                     if(le != -1 && edges_z_order[le] >= z_0){
                         bits[t] = 1;
                         if(l > block_size_stop){
                             q.push(t_part_tuple(i, le, l/k, z_0));
+                        }else{
+                            //Preparing next level
+                            for(size_type z_order = z_0/elements * k_2; z_order < (z_0/elements+1)*k_2; ++z_order){
+                                hash.insert({z_order, n_elem});
+                                ++n_elem;
+                            }
                         }
                         i = le + 1;
+                    }else{
+                        ++zeroes;
                     }
                     ++t;
                     z_0 += elements;
                 }
             }
             bits.resize(t);
+            return zeroes;
 
         }
     };

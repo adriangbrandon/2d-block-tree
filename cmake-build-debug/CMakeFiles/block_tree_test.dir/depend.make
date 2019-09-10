@@ -12,6 +12,7 @@ CMakeFiles/block_tree_test.dir/test/block_tree_test.cpp.o: ../include/kr_block_a
 CMakeFiles/block_tree_test.dir/test/block_tree_test.cpp.o: ../include/kr_roll_adjacent_list_v2.hpp
 CMakeFiles/block_tree_test.dir/test/block_tree_test.cpp.o: ../include/logger.hpp
 CMakeFiles/block_tree_test.dir/test/block_tree_test.cpp.o: ../include/progress_bar.hpp
+CMakeFiles/block_tree_test.dir/test/block_tree_test.cpp.o: ../include/search_util.hpp
 CMakeFiles/block_tree_test.dir/test/block_tree_test.cpp.o: ../include/zeta_order.hpp
 CMakeFiles/block_tree_test.dir/test/block_tree_test.cpp.o: ../test/block_tree_test.cpp
 CMakeFiles/block_tree_test.dir/test/block_tree_test.cpp.o: external/sdsl-lite/include/sdsl/bit_vector_il.hpp
