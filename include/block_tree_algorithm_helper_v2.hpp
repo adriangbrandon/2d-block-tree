@@ -413,6 +413,8 @@ namespace block_tree_2d {
 
             auto blocks_per_row = adjacent_lists.size() / block_size;
             //Total number of blocks
+            auto total_blocks = blocks_per_row * blocks_per_row;
+            util::progress_bar m_progress_bar(total_blocks);
             //IMPORTANT: kr_block, skips every empty block. For this reason, every node of the current level has to be
             //           initialized as empty node.
             while(kr_block.next()){
@@ -437,16 +439,19 @@ namespace block_tree_2d {
                         std::cout << "Pointer to source in z-order: " << (source->first) << " offset: <0,0>" << std::endl;
 #endif
 
+                        m_progress_bar.done();
                         return true;
                     }
                 }else{
                     size_type z_order = codes::zeta_order::encode(kr_block.col, kr_block.row);
                     ht.insert_no_hash_collision(it_table, kr_block.hash, z_order);
                 }
+                m_progress_bar.update(processed_blocks);
 #if BT_VERBOSE
                 std::cout << std::endl;
 #endif
             }
+            m_progress_bar.done();
             return false;
         }
 
@@ -490,13 +495,16 @@ namespace block_tree_2d {
                         std::cout << "Target: (" << sx_target << ", " << sy_target << ")" << std::endl;
                         std::cout << "Pointer to source in (x,y): " << kr_roll.col << ", " << kr_roll.row << std::endl;
 #endif
+                        m_progress_bar.done();
                         return true;
                     }
                 }
+                m_progress_bar.update(processed_rolls);
 #if BT_VERBOSE
                 std::cout << std::endl;
 #endif
             }
+            m_progress_bar.done();
             return false;
             //print_ajdacent_list(adjacent_lists);
         }
