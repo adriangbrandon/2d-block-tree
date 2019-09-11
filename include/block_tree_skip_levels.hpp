@@ -71,7 +71,7 @@ namespace block_tree_2d {
                 //std::cout << "htc" << std::endl;
                 //std::cout << "blocks: " << blocks << std::endl;
                 //htc_type m_htc(2*blocks);
-                htc_type m_htc(std::min(10240ULL, 2*blocks));
+                htc_type m_htc(std::min(static_cast<size_type>(10240), 2*blocks));
                 util::logger::log("Checking blocks at level=" + std::to_string(l) + " with block_size=" + std::to_string(block_size));
                 if(!block_tree_2d::algorithm::contains_identical_blocks(adjacency_lists, this->k, m_htc, this->dimensions, block_size)){
                     util::logger::log("Checking rolls at level=" + std::to_string(l) + " with block_size=" + std::to_string(block_size));
