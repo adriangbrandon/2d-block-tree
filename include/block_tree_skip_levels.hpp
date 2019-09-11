@@ -34,12 +34,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef INC_2D_BLOCK_TREE_BLOCK_TREE_SKIP_LEVELS_HPP
 #define INC_2D_BLOCK_TREE_BLOCK_TREE_SKIP_LEVELS_HPP
 
+#include <block_tree_algorithm_helper_v2.hpp>
+#include "alternative_code.hpp"
+#include <logger.hpp>
 #include <block_tree.hpp>
+#include <vector>
 
 namespace block_tree_2d {
 
     template <class input_t = std::vector<std::vector<int64_t>>>
     class block_tree_skip_levels : public block_tree<input_t> {
+
+    public:
 
         typedef input_t input_type;
         typedef typename block_tree<input_t>::value_type value_type;
@@ -54,6 +60,7 @@ namespace block_tree_2d {
 
         std::pair<size_type, size_type> minimum_block_size(input_type &adjacency_lists, const size_type height){
 
+            std::cout << "minimum_block_size" << std::endl;
             if(height <= 1) return {this->k, 1};
 
             size_type l = height-1;
@@ -61,7 +68,10 @@ namespace block_tree_2d {
             size_type blocks =  rows * rows;
             size_type block_size = this->k;
             while(l > 0){
-                htc_type m_htc(2*blocks);
+                //std::cout << "htc" << std::endl;
+                //std::cout << "blocks: " << blocks << std::endl;
+                //htc_type m_htc(2*blocks);
+                htc_type m_htc(std::min(10240ULL, 2*blocks));
                 util::logger::log("Checking blocks at level=" + std::to_string(l) + " with block_size=" + std::to_string(block_size));
                 if(!block_tree_2d::algorithm::contains_identical_blocks(adjacency_lists, this->k, m_htc, this->dimensions, block_size)){
                     util::logger::log("Checking rolls at level=" + std::to_string(l) + " with block_size=" + std::to_string(block_size));
@@ -129,8 +139,16 @@ namespace block_tree_2d {
             util::logger::log("2D Block Tree DONE!!!");
         }
 
+        void copy(const block_tree_skip_levels &p){
+            block_tree<input_type >::copy(p);
+            m_zeroes = p.m_zeroes;
+            m_minimum_level = p.m_minimum_level;
+        }
+
 
     public:
+
+        block_tree_skip_levels() = default;
 
         block_tree_skip_levels(input_type &adjacency_lists, const size_type kparam) {
             size_type h, total_size;
@@ -144,7 +162,7 @@ namespace block_tree_2d {
             return level > m_minimum_level && !(taking_pointer && level <= level_taking_pointer);
         }
 
-        virtual inline size_type idx_leaf(const size_type idx){
+        inline size_type idx_leaf(const size_type idx){
             return idx - this->m_topology_rank(idx+1) - m_zeroes;
         }
 
@@ -157,6 +175,66 @@ namespace block_tree_2d {
         }
 
 
+        //! Copy constructor
+        block_tree_skip_levels(const block_tree_skip_levels &p) {
+            copy(p);
+        }
+
+        //! Move constructor
+        block_tree_skip_levels(block_tree_skip_levels &&p) {
+            *this = std::move(p);
+        }
+
+        //! Assignment move operation
+        block_tree_skip_levels &operator=(block_tree_skip_levels &&p) {
+            if (this != &p) {
+                block_tree<input_type>::operator=(p);
+                m_minimum_level = std::move(p.m_minimum_level);
+                m_zeroes = std::move(p.m_zeroes);
+            }
+            return *this;
+        }
+
+        //! Assignment operator
+        block_tree_skip_levels &operator=(const block_tree_skip_levels &p) {
+            if (this != &p) {
+                copy(p);
+            }
+            return *this;
+        }
+
+        //! Swap method
+        /*! Swaps the content of the two data structure.
+        *  You have to use set_vector to adjust the supported bit_vector.
+        *  \param bp_support Object which is swapped.
+        */
+        void swap(block_tree_skip_levels &p) {
+            block_tree<input_type>::swap(p);
+            std::swap(m_minimum_level, p.m_minimum_level);
+            std::swap(m_zeroes, p.m_zeroes);
+        }
+
+
+        //! Serializes the data structure into the given ostream
+         size_type serialize(std::ostream& out, sdsl::structure_tree_node* v=nullptr,
+                            const std::string name="")const
+        {
+            sdsl::structure_tree_node* child = sdsl::structure_tree::add_child(
+                    v, name, sdsl::util::class_name(*this));
+            size_type written_bytes = 0;
+            written_bytes += block_tree<input_type>::serialize(out, v, name);
+            written_bytes += sdsl::write_member(m_minimum_level, out, child, "minimum_level");
+            written_bytes += sdsl::write_member(m_zeroes, out, child, "zeroes");
+            return written_bytes;
+        }
+
+        //! Loads the data structure from the given istream.
+        void load(std::istream& in)
+        {
+            block_tree<input_type>::load(in);
+            sdsl::read_member(m_minimum_level, in);
+            sdsl::read_member(m_zeroes, in);
+        }
 
 
     };

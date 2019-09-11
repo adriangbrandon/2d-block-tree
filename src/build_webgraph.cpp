@@ -32,30 +32,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 #include <dataset_reader.hpp>
 #include <block_tree.hpp>
+#include <block_tree_skip_levels.hpp>
 #include <adjacency_list_helper.hpp>
 #include <sdsl/io.hpp>
 
-int main(int argc, char **argv) {
-
-    if(argc != 4 && argc != 3){
-        std::cout << argv[0] << "<dataset> <k> [limit]" << std::endl;
-        return 0;
-    }
-
-    std::string dataset = argv[1];
-    uint64_t k = atoi(argv[2]);
-    uint64_t limit = -1;
-    if(argc == 4){
-        limit = atoi(argv[3]);
-    }
-
-
+template<class t_block_tree>
+void run_build(const std::string &dataset, const uint64_t k, const uint64_t limit){
     std::vector<std::vector<int64_t>> adjacency_lists;
     dataset_reader::web_graph::read(dataset, adjacency_lists, limit);
     const auto copy_lists = adjacency_lists;
 
     std::cout << "Building Block-tree..." << std::endl;
-    block_tree_2d::block_tree<> m_block_tree(adjacency_lists, k);
+    t_block_tree m_block_tree(adjacency_lists, k);
     std::cout << "The Block-tree was built." << std::endl;
     std::string name_file = dataset;
     if(limit != -1){
@@ -112,8 +100,29 @@ int main(int argc, char **argv) {
         }
     }
     std::cout << std::endl;
+}
 
+int main(int argc, char **argv) {
 
+    if(argc != 5 && argc != 4){
+        std::cout << argv[0] << "<dataset> <type> <k>  [limit]" << std::endl;
+        std::cout << "type: naive, skip_levels" << std::endl;
+        return 0;
+    }
 
+    std::string dataset = argv[1];
+    std::string type = argv[2];
+    auto k = static_cast<uint64_t >(atoi(argv[3]));
+    auto limit = static_cast<uint64_t>(-1);
+    if(argc == 5){
+        limit = static_cast<uint64_t >(atoi(argv[4]));
+    }
 
+    if(type == "naive"){
+        run_build<block_tree_2d::block_tree<>>(dataset, k, limit);
+    }else if (type == "skip_levels"){
+        run_build<block_tree_2d::block_tree_skip_levels<>>(dataset, k, limit);
+    }else{
+        std::cout << "Type: " << type << " is not supported." << std::endl;
+    }
 }

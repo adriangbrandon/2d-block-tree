@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
         block_tree_2d::block_tree<> m_block_tree2;
         sdsl::load_from_file(m_block_tree2, "test.2dbt");
 
-        m_block_tree.access_region(0, 0, dimensions - 1, dimensions - 1, result2);
+        m_block_tree2.access_region(0, 0, dimensions - 1, dimensions - 1, result2);
         std::cout << "Done." << std::endl;
 
         block_tree_2d::algorithm::print_ajdacent_list(result2);

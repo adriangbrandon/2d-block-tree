@@ -7,6 +7,7 @@ CMakeFiles/build_webgraph.dir/src/build_webgraph.cpp.o
  ../include/bithacks.hpp
  ../include/block_tree.hpp
  ../include/block_tree_algorithm_helper_v2.hpp
+ ../include/block_tree_skip_levels.hpp
  ../include/dataset_reader.hpp
  ../include/hash_table_chainning.hpp
  ../include/heap.hpp
@@ -14,6 +15,7 @@ CMakeFiles/build_webgraph.dir/src/build_webgraph.cpp.o
  ../include/kr_roll_adjacent_list_v2.hpp
  ../include/logger.hpp
  ../include/progress_bar.hpp
+ ../include/search_util.hpp
  ../include/zeta_order.hpp
  /Users/adrian/CLionProjects/2d-block-tree/src/build_webgraph.cpp
  external/sdsl-lite/include/sdsl/bit_vector_il.hpp

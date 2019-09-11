@@ -47,6 +47,20 @@ bithacks.hpp
 -
 progress_bar.hpp
 -
+search_util.hpp
+-
+
+../include/block_tree_skip_levels.hpp
+block_tree_algorithm_helper_v2.hpp
+-
+alternative_code.hpp
+../include/alternative_code.hpp
+logger.hpp
+-
+block_tree.hpp
+-
+vector
+-
 
 ../include/dataset_reader.hpp
 iostream
@@ -110,6 +124,10 @@ iostream
 stdint.h
 -
 
+../include/search_util.hpp
+stdint.h
+-
+
 ../include/zeta_order.hpp
 stdint.h
 -
@@ -120,6 +138,8 @@ utility
 dataset_reader.hpp
 -
 block_tree.hpp
+-
+block_tree_skip_levels.hpp
 -
 adjacency_list_helper.hpp
 -
