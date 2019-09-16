@@ -87,7 +87,7 @@ namespace block_tree_2d {
         }
 
 
-         void construction(input_type &adjacency_lists, size_type h, size_type block_size, size_type blocks){
+         /*void construction(input_type &adjacency_lists, size_type h, size_type block_size, size_type blocks){
 
 
             std::cout << "Construction skip" << std::endl;
@@ -100,6 +100,60 @@ namespace block_tree_2d {
             size_type min_block_size;
             std::tie(min_block_size, m_minimum_level) = minimum_block_size(adjacency_lists, h);
             util::logger::log("Minimum level=" + std::to_string(m_minimum_level) + " and block_size=" + std::to_string(min_block_size));
+
+            //2. Building LOUDS of k2_tree until min_block_size and map between z_order and position in vector nodes
+            block_tree_2d::algorithm::hash_type hash;
+            m_zeroes = block_tree_2d::algorithm::build_k2_tree(adjacency_lists, this->k, h, min_block_size, this->m_topology, hash);
+
+            //for(size_type i = 0; i < this->m_topology.size(); ++i){
+            //    std::cout << this->m_topology[i] << ", ";
+            //}
+            std::cout << std::endl;
+            std::vector<node_type> nodes(hash.size());
+            size_type topology_index = this->m_topology.size(), is_pointer_index = 0;
+            size_type level = m_minimum_level;
+            block_size = min_block_size / this->m_k;
+            //std::cout << "Level: " << level << std::endl;
+            while (block_size > 1) {
+                ++level;
+                util::logger::log("Processing level " + std::to_string(level) + " of " + std::to_string(h));
+                util::logger::log("Block size: " + std::to_string(block_size));
+                auto pointers = this->processing_level(level - m_minimum_level, adjacency_lists, block_size, topology_index, is_pointer_index, hash, nodes);
+                util::logger::log("Pointers: " + std::to_string(pointers));
+                block_size = block_size / this->k;
+
+            }
+            ++level;
+            util::logger::log("Processing last level (" + std::to_string(level) + ")");
+            block_tree_2d::algorithm::compute_last_level(adjacency_lists, hash, nodes);
+            util::logger::log("Compacting last level (" + std::to_string(level) + ")");
+            this->compact_last_level(nodes, topology_index);
+            this->m_height = level;
+            this->m_topology.resize(topology_index);
+            this->m_is_pointer.resize(is_pointer_index);
+            this->m_level_ones.resize(2*(this->m_height - m_minimum_level));
+            sdsl::util::init_support(this->m_topology_rank, &this->m_topology);
+            sdsl::util::init_support(this->m_topology_select, &this->m_topology);
+            sdsl::util::init_support(this->m_is_pointer_rank, &this->m_is_pointer);
+            sdsl::util::bit_compress(this->m_level_ones);
+            util::logger::log("2D Block Tree DONE!!!");
+        }*/
+
+        void construction(input_type &adjacency_lists, size_type h, size_type block_size, size_type blocks){
+
+
+            std::cout << "Construction skip" << std::endl;
+            //0. Init the structure
+            this->init_structure();
+            this->m_offsets[0].resize(0);
+            this->m_pointers[0].resize(0);
+
+            //1. Obtaining minimum block size where there are identical blocks
+            size_type min_block_size = 16;
+            m_minimum_level = 16;
+           // std::tie(min_block_size, m_minimum_level) = minimum_block_size(adjacency_lists, h);
+            util::logger::log("Minimum level=" + std::to_string(m_minimum_level) + " and block_size=" + std::to_string(min_block_size));
+
 
             //2. Building LOUDS of k2_tree until min_block_size and map between z_order and position in vector nodes
             block_tree_2d::algorithm::hash_type hash;
@@ -168,12 +222,26 @@ namespace block_tree_2d {
 
          void leaf_node_info(const size_type pos_zero, const size_type level,
                                     size_type &pointer, value_type &offset_x, value_type &offset_y){
+
+            //std::cout << "level: " << level << std::endl;
+            //std::cout << "rank: " << this->m_is_pointer_rank(pos_zero+1) << std::endl;
+            //std::cout << "pos: " << 2*(level-m_minimum_level-1)+1 << std::endl;
+            //std::cout << "val: " << this->m_level_ones[2*(level-m_minimum_level-1)+1] << std::endl;
             size_type p_pointer = this->m_is_pointer_rank(pos_zero+1)- this->m_level_ones[2*(level-m_minimum_level-1)+1] -1;
             pointer = this->m_level_ones[2*(level-m_minimum_level)]+ this->m_pointers[level-m_minimum_level][p_pointer];
             offset_x = codes::alternative_code::decode(this->m_offsets[level-m_minimum_level][2*p_pointer]);
             offset_y = codes::alternative_code::decode(this->m_offsets[level-m_minimum_level][2*p_pointer+1]);
+           // std::cout << "Pointer at: " << p_pointer << " with offset: (" << offset_x << ", " << offset_y << ") at level="
+           //<< level << std::endl;
         }
 
+        bool is_pointer(size_type idx, size_type level, size_type &pos_zero){
+            if(level <= m_minimum_level){
+                return false;
+            }
+            pos_zero= this->idx_leaf(idx);
+            return (idx > 0 && this->m_is_pointer[pos_zero]);
+        }
 
         //! Copy constructor
         block_tree_skip_levels(const block_tree_skip_levels &p) {

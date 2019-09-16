@@ -69,7 +69,7 @@ namespace block_tree_2d {
         class compare_abs_value {
         public:
             bool operator()(const int64_t &x, const int64_t &y){
-                return util::bithacks::abs(x) < util::bithacks::abs(y);
+                return std::abs(x) < std::abs(y);
             }
         };
 
@@ -201,7 +201,7 @@ namespace block_tree_2d {
                 auto it_b2 = iterators_b2[(sy_b2 + row) % block_size];
                 auto it_b1 = std::upper_bound(beg_list_b1, (adjacent_lists.begin()+sy_b1+row)->end(), ex_b1, compare_abs_value());
                 iterators_b1[(sy_b1 + row) % block_size] = it_b1;
-                while(it_b2 != beg_list_b2 && util::bithacks::abs(*(--it_b2)) >= sx_b2){
+                while(it_b2 != beg_list_b2 && std::abs(*(--it_b2)) >= sx_b2){
                     if(*it_b2 >= 0){
                         size_type d2 = *it_b2 - sx_b2;
                         if(it_b1 == beg_list_b1 || *(--it_b1) < sx_b1) return false;
@@ -316,7 +316,7 @@ namespace block_tree_2d {
         }
 
         static inline void compute_topleft_and_offsets(const value_type col, const value_type row, const size_type block_size,
-                                                       size_type &c, size_type &r, size_type &off_x, size_type &off_y){
+                                                       size_type &c, size_type &r, value_type &off_x, value_type &off_y){
 
             c = col/block_size;
             r = row/block_size;
@@ -477,6 +477,7 @@ namespace block_tree_2d {
             iterator_hash_type it_hash;
             iterators_value_type iterators_target = iterators_value_type(block_size);
             while(kr_roll.next()){
+
 #if BT_VERBOSE
                 std::cout << "Source: (" << kr_roll.col << ", " << kr_roll.row << ")" << std::endl;
                 std::cout << "Hash: " << kr_roll.hash << std::endl;
@@ -624,6 +625,7 @@ namespace block_tree_2d {
                 std::cout << "Source: (" << kr_roll.col << ", " << kr_roll.row << ")" << std::endl;
                 std::cout << "Hash: " << kr_roll.hash << std::endl;
 #endif
+
                 auto processed_rolls = kr_roll.row * rolls_per_row + kr_roll.col+1;
                 //check if kr_block.hash exists in map
                 if(ht.hash_collision(kr_roll.hash, it_table, it_hash)){
@@ -640,7 +642,8 @@ namespace block_tree_2d {
 #endif
                         //Compute offsets and top-left block
                         size_type x_block, y_block;
-                        size_type source_ptr, source_off_x, source_off_y, off_x, off_y;
+                        size_type source_ptr;
+                        value_type source_off_x, source_off_y, off_x, off_y;
                         compute_topleft_and_offsets(kr_roll.col, kr_roll.row, block_size, x_block, y_block, off_x, off_y);
                         //Delete <target> from hash_table
                         ht.remove_value(it_table, it_hash, target);
@@ -781,7 +784,16 @@ namespace block_tree_2d {
 
             size_type l = adjacent_lists.size();
             std::queue<t_part_tuple> q;
-            q.push(t_part_tuple(0, edges_z_order.size()-1, l/k , 0));
+            if(l > block_size_stop){
+                q.push(t_part_tuple(0, edges_z_order.size()-1, l/k , 0));
+            }else{
+                //Preparing next level
+                size_type n_elem = 0;
+                for(size_type z_order = 0; z_order < k_2; ++z_order){
+                    hash.insert({z_order, n_elem});
+                    ++n_elem;
+                }
+            }
             size_type i, j, z_0;
             size_type t = k_2;
             size_type n_elem = 0, zeroes = k_2 -1;

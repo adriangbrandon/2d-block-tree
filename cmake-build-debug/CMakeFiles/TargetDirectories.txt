@@ -1,6 +1,7 @@
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/install.dir
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/list_install_components.dir
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/display.dir
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/build_k2_tree_test.dir
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/build_k2tree.dir
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/build_webgraph.dir
@@ -8,6 +9,7 @@
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/hash_table.dir
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/rebuild_cache.dir
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/package_source.dir
+/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/fixing_error.dir
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/block_tree_skip_levels_test.dir
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/install/local.dir
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/block_tree_test.dir

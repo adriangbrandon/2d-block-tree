@@ -179,6 +179,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named display
+
+# Build rule for target.
+display: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 display
+.PHONY : display
+
+# fast build rule for target.
+display/fast:
+	$(MAKE) -f CMakeFiles/display.dir/build.make CMakeFiles/display.dir/build
+.PHONY : display/fast
+
+#=============================================================================
 # Target rules for targets named build_k2_tree_test
 
 # Build rule for target.
@@ -242,6 +255,19 @@ hash_table: cmake_check_build_system
 hash_table/fast:
 	$(MAKE) -f CMakeFiles/hash_table.dir/build.make CMakeFiles/hash_table.dir/build
 .PHONY : hash_table/fast
+
+#=============================================================================
+# Target rules for targets named fixing_error
+
+# Build rule for target.
+fixing_error: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 fixing_error
+.PHONY : fixing_error
+
+# fast build rule for target.
+fixing_error/fast:
+	$(MAKE) -f CMakeFiles/fixing_error.dir/build.make CMakeFiles/fixing_error.dir/build
+.PHONY : fixing_error/fast
 
 #=============================================================================
 # Target rules for targets named block_tree_skip_levels_test
@@ -3393,6 +3419,60 @@ src/build_webgraph.cpp.s:
 	$(MAKE) -f CMakeFiles/build_webgraph.dir/build.make CMakeFiles/build_webgraph.dir/src/build_webgraph.cpp.s
 .PHONY : src/build_webgraph.cpp.s
 
+src/display.o: src/display.cpp.o
+
+.PHONY : src/display.o
+
+# target to build an object file
+src/display.cpp.o:
+	$(MAKE) -f CMakeFiles/display.dir/build.make CMakeFiles/display.dir/src/display.cpp.o
+.PHONY : src/display.cpp.o
+
+src/display.i: src/display.cpp.i
+
+.PHONY : src/display.i
+
+# target to preprocess a source file
+src/display.cpp.i:
+	$(MAKE) -f CMakeFiles/display.dir/build.make CMakeFiles/display.dir/src/display.cpp.i
+.PHONY : src/display.cpp.i
+
+src/display.s: src/display.cpp.s
+
+.PHONY : src/display.s
+
+# target to generate assembly for a file
+src/display.cpp.s:
+	$(MAKE) -f CMakeFiles/display.dir/build.make CMakeFiles/display.dir/src/display.cpp.s
+.PHONY : src/display.cpp.s
+
+src/fixing_error.o: src/fixing_error.cpp.o
+
+.PHONY : src/fixing_error.o
+
+# target to build an object file
+src/fixing_error.cpp.o:
+	$(MAKE) -f CMakeFiles/fixing_error.dir/build.make CMakeFiles/fixing_error.dir/src/fixing_error.cpp.o
+.PHONY : src/fixing_error.cpp.o
+
+src/fixing_error.i: src/fixing_error.cpp.i
+
+.PHONY : src/fixing_error.i
+
+# target to preprocess a source file
+src/fixing_error.cpp.i:
+	$(MAKE) -f CMakeFiles/fixing_error.dir/build.make CMakeFiles/fixing_error.dir/src/fixing_error.cpp.i
+.PHONY : src/fixing_error.cpp.i
+
+src/fixing_error.s: src/fixing_error.cpp.s
+
+.PHONY : src/fixing_error.s
+
+# target to generate assembly for a file
+src/fixing_error.cpp.s:
+	$(MAKE) -f CMakeFiles/fixing_error.dir/build.make CMakeFiles/fixing_error.dir/src/fixing_error.cpp.s
+.PHONY : src/fixing_error.cpp.s
+
 src/hash_table.o: src/hash_table.cpp.o
 
 .PHONY : src/hash_table.o
@@ -3645,6 +3725,7 @@ help:
 	@echo "... install"
 	@echo "... list_install_components"
 	@echo "... edit_cache"
+	@echo "... display"
 	@echo "... build_k2_tree_test"
 	@echo "... build_k2tree"
 	@echo "... build_webgraph"
@@ -3652,6 +3733,7 @@ help:
 	@echo "... hash_table"
 	@echo "... rebuild_cache"
 	@echo "... package_source"
+	@echo "... fixing_error"
 	@echo "... block_tree_skip_levels_test"
 	@echo "... install/local"
 	@echo "... block_tree_test"
@@ -3901,6 +3983,12 @@ help:
 	@echo "... src/build_webgraph.o"
 	@echo "... src/build_webgraph.i"
 	@echo "... src/build_webgraph.s"
+	@echo "... src/display.o"
+	@echo "... src/display.i"
+	@echo "... src/display.s"
+	@echo "... src/fixing_error.o"
+	@echo "... src/fixing_error.i"
+	@echo "... src/fixing_error.s"
 	@echo "... src/hash_table.o"
 	@echo "... src/hash_table.i"
 	@echo "... src/hash_table.s"

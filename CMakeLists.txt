@@ -9,7 +9,7 @@ set(PROJECT_CONTACT "adrian.gbrandon@udc.es")
 
 
 #Change to "Debug" when you need it
-set(CMAKE_BUILD_TYPE "Release")
+set(CMAKE_BUILD_TYPE "Debug")
 
 # C++11 compiler Check
 if(NOT CMAKE_CXX_COMPILER_VERSION) # work around for cmake versions smaller than 2.8.10
@@ -101,3 +101,9 @@ target_link_libraries(build_k2tree sdsl divsufsort divsufsort64)
 
 add_executable(build_k2_tree_test test/build_k2_tree_test.cpp)
 target_link_libraries(build_k2_tree_test sdsl divsufsort divsufsort64)
+
+add_executable(fixing_error src/fixing_error.cpp)
+target_link_libraries(fixing_error sdsl divsufsort divsufsort64)
+
+add_executable(display src/display.cpp)
+target_link_libraries(display sdsl divsufsort divsufsort64)

@@ -164,8 +164,13 @@ namespace karp_rabin {
                     v_in.emplace_back(it_in,  i);
                 }
             }
-            m_heap_in = heap_type(v_in);
-            m_heap_out = heap_type(v_out);
+            if(!v_in.empty()){
+                m_heap_in = heap_type(v_in);
+            }
+            if(!v_out.empty()){
+                m_heap_out = heap_type(v_out);
+            }
+
 
         }
 
@@ -199,7 +204,7 @@ namespace karp_rabin {
                 //1.2. Iterate over the elements of an adjacent list
                 auto &it_element = m_iterators_end_first_block[list_id];
                 size_type hash_row = 0;
-                while(it_element != it_list->end() && util::bithacks::abs(*it_element) < m_block_size){
+                while(it_element != it_list->end() && std::abs(*it_element) < m_block_size){
                     if((*it_element) >= 0){
                         //2.1 Compute hash_value with 0s
                         for(auto v = prev_value+1; v < (*it_element); ++v){
@@ -313,7 +318,7 @@ namespace karp_rabin {
             size_type last_row = m_row + m_block_size-1;
             auto prev_value = (size_type) -1;
             auto it_element = (m_iterator_list + last_row)->begin();
-            while(it_element != (m_iterator_list + last_row)->end() && util::bithacks::abs(*it_element) < m_block_size){
+            while(it_element != (m_iterator_list + last_row)->end() && std::abs(*it_element) < m_block_size){
                 // Compute hash_value with 0s
                 if(*it_element >= 0){
                     for(auto v = prev_value+1; v < (*it_element); ++v){
@@ -504,7 +509,7 @@ namespace karp_rabin {
             std::vector<pq_element_type> v_in;
             for(size_type i = 0; i < m_block_size; ++i){
                 auto cyclic_i = (m_row + i) % m_block_size;
-                auto it_in = m_iterators[cyclic_i];
+                auto &it_in = m_iterators[cyclic_i];
                 while(it_in != m_iterator_list[m_row+i].end() && *it_in < 0){
                     ++it_in;
                 }

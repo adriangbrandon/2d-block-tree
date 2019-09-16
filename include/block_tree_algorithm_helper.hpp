@@ -106,7 +106,7 @@ namespace block_tree_2d {
             auto current_z_order = codes::zeta_order::encode(current_col, current_row);
             for(auto &it : hash_values){
                 if(are_identical(adjacent_lists, current_z_order, current_iterators, it.first, it.second, block_size)){
-                    std::cout << "Current: " << current_z_order << " equal to: " << it.first << std::endl;
+                    //std::cout << "Current: " << current_z_order << " equal to: " << it.first << std::endl;
                     return true;
                 }
             }

@@ -28,16 +28,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 //
-// Created by Adrián on 08/08/2019.
+// Created by Adrián on 16/09/2019.
 //
 
 #include <block_tree.hpp>
 #include <block_tree_skip_levels.hpp>
 #include <adjacency_list_helper.hpp>
 #include <sdsl/io.hpp>
+#include <dataset_reader.hpp>
 
 template<class t_block_tree>
-void run_load(const std::string &dataset, const uint64_t k, const uint64_t limit){
+void run_display(const std::string &dataset, const uint64_t k, const uint64_t limit){
 
     std::cout << "Loading Block-tree..." << std::endl;
     t_block_tree m_block_tree;
@@ -47,15 +48,16 @@ void run_load(const std::string &dataset, const uint64_t k, const uint64_t limit
     }
     name_file = name_file + ".2dbt";
     sdsl::load_from_file(m_block_tree, name_file);
+    m_block_tree.display();
 
     std::cout << "Size in bytes: " << sdsl::size_in_bytes(m_block_tree) << std::endl;
-    sdsl::write_structure<sdsl::JSON_FORMAT>(m_block_tree, name_file + ".json");
-    sdsl::write_structure<sdsl::HTML_FORMAT>(m_block_tree, name_file + ".html");
+
 }
+
 
 int main(int argc, char **argv) {
 
-    if(argc != 5 && argc != 4){
+    if (argc != 5 && argc != 4) {
         std::cout << argv[0] << "<dataset> <type> <k>  [limit]" << std::endl;
         std::cout << "type: naive, skip_levels" << std::endl;
         return 0;
@@ -65,21 +67,15 @@ int main(int argc, char **argv) {
     std::string type = argv[2];
     auto k = static_cast<uint64_t >(atoi(argv[3]));
     auto limit = static_cast<uint64_t>(-1);
-    if(argc == 5){
+    if (argc == 5) {
         limit = static_cast<uint64_t >(atoi(argv[4]));
     }
 
-    if(type == "naive"){
-        run_load<block_tree_2d::block_tree<>>(dataset, k, limit);
-    }else if (type == "skip_levels"){
-        run_load<block_tree_2d::block_tree_skip_levels<>>(dataset, k, limit);
-    }else{
+    if (type == "naive") {
+        run_display<block_tree_2d::block_tree<>>(dataset, k, limit);
+    } else if (type == "skip_levels") {
+        run_display<block_tree_2d::block_tree_skip_levels<>>(dataset, k, limit);
+    } else {
         std::cout << "Type: " << type << " is not supported." << std::endl;
     }
-
-
-
-
-
-
 }
