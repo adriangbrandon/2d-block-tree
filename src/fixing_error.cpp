@@ -61,11 +61,11 @@ void run_load(const std::string &dataset, const uint64_t k, const uint64_t limit
     std::vector<std::vector<int64_t>> copy_lists;
     dataset_reader::web_graph::read(dataset, copy_lists, limit);
 
-    for(uint64_t i = 135736; i < 135744; ++i){
+    for(uint64_t i = 774454; i < 774455; ++i){
         for(uint64_t j = 0; j < copy_lists[i].size(); ++j){
-            if(copy_lists[i][j] >= 136592 && copy_lists[i][j] < 136600){
+            //if(copy_lists[i][j] >= 136592 && copy_lists[i][j] < 136600){
                 std::cout << copy_lists[i][j] << ", ";
-            }
+            //}
 
         }
         std::cout << std::endl;

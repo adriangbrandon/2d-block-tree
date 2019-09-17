@@ -349,9 +349,9 @@ namespace block_tree_2d {
 
             htc_type m_htc(2*nodes.size()); //2* nodes, in order to reduce resize operations
             util::logger::log("Computing fingerprint of blocks at level=" + std::to_string(level));
-            block_tree_2d::algorithm::get_fingerprint_blocks(adjacency_lists, k, m_htc, dimensions, block_size, hash, nodes);
+            block_tree_2d::algorithm::get_fingerprint_blocks_stack_lite(adjacency_lists, k, m_htc, dimensions, block_size, hash, nodes);
             util::logger::log("Computing fingerprint of shifts at level=" + std::to_string(level));
-            block_tree_2d::algorithm::get_type_of_nodes(adjacency_lists, k, m_htc, dimensions, block_size, hash, nodes);
+            block_tree_2d::algorithm::get_type_of_nodes_stack_lite(adjacency_lists, k, m_htc, dimensions, block_size, hash, nodes);
             util::logger::log("Clearing adjacency lists at level=" + std::to_string(level));
             block_tree_2d::algorithm::clear_adjacency_lists(adjacency_lists);
             util::logger::log("Compacting level=" + std::to_string(level));

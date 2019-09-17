@@ -31,8 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Created by Adrián on 15/07/2019.
 //
 
-#ifndef INC_KARP_RABIN_ROLL_ADJACENT_LIST_V2_HPP
-#define INC_KARP_RABIN_ROLL_ADJACENT_LIST_V2_HPP
+#ifndef INC_KARP_RABIN_ROLL_ADJACENT_LIST_V3_HPP
+#define INC_KARP_RABIN_ROLL_ADJACENT_LIST_V3_HPP
 
 #include <cstdint>
 #include <vector>
@@ -44,7 +44,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace karp_rabin {
 
     template <class t_input = std::vector<std::vector<int64_t>>>
-    class kr_roll_adjacent_list_v2 {
+    class kr_roll_adjacent_list_v3 {
 
 
     public:
@@ -165,12 +165,14 @@ namespace karp_rabin {
                     v_in.emplace_back(it_in,  i);
                 }
             }
-            if(!v_in.empty()){
-                m_heap_in = heap_type(v_in);
+            m_heap_in = heap_type(v_in);
+            m_heap_out = heap_type(v_out);
+            /*if(!v_in.empty()){
+
             }
             if(!v_out.empty()){
-                m_heap_out = heap_type(v_out);
-            }
+
+            }*/
 
 
         }
@@ -192,7 +194,7 @@ namespace karp_rabin {
         }
 
 
-        bool compute_initial_hash_block(){
+        int compute_initial_hash_block(){
 
             m_row = 0;
             m_prev_block_row = (m_row / m_block_size) * m_block_size;
@@ -242,16 +244,18 @@ namespace karp_rabin {
             //2. Initialize heaps
             init_heaps();
             if(m_hash == 0 && is_empty()){
-                shift_right();
+                return 0;
             }
-            return true;
+            return 1;
         }
 
 
-
-        bool shift_right(){
+        /**
+         * @return 0 = empty, 1 = ok, 2 = next row
+         */
+        int state_shift_right(){
             ++m_col;
-            if(m_col == 772062 && m_row == 775348){
+            /*if(m_col == 772062 && m_row == 775348){
                 std::cout << "col: " << m_col << " row: " << m_row << std::endl;
                 for(auto r = m_row; r < 862664; r++){
                     //std::cout << "List: " << r << " [";
@@ -265,11 +269,11 @@ namespace karp_rabin {
                     //std::cout << "]" << std::endl;
                 }
                 exit(20);
-            }
+            }*/
 
             //No more ones to process, so we advance to the next row
-            if(m_heap_out.empty() || m_col == m_total_shifts){
-                return next_row();
+            if(m_heap_out.empty() || m_col >= m_total_shifts){
+                return 2;
             }
             //Skip
             if(!m_heap_in.empty() && *(m_heap_out.top().first) == *(m_heap_in.top().first)){
@@ -314,13 +318,17 @@ namespace karp_rabin {
             }
             m_hash = hash;
             if(m_hash == 0 && is_empty()){
-                return shift_right();
+                return 0;
             }
-            return true;
+            return 1;
         }
 
-        bool next_row(){
-            if(m_iterator_list + m_row + m_block_size == m_end_list) return false;
+        /**
+         *
+         * @return 0 = empty, 1 = ok, 2 = next row
+         */
+        int state_next_row(){
+            //if(m_iterator_list + m_row + m_block_size == m_end_list) return false;
             ++m_row;
             m_next_block_row = (m_row / m_block_size+1) * m_block_size;
             m_col = 0;
@@ -370,17 +378,17 @@ namespace karp_rabin {
             //1.6 Init heaps
             init_heaps();
             if(m_heap_in.empty() && m_heap_out.empty()){
-                return next_row();
+                return 2;
             }
             //1.7 Check if the first area is empty
             if(m_hash == 0 && (m_heap_in.empty() || *(m_heap_in.top().first) >= m_block_size)){
-                return shift_right();
+                return 0;
             }
             return true;
 
         }
 
-        void copy(const kr_roll_adjacent_list_v2 &o){
+        void copy(const kr_roll_adjacent_list_v3 &o){
             m_block_size = o.m_block_size;
             m_prime = o.m_prime;
             m_asize = o.m_asize;
@@ -415,7 +423,7 @@ namespace karp_rabin {
         heap_type &heap_in = m_heap_in;
         heap_type &heap_out = m_heap_out;
 
-        kr_roll_adjacent_list_v2(size_type bs, size_type q, input_type &input){
+        kr_roll_adjacent_list_v3(size_type bs, size_type q, input_type &input){
             m_block_size = bs;
             m_prime = q;
             m_total_shifts = std::distance(input.begin(), input.end()) - m_block_size + 1;
@@ -430,25 +438,25 @@ namespace karp_rabin {
         }
 
         //! Copy constructor
-        kr_roll_adjacent_list_v2(const kr_roll_adjacent_list_v2& o)
+        kr_roll_adjacent_list_v3(const kr_roll_adjacent_list_v3& o)
         {
             copy(o);
         }
 
         //! Move constructor
-        kr_roll_adjacent_list_v2(kr_roll_adjacent_list_v2&& o)
+        kr_roll_adjacent_list_v3(kr_roll_adjacent_list_v3&& o)
         {
             *this = std::move(o);
         }
 
 
-        kr_roll_adjacent_list_v2 &operator=(const kr_roll_adjacent_list_v2 &o) {
+        kr_roll_adjacent_list_v3 &operator=(const kr_roll_adjacent_list_v3 &o) {
             if (this != &o) {
                 copy(o);
             }
             return *this;
         }
-        kr_roll_adjacent_list_v2 &operator=(kr_roll_adjacent_list_v2 &&o) {
+        kr_roll_adjacent_list_v3 &operator=(kr_roll_adjacent_list_v3 &&o) {
             if (this != &o) {
                 m_block_size = std::move(o.m_block_size);
                 m_prime = std::move(o.m_prime);
@@ -475,7 +483,7 @@ namespace karp_rabin {
             return *this;
         }
 
-        void swap(kr_roll_adjacent_list_v2 &o) {
+        void swap(kr_roll_adjacent_list_v3 &o) {
             // m_bp.swap(bp_support.m_bp); use set_vector to set the supported bit_vector
             std::swap(m_block_size, o.m_block_size);
             std::swap(m_prime, o.m_prime);
@@ -501,11 +509,21 @@ namespace karp_rabin {
         }
 
         bool next(){
+            int state;
             if(m_row == -1){
-                return compute_initial_hash_block();
-            }else{
-                return shift_right();
+                state = compute_initial_hash_block();
+            }else {
+                state = state_shift_right();
             }
+            while(state != 1){
+                if(state == 0){
+                    state = state_shift_right();
+                }else{
+                    if(m_iterator_list + m_row + m_block_size == m_end_list) return false;
+                    state = state_next_row();
+                }
+            }
+            return true;
         }
 
         /*void update_prev_hash_same_row(){
@@ -529,7 +547,7 @@ namespace karp_rabin {
             std::vector<pq_element_type> v_in;
             for(size_type i = 0; i < m_block_size; ++i){
                 auto cyclic_i = (m_row + i) % m_block_size;
-                auto it_in = m_iterators[cyclic_i];
+                auto &it_in = m_iterators[cyclic_i];
                 while(it_in != m_iterator_list[m_row+i].end() && *it_in < 0){
                     ++it_in;
                 }
