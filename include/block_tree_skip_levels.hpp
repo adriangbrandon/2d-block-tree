@@ -149,9 +149,10 @@ namespace block_tree_2d {
             this->m_pointers[0].resize(0);
 
             //1. Obtaining minimum block size where there are identical blocks
-            size_type min_block_size = 16384;
-            m_minimum_level = 6;
-           // std::tie(min_block_size, m_minimum_level) = minimum_block_size(adjacency_lists, h);
+            //size_type min_block_size = 16;
+            //m_minimum_level = 16;
+            size_type min_block_size;
+            std::tie(min_block_size, m_minimum_level) = minimum_block_size(adjacency_lists, h);
             util::logger::log("Minimum level=" + std::to_string(m_minimum_level) + " and block_size=" + std::to_string(min_block_size));
 
 
