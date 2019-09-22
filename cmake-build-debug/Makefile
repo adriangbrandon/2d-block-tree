@@ -56,6 +56,18 @@ CMAKE_BINARY_DIR = /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
+
 # Special rule for the target install
 install: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
@@ -89,40 +101,6 @@ edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
-# Special rule for the target package_source
-package_source:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool for source..."
-	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cpack --config ./CPackSourceConfig.cmake /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CPackSourceConfig.cmake
-.PHONY : package_source
-
-# Special rule for the target package_source
-package_source/fast: package_source
-
-.PHONY : package_source/fast
-
-# Special rule for the target install/local
-install/local: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local
-
-# Special rule for the target install/local
-install/local/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local/fast
-
 # Special rule for the target install/strip
 install/strip: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
@@ -145,6 +123,28 @@ package: preinstall
 package/fast: package
 
 .PHONY : package/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
+
+# Special rule for the target package_source
+package_source:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool for source..."
+	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cpack --config ./CPackSourceConfig.cmake /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CPackSourceConfig.cmake
+.PHONY : package_source
+
+# Special rule for the target package_source
+package_source/fast: package_source
+
+.PHONY : package_source/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -177,6 +177,45 @@ preinstall/fast:
 depend:
 	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
+
+#=============================================================================
+# Target rules for targets named karp_rabin
+
+# Build rule for target.
+karp_rabin: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 karp_rabin
+.PHONY : karp_rabin
+
+# fast build rule for target.
+karp_rabin/fast:
+	$(MAKE) -f CMakeFiles/karp_rabin.dir/build.make CMakeFiles/karp_rabin.dir/build
+.PHONY : karp_rabin/fast
+
+#=============================================================================
+# Target rules for targets named adjacency_lists_test
+
+# Build rule for target.
+adjacency_lists_test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 adjacency_lists_test
+.PHONY : adjacency_lists_test
+
+# fast build rule for target.
+adjacency_lists_test/fast:
+	$(MAKE) -f CMakeFiles/adjacency_lists_test.dir/build.make CMakeFiles/adjacency_lists_test.dir/build
+.PHONY : adjacency_lists_test/fast
+
+#=============================================================================
+# Target rules for targets named times
+
+# Build rule for target.
+times: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 times
+.PHONY : times
+
+# fast build rule for target.
+times/fast:
+	$(MAKE) -f CMakeFiles/times.dir/build.make CMakeFiles/times.dir/build
+.PHONY : times/fast
 
 #=============================================================================
 # Target rules for targets named display
@@ -218,19 +257,6 @@ build_k2tree/fast:
 .PHONY : build_k2tree/fast
 
 #=============================================================================
-# Target rules for targets named build_webgraph
-
-# Build rule for target.
-build_webgraph: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 build_webgraph
-.PHONY : build_webgraph
-
-# fast build rule for target.
-build_webgraph/fast:
-	$(MAKE) -f CMakeFiles/build_webgraph.dir/build.make CMakeFiles/build_webgraph.dir/build
-.PHONY : build_webgraph/fast
-
-#=============================================================================
 # Target rules for targets named block_tree_skip_levels
 
 # Build rule for target.
@@ -244,30 +270,30 @@ block_tree_skip_levels/fast:
 .PHONY : block_tree_skip_levels/fast
 
 #=============================================================================
-# Target rules for targets named hash_table
+# Target rules for targets named load_webgraph
 
 # Build rule for target.
-hash_table: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 hash_table
-.PHONY : hash_table
+load_webgraph: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 load_webgraph
+.PHONY : load_webgraph
 
 # fast build rule for target.
-hash_table/fast:
-	$(MAKE) -f CMakeFiles/hash_table.dir/build.make CMakeFiles/hash_table.dir/build
-.PHONY : hash_table/fast
+load_webgraph/fast:
+	$(MAKE) -f CMakeFiles/load_webgraph.dir/build.make CMakeFiles/load_webgraph.dir/build
+.PHONY : load_webgraph/fast
 
 #=============================================================================
-# Target rules for targets named fixing_error
+# Target rules for targets named build_webgraph
 
 # Build rule for target.
-fixing_error: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 fixing_error
-.PHONY : fixing_error
+build_webgraph: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 build_webgraph
+.PHONY : build_webgraph
 
 # fast build rule for target.
-fixing_error/fast:
-	$(MAKE) -f CMakeFiles/fixing_error.dir/build.make CMakeFiles/fixing_error.dir/build
-.PHONY : fixing_error/fast
+build_webgraph/fast:
+	$(MAKE) -f CMakeFiles/build_webgraph.dir/build.make CMakeFiles/build_webgraph.dir/build
+.PHONY : build_webgraph/fast
 
 #=============================================================================
 # Target rules for targets named block_tree_skip_levels_test
@@ -283,17 +309,17 @@ block_tree_skip_levels_test/fast:
 .PHONY : block_tree_skip_levels_test/fast
 
 #=============================================================================
-# Target rules for targets named block_tree_test
+# Target rules for targets named hash_table
 
 # Build rule for target.
-block_tree_test: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 block_tree_test
-.PHONY : block_tree_test
+hash_table: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 hash_table
+.PHONY : hash_table
 
 # fast build rule for target.
-block_tree_test/fast:
-	$(MAKE) -f CMakeFiles/block_tree_test.dir/build.make CMakeFiles/block_tree_test.dir/build
-.PHONY : block_tree_test/fast
+hash_table/fast:
+	$(MAKE) -f CMakeFiles/hash_table.dir/build.make CMakeFiles/hash_table.dir/build
+.PHONY : hash_table/fast
 
 #=============================================================================
 # Target rules for targets named block_tree
@@ -309,6 +335,32 @@ block_tree/fast:
 .PHONY : block_tree/fast
 
 #=============================================================================
+# Target rules for targets named fixing_error
+
+# Build rule for target.
+fixing_error: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 fixing_error
+.PHONY : fixing_error
+
+# fast build rule for target.
+fixing_error/fast:
+	$(MAKE) -f CMakeFiles/fixing_error.dir/build.make CMakeFiles/fixing_error.dir/build
+.PHONY : fixing_error/fast
+
+#=============================================================================
+# Target rules for targets named block_tree_test
+
+# Build rule for target.
+block_tree_test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 block_tree_test
+.PHONY : block_tree_test
+
+# fast build rule for target.
+block_tree_test/fast:
+	$(MAKE) -f CMakeFiles/block_tree_test.dir/build.make CMakeFiles/block_tree_test.dir/build
+.PHONY : block_tree_test/fast
+
+#=============================================================================
 # Target rules for targets named algorithm_test
 
 # Build rule for target.
@@ -322,19 +374,6 @@ algorithm_test/fast:
 .PHONY : algorithm_test/fast
 
 #=============================================================================
-# Target rules for targets named karp_rabin
-
-# Build rule for target.
-karp_rabin: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 karp_rabin
-.PHONY : karp_rabin
-
-# fast build rule for target.
-karp_rabin/fast:
-	$(MAKE) -f CMakeFiles/karp_rabin.dir/build.make CMakeFiles/karp_rabin.dir/build
-.PHONY : karp_rabin/fast
-
-#=============================================================================
 # Target rules for targets named karp_rabin_test
 
 # Build rule for target.
@@ -346,19 +385,6 @@ karp_rabin_test: cmake_check_build_system
 karp_rabin_test/fast:
 	$(MAKE) -f CMakeFiles/karp_rabin_test.dir/build.make CMakeFiles/karp_rabin_test.dir/build
 .PHONY : karp_rabin_test/fast
-
-#=============================================================================
-# Target rules for targets named load_webgraph
-
-# Build rule for target.
-load_webgraph: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 load_webgraph
-.PHONY : load_webgraph
-
-# fast build rule for target.
-load_webgraph/fast:
-	$(MAKE) -f CMakeFiles/load_webgraph.dir/build.make CMakeFiles/load_webgraph.dir/build
-.PHONY : load_webgraph/fast
 
 #=============================================================================
 # Target rules for targets named karp_rabin_v2
@@ -3581,6 +3607,60 @@ src/load_webgraph.cpp.s:
 	$(MAKE) -f CMakeFiles/load_webgraph.dir/build.make CMakeFiles/load_webgraph.dir/src/load_webgraph.cpp.s
 .PHONY : src/load_webgraph.cpp.s
 
+src/times.o: src/times.cpp.o
+
+.PHONY : src/times.o
+
+# target to build an object file
+src/times.cpp.o:
+	$(MAKE) -f CMakeFiles/times.dir/build.make CMakeFiles/times.dir/src/times.cpp.o
+.PHONY : src/times.cpp.o
+
+src/times.i: src/times.cpp.i
+
+.PHONY : src/times.i
+
+# target to preprocess a source file
+src/times.cpp.i:
+	$(MAKE) -f CMakeFiles/times.dir/build.make CMakeFiles/times.dir/src/times.cpp.i
+.PHONY : src/times.cpp.i
+
+src/times.s: src/times.cpp.s
+
+.PHONY : src/times.s
+
+# target to generate assembly for a file
+src/times.cpp.s:
+	$(MAKE) -f CMakeFiles/times.dir/build.make CMakeFiles/times.dir/src/times.cpp.s
+.PHONY : src/times.cpp.s
+
+test/adjacency_lists_test.o: test/adjacency_lists_test.cpp.o
+
+.PHONY : test/adjacency_lists_test.o
+
+# target to build an object file
+test/adjacency_lists_test.cpp.o:
+	$(MAKE) -f CMakeFiles/adjacency_lists_test.dir/build.make CMakeFiles/adjacency_lists_test.dir/test/adjacency_lists_test.cpp.o
+.PHONY : test/adjacency_lists_test.cpp.o
+
+test/adjacency_lists_test.i: test/adjacency_lists_test.cpp.i
+
+.PHONY : test/adjacency_lists_test.i
+
+# target to preprocess a source file
+test/adjacency_lists_test.cpp.i:
+	$(MAKE) -f CMakeFiles/adjacency_lists_test.dir/build.make CMakeFiles/adjacency_lists_test.dir/test/adjacency_lists_test.cpp.i
+.PHONY : test/adjacency_lists_test.cpp.i
+
+test/adjacency_lists_test.s: test/adjacency_lists_test.cpp.s
+
+.PHONY : test/adjacency_lists_test.s
+
+# target to generate assembly for a file
+test/adjacency_lists_test.cpp.s:
+	$(MAKE) -f CMakeFiles/adjacency_lists_test.dir/build.make CMakeFiles/adjacency_lists_test.dir/test/adjacency_lists_test.cpp.s
+.PHONY : test/adjacency_lists_test.cpp.s
+
 test/algorithm_test.o: test/algorithm_test.cpp.o
 
 .PHONY : test/algorithm_test.o
@@ -3722,28 +3802,30 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... install/local"
 	@echo "... install"
+	@echo "... karp_rabin"
+	@echo "... adjacency_lists_test"
 	@echo "... list_install_components"
 	@echo "... edit_cache"
+	@echo "... install/strip"
+	@echo "... times"
 	@echo "... display"
 	@echo "... build_k2_tree_test"
 	@echo "... build_k2tree"
-	@echo "... build_webgraph"
+	@echo "... package"
 	@echo "... block_tree_skip_levels"
+	@echo "... load_webgraph"
+	@echo "... build_webgraph"
+	@echo "... block_tree_skip_levels_test"
 	@echo "... hash_table"
+	@echo "... block_tree"
 	@echo "... rebuild_cache"
 	@echo "... package_source"
 	@echo "... fixing_error"
-	@echo "... block_tree_skip_levels_test"
-	@echo "... install/local"
 	@echo "... block_tree_test"
-	@echo "... block_tree"
 	@echo "... algorithm_test"
-	@echo "... karp_rabin"
 	@echo "... karp_rabin_test"
-	@echo "... install/strip"
-	@echo "... package"
-	@echo "... load_webgraph"
 	@echo "... karp_rabin_v2"
 	@echo "... uninstall-sdsl"
 	@echo "... uninstall"
@@ -4001,6 +4083,12 @@ help:
 	@echo "... src/load_webgraph.o"
 	@echo "... src/load_webgraph.i"
 	@echo "... src/load_webgraph.s"
+	@echo "... src/times.o"
+	@echo "... src/times.i"
+	@echo "... src/times.s"
+	@echo "... test/adjacency_lists_test.o"
+	@echo "... test/adjacency_lists_test.i"
+	@echo "... test/adjacency_lists_test.s"
 	@echo "... test/algorithm_test.o"
 	@echo "... test/algorithm_test.i"
 	@echo "... test/algorithm_test.s"

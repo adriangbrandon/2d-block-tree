@@ -221,9 +221,39 @@ namespace block_tree_2d {
             }
         }
 
-        virtual void recursive_access_region(const size_type min_x, const size_type max_x, const size_type min_y, const size_type max_y,
+
+
+        struct add_in_region {
+            template<class result_type>
+            void operator() (result_type &result, const size_type x, const size_type y)
+            {
+                result[y].push_back(x);
+            }
+        };
+
+        struct add_in_row {
+            void operator() (std::vector<size_type> &result, const size_type x, const size_type y)
+            {
+                 result.push_back(x);
+            }
+        };
+
+        struct add_in_column {
+            void operator() (std::vector<size_type> &result, const size_type x, const size_type y)
+            {
+                result.push_back(y);
+            }
+        };
+
+
+
+
+
+
+        template <class add_function, class result_type>
+        void recursive_access_region(const size_type min_x, const size_type max_x, const size_type min_y, const size_type max_y,
                                      const size_type x, const size_type y, const size_type idx, const size_type level,
-                                     const size_type block_size, input_type &result,
+                                     const size_type block_size, result_type &result, add_function add,
                                      const bool taking_pointer=false, const size_type level_taking_pointer = 0){
 
 #if BT_VERBOSE
@@ -237,7 +267,8 @@ namespace block_tree_2d {
             if(level == m_height){
                 if(m_topology[idx]){
                     //Adding result
-                    result[y].push_back(x);
+                    add(result, x, y);
+                    //result[y].push_back(x);
                 }
             }else{
                 if(m_topology[idx]){
@@ -269,7 +300,7 @@ namespace block_tree_2d {
                                                     y + (new_block_size * j - min_y) * disp_y,
                                                     start_children + codes::zeta_order::encode(i, j),
                                                     level + 1,
-                                                    new_block_size, result, taking_pointer, level_taking_pointer);
+                                                    new_block_size, result, add, taking_pointer, level_taking_pointer);
                             disp_y = 1;
                         }
                         disp_x = 1;
@@ -281,7 +312,7 @@ namespace block_tree_2d {
                         size_type pointer;
                         leaf_node_info(pos_zero, level, pointer, offset_x, offset_y);
                         take_pointer(min_x, max_x, min_y, max_y, x, y, pointer,
-                                offset_x, offset_y, level, block_size, result);
+                                offset_x, offset_y, level, block_size, result, add);
                     }
                 }
             }
@@ -304,12 +335,13 @@ namespace block_tree_2d {
             offset_y = codes::alternative_code::decode(m_offsets[level][2*p_pointer+1]);
         }
 
+        template <class result_type, class add_function>
         void take_pointer(const size_type min_x, const size_type  max_x,
                           const size_type min_y, const size_type max_y,
                           const size_type x, const size_type y,
                           size_type ptr,
                           const value_type offset_x, const value_type offset_y,
-                          const size_type level, size_type block_size, input_type &result){
+                          const size_type level, size_type block_size, result_type &result, add_function add){
 
             value_type new_min_x = min_x + offset_x;
             value_type new_min_y = min_y + offset_y;
@@ -330,7 +362,7 @@ namespace block_tree_2d {
             recursive_access_region(static_cast<size_type >(new_min_x),
                                     static_cast<size_type >(new_min_x + length_x),
                                     static_cast<size_type >(new_min_y),
-                                    static_cast<size_type >(new_min_y + length_y), x, y, ptr, l, block_size, result, true, level);
+                                    static_cast<size_type >(new_min_y + length_y), x, y, ptr, l, block_size, result, add, true, level);
         }
 
         template<class Container>
@@ -394,14 +426,28 @@ namespace block_tree_2d {
             }
         }
 
-        void access_region(const size_type min_x, const size_type min_y,
+        inline void access_region(const size_type min_x, const size_type min_y,
                            const size_type max_x, const size_type max_y,
                            input_type &result){
             size_type size_vector = max_y - min_y+1;
             result = input_type(size_vector);
             auto block_size = (size_type) std::pow(m_k, m_height);
-            recursive_access_region(min_x, max_x, min_y, max_y, 0, 0, 0, 0, block_size, result);
+            this->recursive_access_region(min_x, max_x, min_y, max_y, 0, 0, 0, 0, block_size, result, add_in_region());
 
+        }
+
+        inline std::vector<size_type> neigh(size_type id){
+            std::vector<size_type> r;
+            auto block_size = (size_type) std::pow(m_k, m_height);
+            this->recursive_access_region(0, this->m_dimensions-1, id, id, 0, 0, 0, 0, block_size, r, add_in_row());
+            return r;
+        }
+
+        inline std::vector<size_type> reverse_neigh(size_type id){
+            std::vector<size_type> r;
+            auto block_size = (size_type) std::pow(m_k, m_height);
+            this->recursive_access_region(id, id, 0, this->m_dimensions-1, 0, 0, 0, 0, block_size, r, add_in_column());
+            return r;
         }
 
         //! Copy constructor
@@ -614,6 +660,7 @@ namespace block_tree_2d {
         }
 
     };
+
 }
 
 #endif //INC_2D_BLOCK_TREE_BLOCK_TREE_HPP

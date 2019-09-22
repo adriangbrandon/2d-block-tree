@@ -9,7 +9,7 @@ set(PROJECT_CONTACT "adrian.gbrandon@udc.es")
 
 
 #Change to "Debug" when you need it
-set(CMAKE_BUILD_TYPE "Debug")
+set(CMAKE_BUILD_TYPE "Release")
 
 # C++11 compiler Check
 if(NOT CMAKE_CXX_COMPILER_VERSION) # work around for cmake versions smaller than 2.8.10
@@ -75,6 +75,9 @@ target_link_libraries(block_tree_test sdsl divsufsort divsufsort64)
 add_executable(block_tree_skip_levels_test test/block_tree_skip_levels_test.cpp)
 target_link_libraries(block_tree_skip_levels_test sdsl divsufsort divsufsort64)
 
+add_executable(adjacency_lists_test test/adjacency_lists_test.cpp)
+target_link_libraries(adjacency_lists_test sdsl divsufsort divsufsort64)
+
 add_executable(hash_table src/hash_table.cpp)
 target_link_libraries(hash_table sdsl divsufsort divsufsort64)
 
@@ -107,3 +110,6 @@ target_link_libraries(fixing_error sdsl divsufsort divsufsort64)
 
 add_executable(display src/display.cpp)
 target_link_libraries(display sdsl divsufsort divsufsort64)
+
+add_executable(times src/times.cpp)
+target_link_libraries(times sdsl divsufsort divsufsort64)

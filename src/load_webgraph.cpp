@@ -77,9 +77,4 @@ int main(int argc, char **argv) {
         std::cout << "Type: " << type << " is not supported." << std::endl;
     }
 
-
-
-
-
-
 }
