@@ -620,6 +620,7 @@ namespace block_tree_2d {
             iterator_hash_type it_hash;
             iterators_value_type iterators_source = iterators_value_type(block_size);
 
+            size_type hashes = 0;
             auto blocks_per_row = adjacent_lists.size() / block_size;
             //Total number of blocks
             auto total_blocks = blocks_per_row * blocks_per_row;
@@ -680,6 +681,7 @@ namespace block_tree_2d {
                     nodes[pos_target].z_order = z_order_target;
                 }
                 m_progress_bar.update(processed_blocks);
+                ++hashes;
 #if BT_VERBOSE
                 std::cout << std::endl;
 #endif
@@ -687,6 +689,7 @@ namespace block_tree_2d {
             //Delete sources of hash_table
             ht.remove_marked();
             m_progress_bar.done();
+            std::cout << "Total hashes: " << hashes << std::endl;
             //print_ajdacent_list(adjacent_lists);
         }
 
@@ -712,16 +715,12 @@ namespace block_tree_2d {
             iterator_table_type it_table;
             iterator_hash_type it_hash;
             iterators_value_type iterators_target = iterators_value_type(block_size);
+            size_type hashes = 0;
             while(kr_roll.next()){
 #if BT_VERBOSE
                 std::cout << "Source: (" << kr_roll.col << ", " << kr_roll.row << ")" << std::endl;
                 std::cout << "Hash: " << kr_roll.hash << std::endl;
 #endif
-
-                if(kr_roll.row == 775471 && kr_roll.col == 690252){
-                    std::cout << "Source: (" << kr_roll.col << ", " << kr_roll.row << ")" << std::endl;
-                    std::cout << "Hash: " << kr_roll.hash << std::endl;
-                }
                 auto processed_rolls = kr_roll.row * rolls_per_row + kr_roll.col+1;
                 //check if kr_block.hash exists in map
                 if(ht.hash_collision(kr_roll.hash, it_table, it_hash)){
@@ -829,9 +828,11 @@ namespace block_tree_2d {
 #if BT_VERBOSE
                 std::cout << std::endl;
 #endif
+                ++hashes;
                 m_progress_bar.update(processed_rolls);
             }
             m_progress_bar.done();
+            std::cout << "Total hashes: " << hashes << std::endl;
             //print_ajdacent_list(adjacent_lists);
         }
 
@@ -848,6 +849,7 @@ namespace block_tree_2d {
             typedef typename hash_table_type::iterator_hash_type  iterator_hash_type;
             typedef typename hash_table_type::iterator_value_type iterator_hash_value_type;
 
+            size_type hashes = 0;
             auto rolls_per_row = adjacent_lists.size() - block_size + 1;
             //Total number of blocks
             auto total_rolls = rolls_per_row * rolls_per_row;
@@ -863,10 +865,6 @@ namespace block_tree_2d {
                 std::cout << "Hash: " << kr_roll.hash << std::endl;
 #endif
 
-                if(kr_roll.row == 775471 && kr_roll.col == 690252){
-                    std::cout << "Source: (" << kr_roll.col << ", " << kr_roll.row << ")" << std::endl;
-                    std::cout << "Hash: " << kr_roll.hash << std::endl;
-                }
                 auto processed_rolls = kr_roll.row * rolls_per_row + kr_roll.col+1;
                 //check if kr_block.hash exists in map
                 if(ht.hash_collision(kr_roll.hash, it_table, it_hash)){
@@ -975,8 +973,10 @@ namespace block_tree_2d {
                 std::cout << std::endl;
 #endif
                 m_progress_bar.update(processed_rolls);
+                ++hashes;
             }
             m_progress_bar.done();
+            std::cout << "Total hashes: " << hashes << std::endl;
             //print_ajdacent_list(adjacent_lists);
         }
 
