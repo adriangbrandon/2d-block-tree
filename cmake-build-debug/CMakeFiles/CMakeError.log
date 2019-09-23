@@ -1,10 +1,10 @@
 Performing C++ SOURCE FILE Test HAVE_CXA_DEMANGLE failed with the following output:
 Change Dir: /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_13b44/fast"
-/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_13b44.dir/build.make CMakeFiles/cmTC_13b44.dir/build
-Building CXX object CMakeFiles/cmTC_13b44.dir/src.cxx.o
-/Library/Developer/CommandLineTools/usr/bin/c++    -std=c++11 -stdlib=libc++ -msse4.2 -std=c++11 -DNDEBUG -stdlib=libc++ -DHAVE_CXA_DEMANGLE -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_13b44.dir/src.cxx.o -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.cxx
+Run Build Command(s):/usr/bin/make cmTC_5a50e/fast 
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_5a50e.dir/build.make CMakeFiles/cmTC_5a50e.dir/build
+Building CXX object CMakeFiles/cmTC_5a50e.dir/src.cxx.o
+/Library/Developer/CommandLineTools/usr/bin/c++    -std=c++11 -stdlib=libc++ -msse4.2 -std=c++11 -DNDEBUG -stdlib=libc++ -DHAVE_CXA_DEMANGLE -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_5a50e.dir/src.cxx.o -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.cxx
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.cxx:4:37: error: member access into incomplete type 'const std::type_info'
     const char *foo = typeid(foobar).name();
                                     ^
@@ -12,8 +12,8 @@ Building CXX object CMakeFiles/cmTC_13b44.dir/src.cxx.o
 class type_info; // forward declaration
       ^
 1 error generated.
-make[1]: *** [CMakeFiles/cmTC_13b44.dir/src.cxx.o] Error 1
-make: *** [cmTC_13b44/fast] Error 2
+make[1]: *** [CMakeFiles/cmTC_5a50e.dir/src.cxx.o] Error 1
+make: *** [cmTC_5a50e/fast] Error 2
 
 Source file was:
 #include <cxxabi.h>
@@ -26,32 +26,32 @@ int main(void){
 Performing C SOURCE FILE Test HAVE___DECLSPEC_DLLEXPORT_ failed with the following output:
 Change Dir: /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_902e5/fast"
-/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_902e5.dir/build.make CMakeFiles/cmTC_902e5.dir/build
-Building C object CMakeFiles/cmTC_902e5.dir/src.c.o
-/Library/Developer/CommandLineTools/usr/bin/cc   -Wall -DHAVE___DECLSPEC_DLLEXPORT_ -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_902e5.dir/src.c.o   -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.c
+Run Build Command(s):/usr/bin/make cmTC_9ac01/fast 
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_9ac01.dir/build.make CMakeFiles/cmTC_9ac01.dir/build
+Building C object CMakeFiles/cmTC_9ac01.dir/src.c.o
+/Library/Developer/CommandLineTools/usr/bin/cc   -Wall -DHAVE___DECLSPEC_DLLEXPORT_ -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_9ac01.dir/src.c.o   -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.c
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.c:1:1: error: '__declspec' attributes are not enabled; use '-fdeclspec' or '-fms-extensions' to enable support for __declspec attributes
 __declspec(dllexport) void func(); void func() { } int main() { func(); return 0; }
 ^
 1 error generated.
-make[1]: *** [CMakeFiles/cmTC_902e5.dir/src.c.o] Error 1
-make: *** [cmTC_902e5/fast] Error 2
+make[1]: *** [CMakeFiles/cmTC_9ac01.dir/src.c.o] Error 1
+make: *** [cmTC_9ac01/fast] Error 2
 
 Source file was:
 __declspec(dllexport) void func(); void func() { } int main() { func(); return 0; }
 Performing C SOURCE FILE Test HAVE___DECLSPEC_DLLIMPORT_ failed with the following output:
 Change Dir: /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_144c7/fast"
-/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_144c7.dir/build.make CMakeFiles/cmTC_144c7.dir/build
-Building C object CMakeFiles/cmTC_144c7.dir/src.c.o
-/Library/Developer/CommandLineTools/usr/bin/cc   -Wall -DHAVE___DECLSPEC_DLLIMPORT_ -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_144c7.dir/src.c.o   -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.c
+Run Build Command(s):/usr/bin/make cmTC_2c5c7/fast 
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_2c5c7.dir/build.make CMakeFiles/cmTC_2c5c7.dir/build
+Building C object CMakeFiles/cmTC_2c5c7.dir/src.c.o
+/Library/Developer/CommandLineTools/usr/bin/cc   -Wall -DHAVE___DECLSPEC_DLLIMPORT_ -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_2c5c7.dir/src.c.o   -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.c
 /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.c:1:1: error: '__declspec' attributes are not enabled; use '-fdeclspec' or '-fms-extensions' to enable support for __declspec attributes
 __declspec(dllimport) void func(); void func() { } int main() { func(); return 0; }
 ^
 1 error generated.
-make[1]: *** [CMakeFiles/cmTC_144c7.dir/src.c.o] Error 1
-make: *** [cmTC_144c7/fast] Error 2
+make[1]: *** [CMakeFiles/cmTC_2c5c7.dir/src.c.o] Error 1
+make: *** [cmTC_2c5c7/fast] Error 2
 
 Source file was:
 __declspec(dllimport) void func(); void func() { } int main() { func(); return 0; }

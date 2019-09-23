@@ -36,6 +36,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <kr_block_adjacent_list_v2.hpp>
 #include <kr_block_adjacent_list_v3.hpp>
+#include <kr_block_adjacent_list_v4.hpp>
+#include <kr_roll_adjacent_list_v4.hpp>
 #include <kr_roll_adjacent_list_v3.hpp>
 #include <kr_roll_adjacent_list_v2.hpp>
 #include <hash_table_chainning.hpp>
@@ -399,7 +401,7 @@ namespace block_tree_2d {
         static bool contains_identical_blocks(input_type &adjacent_lists, const size_type k, hash_table_type &ht,
                                            const size_type dimensions, const size_type block_size){
 
-            typedef karp_rabin::kr_block_adjacent_list_v3<input_type> kr_type;
+            typedef karp_rabin::kr_block_adjacent_list_v4<input_type> kr_type;
             typedef typename kr_type::hash_type hash_type;
             typedef std::vector<typename kr_type::iterator_value_type> iterators_value_type;
             // typedef uint64_t iterators_type;
@@ -460,7 +462,7 @@ namespace block_tree_2d {
         static bool contains_identical_rolls(input_type &adjacent_lists, const size_type k, hash_table_type &ht,
                                       const size_type dimensions, const size_type block_size){
 
-            typedef karp_rabin::kr_roll_adjacent_list_v3<input_type> kr_type;
+            typedef karp_rabin::kr_roll_adjacent_list_v4<input_type> kr_type;
             typedef typename kr_type::hash_type hash_type;
             typedef std::vector<typename kr_type::iterator_value_type> iterators_value_type;
             // typedef uint64_t iterators_type;
@@ -605,7 +607,7 @@ namespace block_tree_2d {
                                            const size_type dimensions, const size_type block_size,
                                            hash_type &hash, std::vector<node_type> &nodes){
 
-            typedef karp_rabin::kr_block_adjacent_list_v3<input_type> kr_type;
+            typedef karp_rabin::kr_block_adjacent_list_v4<input_type> kr_type;
             typedef typename kr_type::hash_type hash_type;
             typedef std::vector<typename kr_type::iterator_value_type> iterators_value_type;
             // typedef uint64_t iterators_type;
@@ -838,7 +840,7 @@ namespace block_tree_2d {
                                       const size_type dimensions, const size_type block_size,
                                       hash_type &hash, std::vector<node_type> &nodes){
 
-            typedef karp_rabin::kr_roll_adjacent_list_v3<input_type> kr_type;
+            typedef karp_rabin::kr_roll_adjacent_list_v4<input_type> kr_type;
             typedef typename kr_type::hash_type hash_type;
             typedef std::vector<typename kr_type::iterator_value_type> iterators_value_type;
             // typedef uint64_t iterators_type;
