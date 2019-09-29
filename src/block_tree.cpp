@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <block_tree.hpp>
 #include <vector>
 #include <adjacency_list_helper.hpp>
+#include <block_tree_intersection_lists.hpp>
 
 int main(int argc, char **argv) {
 
@@ -42,20 +43,20 @@ int main(int argc, char **argv) {
 
 
     typedef hash_table::hash_table_chainning<hash_type, uint64_t> htc_type;
-    std::vector<int64_t> row0 = {2};
-    std::vector<int64_t> row1 = {2};
-    std::vector<int64_t> row2 = {};
-    std::vector<int64_t> row3 = {};
+    std::vector<int64_t> row0 = {0};
+    std::vector<int64_t> row1 = {0,2};
+    std::vector<int64_t> row2 = {0};
+    std::vector<int64_t> row3 = {0};
     std::vector<int64_t> row4 = {};
-    std::vector<int64_t> row5 = {6};
+    std::vector<int64_t> row5 = {};
     std::vector<int64_t> row6 = {};
-    std::vector<int64_t> row7 = {};
-    std::vector<int64_t> row8 = {9};
-    std::vector<int64_t> row9 = {9};
-    std::vector<int64_t> row10 = {};
+    std::vector<int64_t> row7 = {1};
+    std::vector<int64_t> row8 = {1,3};
+    std::vector<int64_t> row9 = {1};
+    std::vector<int64_t> row10 = {1};
     std::vector<int64_t> row11 = {};
     std::vector<int64_t> row12 = {};
-    std::vector<int64_t> row13 = {13};
+    std::vector<int64_t> row13 = {};
     std::vector<int64_t> row14 = {};
     std::vector<int64_t> row15 = {};
 
@@ -68,28 +69,28 @@ int main(int argc, char **argv) {
     //for(size_t i = 0; i < 100; ++i){
         std::vector< std::vector<int64_t>> matrix8_8;
         //util::adjacency_list::read(matrix8_8, "adjacency_lists.txt");std::vector< std::vector<int64_t>> matrix8_8;
-    matrix8_8.push_back(row0);
-    matrix8_8.push_back(row1);
-    matrix8_8.push_back(row2);
-    matrix8_8.push_back(row3);
-    matrix8_8.push_back(row4);
-    matrix8_8.push_back(row5);
-    matrix8_8.push_back(row6);
-    matrix8_8.push_back(row7);
-    matrix8_8.push_back(row8);
-    matrix8_8.push_back(row9);
-    matrix8_8.push_back(row10);
-    matrix8_8.push_back(row11);
-    matrix8_8.push_back(row12);
-    matrix8_8.push_back(row13);
-    matrix8_8.push_back(row14);
-    matrix8_8.push_back(row15);
+        matrix8_8.push_back(row0);
+        matrix8_8.push_back(row1);
+        matrix8_8.push_back(row2);
+        matrix8_8.push_back(row3);
+        matrix8_8.push_back(row4);
+        matrix8_8.push_back(row5);
+        matrix8_8.push_back(row6);
+        matrix8_8.push_back(row7);
+        matrix8_8.push_back(row8);
+        matrix8_8.push_back(row9);
+        matrix8_8.push_back(row10);
+        matrix8_8.push_back(row11);
+        matrix8_8.push_back(row12);
+        matrix8_8.push_back(row13);
+        matrix8_8.push_back(row14);
+        matrix8_8.push_back(row15);
         std::cout << matrix8_8.size() << std::endl;
 
         block_tree_2d::algorithm::print_ajdacent_list(matrix8_8);
 
         std::cout << "Building Block-tree dimensions=" << dimensions;
-        block_tree_2d::block_tree<> m_block_tree(matrix8_8, k);
+        block_tree_2d::block_tree_intersection_lists<> m_block_tree(matrix8_8, k);
         std::cout << "Done." << std::endl;
         m_block_tree.print();
         std::cout << "Retrieving adjacency lists...";
@@ -100,7 +101,7 @@ int main(int argc, char **argv) {
         block_tree_2d::algorithm::print_ajdacent_list(result);
         sdsl::store_to_file(m_block_tree, "test.2dbt");
 
-        block_tree_2d::block_tree<> m_block_tree2;
+        block_tree_2d::block_tree_intersection_lists<> m_block_tree2;
         sdsl::load_from_file(m_block_tree2, "test.2dbt");
 
         m_block_tree2.access_region(0, 0, dimensions - 1, dimensions - 1, result2);

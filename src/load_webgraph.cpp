@@ -46,7 +46,6 @@ void run_load(const std::string &dataset, const uint64_t k, const uint64_t limit
         name_file = name_file + "_" + std::to_string(limit);
     }
     name_file = name_file + ".2dbt";
-    sdsl::load_from_file(m_block_tree, name_file);
 
     std::cout << "Size in bytes: " << sdsl::size_in_bytes(m_block_tree) << std::endl;
     sdsl::write_structure<sdsl::JSON_FORMAT>(m_block_tree, name_file + ".json");

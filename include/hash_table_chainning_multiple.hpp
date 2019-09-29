@@ -2,8 +2,8 @@
 // Created by adrian on 16/06/17.
 //
 
-#ifndef INC_HASH_TABLE_CHAINNING_HPP
-#define INC_HASH_TABLE_CHAINNING_HPP
+#ifndef INC_HASH_TABLE_CHAINNING_MULTIPLE_HPP
+#define INC_HASH_TABLE_CHAINNING_MULTIPLE_HPP
 
 #include <stdint.h>
 #include <sdsl/int_vector.hpp>
@@ -15,14 +15,14 @@
 namespace hash_table {
 
     template<class t_hash = uint64_t, class t_value = uint64_t>
-    class hash_table_chainning {
+    class hash_table_chainning_multiple {
 
     public:
         typedef uint64_t size_type;
         //typedef chainning_list_element<t_value> key_value_type;
         typedef t_hash hash_type;
         typedef t_value value_type;
-        typedef std::list<std::pair<value_type, bool>> value_list_type;
+        typedef std::list<std::pair<value_type, std::vector<value_type>>> value_list_type;
         typedef std::pair<hash_type, value_list_type> hash_list_element_type;
         typedef std::list<hash_list_element_type> hash_list_type;
         typedef std::vector<hash_list_type> table_type;
@@ -39,7 +39,7 @@ namespace hash_table {
             return (pre_hash % m_table_size);
         }
 
-        void copy(const hash_table_chainning &p) {
+        void copy(const hash_table_chainning_multiple &p) {
             m_table_size = p.m_table_size;
             m_used = p.m_used;
             m_table = p.m_table;
@@ -98,9 +98,9 @@ namespace hash_table {
         }
 
     public:
-        hash_table_chainning() = default;
+        hash_table_chainning_multiple() = default;
 
-        explicit hash_table_chainning(size_type size) {
+        explicit hash_table_chainning_multiple(size_type size) {
             m_table_size = nearest_prime(size);
             m_used = 0;
             m_table = table_type(m_table_size, hash_list_type());
@@ -118,15 +118,19 @@ namespace hash_table {
             if(it_table->empty()){
                 ++m_used;
             }
-            value_list_type value_list = {{value, false}};
+            value_list_type value_list = {{value, {}}};
             it_table->emplace_back(hash, value_list);
         }
 
         void insert_hash_collision(const iterator_hash_type &it_hash, value_type &value){
-            it_hash->second.emplace_back(value, false);
+            it_hash->second.emplace_back(value, std::vector<value_type>());
         }
 
-        void remove_value(const iterator_table_type &it_table, iterator_hash_type &it_hash, iterator_value_type &it) {
+        void insert_value_collision(const iterator_value_type &it_value, value_type &value){
+            it_value->second.emplace_back(value);
+        }
+
+        /*void remove_value(const iterator_table_type &it_table, iterator_hash_type &it_hash, iterator_value_type &it) {
             it = it_hash->second.erase(it);
             if(it_hash->second.empty()){
                 it_hash = it_table->erase(it_hash);
@@ -178,21 +182,21 @@ namespace hash_table {
                 ++it_hash;
             }
             return false;
-        }
+        }*/
 
 
         //! Copy constructor
-        hash_table_chainning(const hash_table_chainning &p) {
+        hash_table_chainning_multiple(const hash_table_chainning_multiple &p) {
             copy(p);
         }
 
         //! Move constructor
-        hash_table_chainning(hash_table_chainning &&p) {
+        hash_table_chainning_multiple(hash_table_chainning_multiple &&p) {
             *this = std::move(p);
         }
 
         //! Assignment move operation
-        hash_table_chainning &operator=(hash_table_chainning &&p) {
+        hash_table_chainning_multiple &operator=(hash_table_chainning_multiple &&p) {
             if (this != &p) {
                 m_used = std::move(p.m_used);
                 m_table_size = std::move(p.m_table_size);
@@ -202,7 +206,7 @@ namespace hash_table {
         }
 
         //! Assignment operator
-        hash_table_chainning &operator=(const hash_table_chainning &p) {
+        hash_table_chainning_multiple &operator=(const hash_table_chainning_multiple &p) {
             if (this != &p) {
                 copy(p);
             }
@@ -214,14 +218,14 @@ namespace hash_table {
         *  You have to use set_vector to adjust the supported bit_vector.
         *  \param bp_support Object which is swapped.
         */
-        void swap(hash_table_chainning &p) {
+        void swap(hash_table_chainning_multiple &p) {
             std::swap(m_used, p.m_used);
             std::swap(m_table_size, p.m_table_size);
             std::swap(m_table, p.m_table);
         }
 
         void print(){
-            std::cout << "Hash Table Double Chainning" << std::endl;
+            std::cout << "Hash Table Double Chainning Multiple" << std::endl;
             for(size_type i = 0; i < m_table.size();i++){
                 std::cout << "Entry: " << i << std::endl;
                 std::cout << "-----------------------------" << std::endl;
@@ -231,7 +235,11 @@ namespace hash_table {
                     auto it_v = it_h->second.begin();
                     std::cout << "Values: ";
                     while(it_v != it_h->second.end()){
-                        std::cout << "<" << it_v->first << ", " << it_v->second << ">" << ", ";
+                        std::cout << "<" << it_v->first << ", [";
+                        for(const auto &v : it_v->second){
+                            std::cout << v << ", ";
+                        }
+                        std::cout << "] >, ";
                         ++it_v;
                     }
                     std::cout << std::endl;

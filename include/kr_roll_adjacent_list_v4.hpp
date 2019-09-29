@@ -211,8 +211,8 @@ namespace karp_rabin {
                 while(it_element != it_list->end() && std::abs(*it_element) < m_block_size){
                     if((*it_element) >= 0){
                         //2.1 Compute hash_value with 0s
-                        auto length = (*it_element) - (prev_value+1) + 1;
-                        hash_value = (hash_value * m_h_length[length-1]) % m_prime;
+                        auto length = (*it_element) - (prev_value+1);
+                        hash_row = (hash_row * m_h_length[length]) % m_prime;
                         /*for(auto v = prev_value+1; v < (*it_element); ++v){
                             hash_row = (hash_row * m_asize) % m_prime;
                         }*/
@@ -225,8 +225,8 @@ namespace karp_rabin {
                 }
                 //1.3. Check the last element and compute hash_value with 0s
                 //prev_value is always smaller than block_size
-                auto length = m_block_size - (prev_value+1) + 1;
-                hash_value = (hash_value * m_h_length[length-1]) % m_prime;
+                auto length = m_block_size - (prev_value+1);
+                hash_row = (hash_row * m_h_length[length]) % m_prime;
                 /*for(auto i = prev_value + 1; i < m_block_size; ++i){
                     hash_row = (hash_row * m_asize) % m_prime;
                 }*/
@@ -350,8 +350,8 @@ namespace karp_rabin {
             while(it_element != (m_iterator_list + last_row)->end() && std::abs(*it_element) < m_block_size){
                 // Compute hash_value with 0s
                 if(*it_element >= 0){
-                    auto length = (*it_element) - (prev_value+1) + 1;
-                    hash_row = (hash_row * m_h_length[length-1]) % m_prime;
+                    auto length = (*it_element) - (prev_value+1);
+                    hash_row = (hash_row * m_h_length[length]) % m_prime;
                     /*for(auto v = prev_value+1; v < (*it_element); ++v){
                         hash_row = (hash_row * m_asize) % m_prime;
                     }*/
@@ -365,8 +365,8 @@ namespace karp_rabin {
             }
             // Check the last element and compute hash_value with 0s
             //prev_value is always smaller than block_size
-            auto length = m_block_size - (prev_value+1) + 1;
-            hash_row = (hash_row * m_h_length[length-1]) % m_prime;
+            auto length = m_block_size - (prev_value+1);
+            hash_row = (hash_row * m_h_length[length]) % m_prime;
             /*for(auto i = prev_value + 1; i < m_block_size; ++i){
                 hash_row = (hash_row * m_asize) % m_prime;
             }*/
@@ -445,9 +445,9 @@ namespace karp_rabin {
             m_end_list = input.end();
             init_iterators(input.begin());
             init_hs();
-            m_h_length = std::vector<hash_type >(m_block_size);
+            m_h_length = std::vector<hash_type >(m_block_size+1);
             m_h_length[0]=1;
-            for(size_type i = 1; i < m_block_size; ++i){
+            for(size_type i = 1; i <= m_block_size; ++i){
                 m_h_length[i] = (m_h_length[i-1] * m_asize) % m_prime;
             }
         }

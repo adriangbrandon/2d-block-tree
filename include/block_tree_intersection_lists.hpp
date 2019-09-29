@@ -31,8 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Created by Adrián on 09/08/2019.
 //
 
-#ifndef INC_2D_BLOCK_TREE_BLOCK_TREE_SKIP_LEVELS_HPP
-#define INC_2D_BLOCK_TREE_BLOCK_TREE_SKIP_LEVELS_HPP
+#ifndef INC_2D_BLOCK_TREE_BLOCK_TREE_INTERSECTION_LISTS_HPP
+#define INC_2D_BLOCK_TREE_BLOCK_TREE_INTERSECTION_LISTS_HPP
 
 #include <block_tree_algorithm_helper_v2.hpp>
 #include "alternative_code.hpp"
@@ -43,7 +43,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace block_tree_2d {
 
     template <class input_t = std::vector<std::vector<int64_t>>>
-    class block_tree_skip_levels : public block_tree<input_t> {
+    class block_tree_intersection_lists : public block_tree<input_t> {
 
     public:
 
@@ -58,6 +58,7 @@ namespace block_tree_2d {
 
         size_type m_minimum_level;
         size_type m_zeroes;
+        static constexpr size_type large_block_size = 2;
 
         std::pair<size_type, size_type> minimum_block_size(input_type &adjacency_lists, const size_type height){
 
@@ -68,7 +69,8 @@ namespace block_tree_2d {
             size_type rows = adjacency_lists.size() / this->k;
             size_type blocks =  rows * rows;
             size_type block_size = this->k;
-            while(l > 0){
+            //1. Looking for repetitions by using Karp-Rabin algorithm
+            while(block_size <= large_block_size){
                 //std::cout << "htc" << std::endl;
                 //std::cout << "blocks: " << blocks << std::endl;
                 //htc_type m_htc(2*blocks);
@@ -84,66 +86,96 @@ namespace block_tree_2d {
                 blocks = blocks / this->m_k2;
                 --l;
             }
+            if(l == 0) return {block_size, l};
+            //2. Looking for repetitions by using intersection of lists
+            htc_multiple_type m_htc_multiple(std::min(static_cast<size_type>(10240), 2*blocks * this->m_k2));
+            block_tree_2d::algorithm::replacements_map_type replacements_map;
+            util::logger::log("Checking replacements at blocks=" + std::to_string(l) + " with block_size=" + std::to_string(block_size/ this->k));
+            block_tree_2d::algorithm::list_blocks(adjacency_lists, this->k, m_htc_multiple, this->dimensions, block_size / this->k, replacements_map);
+            util::logger::log("Checking replacements at rolls=" + std::to_string(l) + " with block_size=" + std::to_string(block_size / this->k));
+            block_tree_2d::algorithm::list_rolls(adjacency_lists, this->k, m_htc_multiple, this->dimensions, block_size / this->k, replacements_map);
+            while(l > 0){
+                bool b = block_tree_2d::algorithm::replacements_to_prev_level(adjacency_lists, replacements_map, block_size,
+                         adjacency_lists.size(), this->k);
+                if(!b){
+                    return {block_size, l};
+                }
+                block_size = block_size * this->m_k;
+                blocks = blocks / this->m_k2;
+                --l;
+            }
             return {block_size, l};
         }
 
 
-         /*void construction(input_type &adjacency_lists, size_type h, size_type block_size, size_type blocks){
+        template <class input_type>
+        size_type processing_level_with_large_blocks(size_type level, input_type &adjacency_lists, size_type block_size,
+                                                size_type &topology_index, size_type &is_pointer_index,
+                                                typename block_tree_2d::algorithm::hash_type &hash, std::vector<node_type> &nodes) {
 
 
-            std::cout << "Construction skip" << std::endl;
-            //0. Init the structure
-            this->init_structure();
-            this->m_offsets[0].resize(0);
-            this->m_pointers[0].resize(0);
+            htc_multiple_type m_htc_multiple(std::min(static_cast<size_type>(10240), static_cast<size_type>(2 * nodes.size())));
+            block_tree_2d::algorithm::replacements_map_type replacements_map;
+            block_tree_2d::algorithm::sources_map_type sources_map;
+            block_tree_2d::algorithm::blocks_replace_map_type blocks_replace_map;
+            util::logger::log("Checking blocks at level=" + std::to_string(level) + " with block_size=" +
+                              std::to_string(large_block_size));
+            block_tree_2d::algorithm::list_blocks(adjacency_lists, this->k, m_htc_multiple, this->dimensions,
+                                                  large_block_size, replacements_map);
+            util::logger::log("Checking rolls at level=" + std::to_string(level) + " with block_size=" +
+                              std::to_string(large_block_size));
+            block_tree_2d::algorithm::list_rolls(adjacency_lists, this->k, m_htc_multiple, this->dimensions,
+                                                 large_block_size, replacements_map);
 
-            //1. Obtaining minimum block size where there are identical blocks
-            size_type min_block_size;
-            std::tie(min_block_size, m_minimum_level) = minimum_block_size(adjacency_lists, h);
-            util::logger::log("Minimum level=" + std::to_string(m_minimum_level) + " and block_size=" + std::to_string(min_block_size));
-
-            //2. Building LOUDS of k2_tree until min_block_size and map between z_order and position in vector nodes
-            block_tree_2d::algorithm::hash_type hash;
-            m_zeroes = block_tree_2d::algorithm::build_k2_tree(adjacency_lists, this->k, h, min_block_size, this->m_topology, hash);
-
-            //for(size_type i = 0; i < this->m_topology.size(); ++i){
-            //    std::cout << this->m_topology[i] << ", ";
-            //}
-            std::cout << std::endl;
-            std::vector<node_type> nodes(hash.size());
-            size_type topology_index = this->m_topology.size(), is_pointer_index = 0;
-            size_type level = m_minimum_level;
-            block_size = min_block_size / this->m_k;
-            //std::cout << "Level: " << level << std::endl;
-            while (block_size > 1) {
-                ++level;
-                util::logger::log("Processing level " + std::to_string(level) + " of " + std::to_string(h));
-                util::logger::log("Block size: " + std::to_string(block_size));
-                auto pointers = this->processing_level(level - m_minimum_level, adjacency_lists, block_size, topology_index, is_pointer_index, hash, nodes);
-                util::logger::log("Pointers: " + std::to_string(pointers));
-                block_size = block_size / this->k;
-
+            util::logger::log("Replacements with block_size=" +std::to_string(block_size));
+            auto b_size = large_block_size;
+            while(b_size < block_size){
+                b_size = b_size * this->k;
+                block_tree_2d::algorithm::replacements_to_prev_level(adjacency_lists, replacements_map, b_size,
+                                                                     adjacency_lists.size(), this->k);
             }
-            ++level;
-            util::logger::log("Processing last level (" + std::to_string(level) + ")");
-            block_tree_2d::algorithm::compute_last_level(adjacency_lists, hash, nodes);
-            util::logger::log("Compacting last level (" + std::to_string(level) + ")");
-            this->compact_last_level(nodes, topology_index);
-            this->m_height = level;
-            this->m_topology.resize(topology_index);
-            this->m_is_pointer.resize(is_pointer_index);
-            this->m_level_ones.resize(2*(this->m_height - m_minimum_level));
-            sdsl::util::init_support(this->m_topology_rank, &this->m_topology);
-            sdsl::util::init_support(this->m_topology_select, &this->m_topology);
-            sdsl::util::init_support(this->m_is_pointer_rank, &this->m_is_pointer);
-            sdsl::util::bit_compress(this->m_level_ones);
-            util::logger::log("2D Block Tree DONE!!!");
-        }*/
+
+            //Building sources hashtable
+            for(const auto &r : replacements_map){
+                auto x_target = r.first.first;
+                auto y_target = r.first.second;
+                auto z_order = codes::zeta_order::encode(x_target / block_size, y_target/block_size);
+                //blocks_replace_map.insert({z_order, 1});
+                auto pos_source = hash.find(z_order)->second;
+                nodes[pos_source].type = NODE_INTERNAL;
+                nodes[pos_source].z_order = z_order;
+                for(const auto &s : r.second){
+                    size_type x_src = x_target + s.first;
+                    size_type y_src = y_target + s.second;
+                    auto it = sources_map.find({x_src, y_src});
+                    if(it != sources_map.end()){
+                        it->second.push_back(z_order);
+                    }else{
+                        std::vector<size_type> z_vec = {z_order};
+                        sources_map.insert({{x_src, y_src}, z_vec});
+                    }
+                }
+            }
+            replacements_map.clear();
+
+            block_tree_2d::algorithm::get_block_replacements(adjacency_lists, this->k, sources_map,
+                    this->dimensions, block_size, hash, nodes);
+            block_tree_2d::algorithm::get_roll_replacements(adjacency_lists, this->k, sources_map,
+                                                             this->dimensions, block_size, hash, nodes);
+            block_tree_2d::algorithm::clear_adjacency_lists(adjacency_lists);
+            util::logger::log("Compacting level=" + std::to_string(level));
+            auto pointers = this->compact_current_level(nodes, level, topology_index, is_pointer_index);
+            util::logger::log("Number of new pointers=" + std::to_string(pointers));
+            util::logger::log("Preparing next level");
+            block_tree_2d::algorithm::prepare_next_level(adjacency_lists, hash, this->m_k2, nodes);
+            return pointers;
+        }
+
 
         void construction(input_type &adjacency_lists, size_type h, size_type block_size, size_type blocks){
 
 
-            std::cout << "Construction skip" << std::endl;
+            std::cout << "Construction intersection lists" << std::endl;
             //0. Init the structure
             this->init_structure();
             this->m_offsets[0].resize(0);
@@ -169,12 +201,23 @@ namespace block_tree_2d {
             size_type topology_index = this->m_topology.size(), is_pointer_index = 0;
             size_type level = m_minimum_level;
             block_size = min_block_size / this->m_k;
+            //Traiting large blocks
+            while (block_size > large_block_size){
+                ++level;
+                util::logger::log("Processing level " + std::to_string(level) + " of " + std::to_string(h));
+                util::logger::log("Block size: " + std::to_string(block_size));
+                auto pointers = processing_level_with_large_blocks(level - m_minimum_level, adjacency_lists, block_size,
+                        topology_index, is_pointer_index, hash, nodes);
+                util::logger::log("Pointers: " + std::to_string(pointers));
+                block_size = block_size / this->k;
+            }
             //std::cout << "Level: " << level << std::endl;
             while (block_size > 1) {
                 ++level;
                 util::logger::log("Processing level " + std::to_string(level) + " of " + std::to_string(h));
                 util::logger::log("Block size: " + std::to_string(block_size));
-                auto pointers = this->processing_level(level - m_minimum_level, adjacency_lists, block_size, topology_index, is_pointer_index, hash, nodes);
+                auto pointers = this->processing_level(level - m_minimum_level, adjacency_lists, block_size,
+                        topology_index, is_pointer_index, hash, nodes);
                 util::logger::log("Pointers: " + std::to_string(pointers));
                 block_size = block_size / this->k;
 
@@ -195,7 +238,7 @@ namespace block_tree_2d {
             util::logger::log("2D Block Tree DONE!!!");
         }
 
-        void copy(const block_tree_skip_levels &p){
+        void copy(const block_tree_intersection_lists &p){
             block_tree<input_type >::copy(p);
             m_zeroes = p.m_zeroes;
             m_minimum_level = p.m_minimum_level;
@@ -204,9 +247,9 @@ namespace block_tree_2d {
 
     public:
 
-        block_tree_skip_levels() = default;
+        block_tree_intersection_lists() = default;
 
-        block_tree_skip_levels(input_type &adjacency_lists, const size_type kparam) {
+        block_tree_intersection_lists(input_type &adjacency_lists, const size_type kparam) {
             size_type h, total_size;
             this->init_construction(h, total_size, adjacency_lists, kparam);
             size_type blocks = this->m_k2, block_size = total_size/this->m_k;
@@ -246,17 +289,17 @@ namespace block_tree_2d {
         }
 
         //! Copy constructor
-        block_tree_skip_levels(const block_tree_skip_levels &p) {
+        block_tree_intersection_lists(const block_tree_intersection_lists &p) {
             copy(p);
         }
 
         //! Move constructor
-        block_tree_skip_levels(block_tree_skip_levels &&p) {
+        block_tree_intersection_lists(block_tree_intersection_lists &&p) {
             *this = std::move(p);
         }
 
         //! Assignment move operation
-        block_tree_skip_levels &operator=(block_tree_skip_levels &&p) {
+        block_tree_intersection_lists &operator=(block_tree_intersection_lists &&p) {
             if (this != &p) {
                 block_tree<input_type>::operator=(p);
                 m_minimum_level = std::move(p.m_minimum_level);
@@ -266,7 +309,7 @@ namespace block_tree_2d {
         }
 
         //! Assignment operator
-        block_tree_skip_levels &operator=(const block_tree_skip_levels &p) {
+        block_tree_intersection_lists &operator=(const block_tree_intersection_lists &p) {
             if (this != &p) {
                 copy(p);
             }
@@ -278,7 +321,7 @@ namespace block_tree_2d {
         *  You have to use set_vector to adjust the supported bit_vector.
         *  \param bp_support Object which is swapped.
         */
-        void swap(block_tree_skip_levels &p) {
+        void swap(block_tree_intersection_lists &p) {
             block_tree<input_type>::swap(p);
             std::swap(m_minimum_level, p.m_minimum_level);
             std::swap(m_zeroes, p.m_zeroes);

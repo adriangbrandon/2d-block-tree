@@ -40,6 +40,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <block_tree_algorithm_helper_v2.hpp>
 #include "alternative_code.hpp"
+#include "hash_table_chainning_multiple.hpp"
 #include <logger.hpp>
 
 
@@ -55,6 +56,7 @@ namespace block_tree_2d {
         typedef input_t input_type;
         typedef typename block_tree_2d::algorithm::node_type node_type;
         typedef hash_table::hash_table_chainning<uint64_t , uint64_t> htc_type;
+        typedef hash_table::hash_table_chainning_multiple<uint64_t , uint64_t> htc_multiple_type;
 
     protected:
         size_type m_k;
