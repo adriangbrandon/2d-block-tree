@@ -33,8 +33,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <block_tree.hpp>
 #include <block_tree_skip_levels.hpp>
+#include <block_tree_intersection_lists.hpp>
 #include <adjacency_list_helper.hpp>
 #include <sdsl/io.hpp>
+
 
 template<class t_block_tree>
 void run_load(const std::string &dataset, const uint64_t k, const uint64_t limit){
@@ -46,10 +48,20 @@ void run_load(const std::string &dataset, const uint64_t k, const uint64_t limit
         name_file = name_file + "_" + std::to_string(limit);
     }
     name_file = name_file + ".2dbt";
+    sdsl::load_from_file(m_block_tree, name_file);
 
     std::cout << "Size in bytes: " << sdsl::size_in_bytes(m_block_tree) << std::endl;
     sdsl::write_structure<sdsl::JSON_FORMAT>(m_block_tree, name_file + ".json");
     sdsl::write_structure<sdsl::HTML_FORMAT>(m_block_tree, name_file + ".html");
+    auto results = m_block_tree.neigh(306900);
+    std::cout << "{";
+    for(const auto &r : results){
+        std::cout << r << ", ";
+    }
+    std::cout << "}" << std::endl;
+    std::cout << "First level with pointer: " << m_block_tree.first_level_with_pointer() << std::endl;
+    m_block_tree.display();
+
 }
 
 int main(int argc, char **argv) {
@@ -72,6 +84,8 @@ int main(int argc, char **argv) {
         run_load<block_tree_2d::block_tree<>>(dataset, k, limit);
     }else if (type == "skip_levels"){
         run_load<block_tree_2d::block_tree_skip_levels<>>(dataset, k, limit);
+    }else if (type == "skip_levels_lists"){
+        run_load<block_tree_2d::block_tree_intersection_lists<>>(dataset, k, limit);
     }else{
         std::cout << "Type: " << type << " is not supported." << std::endl;
     }

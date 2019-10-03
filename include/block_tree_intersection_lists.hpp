@@ -58,7 +58,7 @@ namespace block_tree_2d {
 
         size_type m_minimum_level;
         size_type m_zeroes;
-        static constexpr size_type large_block_size = 2;
+        static constexpr size_type large_block_size = 512;
 
         std::pair<size_type, size_type> minimum_block_size(input_type &adjacency_lists, const size_type height){
 
@@ -90,13 +90,13 @@ namespace block_tree_2d {
             //2. Looking for repetitions by using intersection of lists
             htc_multiple_type m_htc_multiple(std::min(static_cast<size_type>(10240), 2*blocks * this->m_k2));
             block_tree_2d::algorithm::replacements_map_type replacements_map;
-            util::logger::log("Checking replacements at blocks=" + std::to_string(l) + " with block_size=" + std::to_string(block_size/ this->k));
-            block_tree_2d::algorithm::list_blocks(adjacency_lists, this->k, m_htc_multiple, this->dimensions, block_size / this->k, replacements_map);
-            util::logger::log("Checking replacements at rolls=" + std::to_string(l) + " with block_size=" + std::to_string(block_size / this->k));
-            block_tree_2d::algorithm::list_rolls(adjacency_lists, this->k, m_htc_multiple, this->dimensions, block_size / this->k, replacements_map);
+            util::logger::log("Checking replacements at blocks=" + std::to_string(l+1) + " with block_size=" + std::to_string(block_size/ this->k));
+            block_tree_2d::algorithm::list_blocks(adjacency_lists, this->k, m_htc_multiple, this->dimensions, large_block_size, replacements_map);
+            util::logger::log("Checking replacements at rolls=" + std::to_string(l+1) + " with block_size=" + std::to_string(block_size / this->k));
+            block_tree_2d::algorithm::list_rolls(adjacency_lists, this->k, m_htc_multiple, this->dimensions, large_block_size, replacements_map);
             while(l > 0){
-                bool b = block_tree_2d::algorithm::replacements_to_prev_level(adjacency_lists, replacements_map, block_size,
-                         adjacency_lists.size(), this->k);
+                bool b = block_tree_2d::algorithm::exist_replacements(adjacency_lists, replacements_map, block_size,
+                         large_block_size, this->dimensions, this->k);
                 if(!b){
                     return {block_size, l};
                 }
@@ -158,10 +158,11 @@ namespace block_tree_2d {
             }
             replacements_map.clear();
 
+            std::unordered_map<size_type, char> untouchable_block;
             block_tree_2d::algorithm::get_block_replacements(adjacency_lists, this->k, sources_map,
-                    this->dimensions, block_size, hash, nodes);
+                    this->dimensions, block_size, hash, nodes, untouchable_block);
             block_tree_2d::algorithm::get_roll_replacements(adjacency_lists, this->k, sources_map,
-                                                             this->dimensions, block_size, hash, nodes);
+                                                             this->dimensions, block_size, hash, nodes, untouchable_block);
             block_tree_2d::algorithm::clear_adjacency_lists(adjacency_lists);
             util::logger::log("Compacting level=" + std::to_string(level));
             auto pointers = this->compact_current_level(nodes, level, topology_index, is_pointer_index);
@@ -187,7 +188,7 @@ namespace block_tree_2d {
             size_type min_block_size;
             std::tie(min_block_size, m_minimum_level) = minimum_block_size(adjacency_lists, h);
             util::logger::log("Minimum level=" + std::to_string(m_minimum_level) + " and block_size=" + std::to_string(min_block_size));
-
+            //exit(10);
 
             //2. Building LOUDS of k2_tree until min_block_size and map between z_order and position in vector nodes
             block_tree_2d::algorithm::hash_type hash;

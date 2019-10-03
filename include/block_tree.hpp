@@ -428,6 +428,18 @@ namespace block_tree_2d {
             }
         }
 
+        size_type first_level_with_pointer(){
+            for(size_type l = 0; l < m_pointers.size(); ++l){
+                if(!m_pointers[l].empty()){
+                    
+                    std::cout << "pointer: " << m_pointers[l][0] << std::endl;
+                    std::cout << "offset_x: " << codes::alternative_code::decode(m_offsets[l][0]) << std::endl;
+                    std::cout << "offset_y: " << codes::alternative_code::decode(m_offsets[l][1]) << std::endl;
+                    return l;
+                }
+            }
+        }
+
         inline void access_region(const size_type min_x, const size_type min_y,
                            const size_type max_x, const size_type max_y,
                            input_type &result){

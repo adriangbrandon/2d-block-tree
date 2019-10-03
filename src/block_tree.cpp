@@ -43,29 +43,45 @@ int main(int argc, char **argv) {
 
 
     typedef hash_table::hash_table_chainning<hash_type, uint64_t> htc_type;
-    std::vector<int64_t> row0 = {0};
-    std::vector<int64_t> row1 = {0,2};
-    std::vector<int64_t> row2 = {0};
-    std::vector<int64_t> row3 = {0};
-    std::vector<int64_t> row4 = {};
-    std::vector<int64_t> row5 = {};
+    std::vector<int64_t> row0 = {0,17};
+    std::vector<int64_t> row1 = {1, 17};
+    std::vector<int64_t> row2 = {0, 1};
+    std::vector<int64_t> row3 = {1};
+    std::vector<int64_t> row4 = {4};
+    std::vector<int64_t> row5 = {4};
     std::vector<int64_t> row6 = {};
-    std::vector<int64_t> row7 = {1};
-    std::vector<int64_t> row8 = {1,3};
-    std::vector<int64_t> row9 = {1};
-    std::vector<int64_t> row10 = {1};
-    std::vector<int64_t> row11 = {};
-    std::vector<int64_t> row12 = {};
-    std::vector<int64_t> row13 = {};
-    std::vector<int64_t> row14 = {};
+    std::vector<int64_t> row7 = {};
+    /*std::vector<int64_t> row8 = {};
+    std::vector<int64_t> row9 = {};
+    std::vector<int64_t> row10 = {6};
+    std::vector<int64_t> row11 = {5, 10};
+    std::vector<int64_t> row12 = {4};
+    std::vector<int64_t> row13 = {3, 13};
+    std::vector<int64_t> row14 = {2};
     std::vector<int64_t> row15 = {};
+    std::vector<int64_t> row16 = {16, 17};
+    std::vector<int64_t> row17 = {16, 17};
+    std::vector<int64_t> row18 = {14};
+    std::vector<int64_t> row19 = {5, 14};
+    std::vector<int64_t> row20 = {13};
+    std::vector<int64_t> row21 = {8};
+    std::vector<int64_t> row22 = {};
+    std::vector<int64_t> row23 = {};
+    std::vector<int64_t> row24 = {};
+    std::vector<int64_t> row25 = {};
+    std::vector<int64_t> row26 = {};
+    std::vector<int64_t> row27 = {2, 10, 13};
+    std::vector<int64_t> row28 = {3, 5, 11};
+    std::vector<int64_t> row29 = {4, 10, 13};
+    std::vector<int64_t> row30 = {};
+    std::vector<int64_t> row31 = {};*/
 
 
 
 
 
     uint64_t k =2;
-    uint64_t dimensions = 16;
+    uint64_t dimensions = 32;
     //for(size_t i = 0; i < 100; ++i){
         std::vector< std::vector<int64_t>> matrix8_8;
         //util::adjacency_list::read(matrix8_8, "adjacency_lists.txt");std::vector< std::vector<int64_t>> matrix8_8;
@@ -77,7 +93,7 @@ int main(int argc, char **argv) {
         matrix8_8.push_back(row5);
         matrix8_8.push_back(row6);
         matrix8_8.push_back(row7);
-        matrix8_8.push_back(row8);
+       /* matrix8_8.push_back(row8);
         matrix8_8.push_back(row9);
         matrix8_8.push_back(row10);
         matrix8_8.push_back(row11);
@@ -85,6 +101,22 @@ int main(int argc, char **argv) {
         matrix8_8.push_back(row13);
         matrix8_8.push_back(row14);
         matrix8_8.push_back(row15);
+        matrix8_8.push_back(row16);
+        matrix8_8.push_back(row17);
+        matrix8_8.push_back(row18);
+        matrix8_8.push_back(row19);
+        matrix8_8.push_back(row20);
+        matrix8_8.push_back(row21);
+        matrix8_8.push_back(row22);
+        matrix8_8.push_back(row23);
+        matrix8_8.push_back(row24);
+        matrix8_8.push_back(row25);
+        matrix8_8.push_back(row26);
+        matrix8_8.push_back(row27);
+        matrix8_8.push_back(row28);
+        matrix8_8.push_back(row29);
+        matrix8_8.push_back(row30);
+        matrix8_8.push_back(row31);*/
         std::cout << matrix8_8.size() << std::endl;
 
         block_tree_2d::algorithm::print_ajdacent_list(matrix8_8);

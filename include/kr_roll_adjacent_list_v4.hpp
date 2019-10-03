@@ -240,7 +240,7 @@ namespace karp_rabin {
                 hash_value += (hash_row * m_h_in_right[list_id]) % m_prime;
                 ++list_id;
             }
-            m_hash = hash_value;
+            m_hash = hash_value % m_prime;
             m_prev_hash = m_hash;
             //Initial iterators at the end of first block
             m_iterators = m_iterators_end_first_block;
@@ -288,6 +288,7 @@ namespace karp_rabin {
             while(!m_heap_out.empty() && *(m_heap_out.top().first) == m_col-1){
                 auto out_top = m_heap_out.top();
                 hash += (m_prime - m_h_out_right[out_top.second]);
+                hash = hash % m_prime;
                 //m_heap_out.pop();
                 ++out_top.first;
                 //Skip deleted elements
@@ -341,6 +342,7 @@ namespace karp_rabin {
             auto cyclic_i = (m_row-1) % m_block_size;
             auto first_row = (m_prev_kr[cyclic_i] * m_h_in_right[0]) % m_prime;
             hash += (m_prime - first_row);
+            hash = hash % m_prime;
             hash = (hash * m_h_in_right[m_block_size-2]) % m_prime;
             // Compute hash of last row
             hash_type hash_row = 0;

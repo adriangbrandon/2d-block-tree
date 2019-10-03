@@ -33,7 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <iostream>
 #include <vector>
-#include <block_tree_skip_levels.hpp>
+#include <block_tree_intersection_lists.hpp>
 #include <adjacency_list_helper.hpp>
 
 uint64_t number_of_ones(const std::vector<std::vector<int64_t>> &adjacency_lists) {
@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
             std::cout << "----------------------------------------------" << std::endl;*/
 
             std::cout << "Building Block-tree rep=" << r << " freq="<< f << " dimensions=" << dimensions << "....";
-            block_tree_2d::block_tree_skip_levels<> m_block_tree(adjacency_lists, k);
+            block_tree_2d::block_tree_intersection_lists<> m_block_tree(adjacency_lists, k);
             std::cout << "Done." << std::endl;
             //m_block_tree.print();
             std::cout << "Retrieving adjacency lists...";

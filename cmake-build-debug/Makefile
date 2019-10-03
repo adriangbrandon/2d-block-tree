@@ -205,6 +205,32 @@ adjacency_lists_test/fast:
 .PHONY : adjacency_lists_test/fast
 
 #=============================================================================
+# Target rules for targets named build_k2_tree_test
+
+# Build rule for target.
+build_k2_tree_test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 build_k2_tree_test
+.PHONY : build_k2_tree_test
+
+# fast build rule for target.
+build_k2_tree_test/fast:
+	$(MAKE) -f CMakeFiles/build_k2_tree_test.dir/build.make CMakeFiles/build_k2_tree_test.dir/build
+.PHONY : build_k2_tree_test/fast
+
+#=============================================================================
+# Target rules for targets named check_blocks
+
+# Build rule for target.
+check_blocks: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 check_blocks
+.PHONY : check_blocks
+
+# fast build rule for target.
+check_blocks/fast:
+	$(MAKE) -f CMakeFiles/check_blocks.dir/build.make CMakeFiles/check_blocks.dir/build
+.PHONY : check_blocks/fast
+
+#=============================================================================
 # Target rules for targets named times
 
 # Build rule for target.
@@ -229,19 +255,6 @@ display: cmake_check_build_system
 display/fast:
 	$(MAKE) -f CMakeFiles/display.dir/build.make CMakeFiles/display.dir/build
 .PHONY : display/fast
-
-#=============================================================================
-# Target rules for targets named build_k2_tree_test
-
-# Build rule for target.
-build_k2_tree_test: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 build_k2_tree_test
-.PHONY : build_k2_tree_test
-
-# fast build rule for target.
-build_k2_tree_test/fast:
-	$(MAKE) -f CMakeFiles/build_k2_tree_test.dir/build.make CMakeFiles/build_k2_tree_test.dir/build
-.PHONY : build_k2_tree_test/fast
 
 #=============================================================================
 # Target rules for targets named build_k2tree
@@ -3445,6 +3458,33 @@ src/build_webgraph.cpp.s:
 	$(MAKE) -f CMakeFiles/build_webgraph.dir/build.make CMakeFiles/build_webgraph.dir/src/build_webgraph.cpp.s
 .PHONY : src/build_webgraph.cpp.s
 
+src/check_blocks.o: src/check_blocks.cpp.o
+
+.PHONY : src/check_blocks.o
+
+# target to build an object file
+src/check_blocks.cpp.o:
+	$(MAKE) -f CMakeFiles/check_blocks.dir/build.make CMakeFiles/check_blocks.dir/src/check_blocks.cpp.o
+.PHONY : src/check_blocks.cpp.o
+
+src/check_blocks.i: src/check_blocks.cpp.i
+
+.PHONY : src/check_blocks.i
+
+# target to preprocess a source file
+src/check_blocks.cpp.i:
+	$(MAKE) -f CMakeFiles/check_blocks.dir/build.make CMakeFiles/check_blocks.dir/src/check_blocks.cpp.i
+.PHONY : src/check_blocks.cpp.i
+
+src/check_blocks.s: src/check_blocks.cpp.s
+
+.PHONY : src/check_blocks.s
+
+# target to generate assembly for a file
+src/check_blocks.cpp.s:
+	$(MAKE) -f CMakeFiles/check_blocks.dir/build.make CMakeFiles/check_blocks.dir/src/check_blocks.cpp.s
+.PHONY : src/check_blocks.cpp.s
+
 src/display.o: src/display.cpp.o
 
 .PHONY : src/display.o
@@ -3808,10 +3848,11 @@ help:
 	@echo "... adjacency_lists_test"
 	@echo "... list_install_components"
 	@echo "... edit_cache"
+	@echo "... build_k2_tree_test"
+	@echo "... check_blocks"
 	@echo "... install/strip"
 	@echo "... times"
 	@echo "... display"
-	@echo "... build_k2_tree_test"
 	@echo "... build_k2tree"
 	@echo "... package"
 	@echo "... block_tree_skip_levels"
@@ -4065,6 +4106,9 @@ help:
 	@echo "... src/build_webgraph.o"
 	@echo "... src/build_webgraph.i"
 	@echo "... src/build_webgraph.s"
+	@echo "... src/check_blocks.o"
+	@echo "... src/check_blocks.i"
+	@echo "... src/check_blocks.s"
 	@echo "... src/display.o"
 	@echo "... src/display.i"
 	@echo "... src/display.s"
