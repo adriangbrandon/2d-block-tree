@@ -128,12 +128,15 @@ namespace block_tree_2d {
                                                  large_block_size, replacements_map);
 
             util::logger::log("Replacements with block_size=" +std::to_string(block_size));
-            auto b_size = large_block_size;
+
+            block_tree_2d::algorithm::update_replacements(adjacency_lists, replacements_map, block_size, large_block_size,
+                                                          this->dimensions, this->k);
+            /*auto b_size = large_block_size;
             while(b_size < block_size){
                 b_size = b_size * this->k;
                 block_tree_2d::algorithm::replacements_to_prev_level(adjacency_lists, replacements_map, b_size,
                                                                      adjacency_lists.size(), this->k);
-            }
+            }*/
 
             //Building sources hashtable
             for(const auto &r : replacements_map){

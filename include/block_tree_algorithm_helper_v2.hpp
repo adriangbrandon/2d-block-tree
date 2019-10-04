@@ -706,14 +706,12 @@ namespace block_tree_2d {
             size_type hashes = 0;
             //Total number of blocks
             std::vector<point_type> points_to_check;
-            std::cout << "Sources: " << sources.size()<< std::endl;
             for(const auto &s : sources){
                 auto p = s.first;
                 if(p.first % block_size == 0 && p.second % block_size == 0){
                     points_to_check.push_back(p);
                 }
             }
-            std::cout << "Points to check: " << points_to_check.size() << std::endl;
             std::sort(points_to_check.begin(), points_to_check.end());
             util::progress_bar m_progress_bar(points_to_check.size());
             size_type processed_blocks = 0;
@@ -735,14 +733,6 @@ namespace block_tree_2d {
                         nodes[pos_target].z_order = b;
                         remove_target(adjacent_lists, sources, b, block_size);
                         //hash.erase(it_target);
-                        std::cout << "Block size: " << block_size << std::endl;
-                        std::cout << "Z_order: " << b << std::endl;
-                        auto p_print = codes::zeta_order::decode(b);
-                        std::cout << "Block from: ( " << p_print.first * block_size << ", "
-                                  << p_print.second * block_size << ")" << std::endl;
-                        std::cout << "Points to: (" << p.first << ", " << p.second << ")" << std::endl;
-                        std::cout << "Offset_x: " << 0 << std::endl;
-                        std::cout << "Offset_y: " << 0 << std::endl;
                         //}
                     }
 
@@ -767,14 +757,12 @@ namespace block_tree_2d {
             //Total number of blocks
             auto total_blocks = (dimensions-block_size+1) * (dimensions-block_size+1);
             std::vector<point_type> points_to_check;
-            std::cout << "Sources: " << sources.size()<< std::endl;
             for(const auto &s : sources){
                 auto p = s.first;
                 if(p.first % block_size != 0 || p.second % block_size != 0){
                     points_to_check.push_back(p);
                 }
             }
-            std::cout << "Points to check: " << points_to_check.size()<< std::endl;
             std::sort(points_to_check.begin(), points_to_check.end());
             util::progress_bar m_progress_bar(points_to_check.size());
             size_type processed_blocks = 0;
@@ -783,13 +771,10 @@ namespace block_tree_2d {
                 auto x = p.first;
                 auto y = p.second;
                 auto it_src = sources.find({x, y});
-                std::cout << "Sources find: " << (it_src != sources.end()) << std::endl;
+                //std::cout << "Sources find: " << (it_src != sources.end()) << std::endl;
                 if(it_src != sources.end()){
                     for(const auto &b : it_src->second){
-                        std::cout << "Checking sources" << std::endl;
-                        std::cout << "Untouchable: " << (untouchable_block.find(b) != untouchable_block.end()) << std::endl;
                         if(untouchable_block.find(b) != untouchable_block.end() || hash.find(b) == hash.end()) continue;
-                        std::cout << "Ok" << std::endl;
                         //Compute offsets and top-left block
                         size_type x_block, y_block;
                         size_type source_ptr;
@@ -870,15 +855,6 @@ namespace block_tree_2d {
                         nodes[pos_target].z_order = b;
                         nodes[pos_target].offset_x = source_off_x;
                         nodes[pos_target].offset_y = source_off_y;
-                        std::cout << "Block size: " << block_size << std::endl;
-                        std::cout << "Z_order: " << b << std::endl;
-                        auto p_print = codes::zeta_order::decode(b);
-                        std::cout << "Block from: ( " << p_print.first * block_size << ", "
-                        << p_print.second * block_size << ")" << std::endl;
-                        std::cout << "Points to: (" << x << ", " << y << ")" << std::endl;
-                        std::cout << "Offset_x: " << source_off_x << std::endl;
-                        std::cout << "Offset_y: " << source_off_y << std::endl;
-
                         remove_target(adjacent_lists, sources, b, block_size);
                         //hash.erase(it_target);
                         for(const auto &b_to_ut : blocks_to_untouchable){
