@@ -722,6 +722,9 @@ namespace block_tree_2d {
                 if(it_src != sources.end()){
                     auto z_order_source = codes::zeta_order::encode(p.first / block_size, p.second / block_size);
                     auto pos_source = hash.find(z_order_source)->second;
+                    if(nodes[pos_source].type == NODE_LEAF){
+                        continue;
+                    }
                     untouchable_block.insert({z_order_source, 1});
                     for(const auto &b : it_src->second){
                         //auto it_repl = blocks_replace_map.find(b);

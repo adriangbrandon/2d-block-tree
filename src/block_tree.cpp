@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
     std::vector<int64_t> row5 = {4};
     std::vector<int64_t> row6 = {};
     std::vector<int64_t> row7 = {};
-    /*std::vector<int64_t> row8 = {};
+    std::vector<int64_t> row8 = {};
     std::vector<int64_t> row9 = {};
     std::vector<int64_t> row10 = {6};
     std::vector<int64_t> row11 = {5, 10};
@@ -74,14 +74,14 @@ int main(int argc, char **argv) {
     std::vector<int64_t> row28 = {3, 5, 11};
     std::vector<int64_t> row29 = {4, 10, 13};
     std::vector<int64_t> row30 = {};
-    std::vector<int64_t> row31 = {};*/
+    std::vector<int64_t> row31 = {};
 
 
 
 
 
     uint64_t k =2;
-    uint64_t dimensions = 8;
+    uint64_t dimensions = 32;
     //for(size_t i = 0; i < 100; ++i){
         std::vector< std::vector<int64_t>> matrix8_8;
         //util::adjacency_list::read(matrix8_8, "adjacency_lists.txt");std::vector< std::vector<int64_t>> matrix8_8;
@@ -93,7 +93,7 @@ int main(int argc, char **argv) {
         matrix8_8.push_back(row5);
         matrix8_8.push_back(row6);
         matrix8_8.push_back(row7);
-       /* matrix8_8.push_back(row8);
+        matrix8_8.push_back(row8);
         matrix8_8.push_back(row9);
         matrix8_8.push_back(row10);
         matrix8_8.push_back(row11);
@@ -116,7 +116,7 @@ int main(int argc, char **argv) {
         matrix8_8.push_back(row28);
         matrix8_8.push_back(row29);
         matrix8_8.push_back(row30);
-        matrix8_8.push_back(row31);*/
+        matrix8_8.push_back(row31);
         std::cout << matrix8_8.size() << std::endl;
 
         block_tree_2d::algorithm::print_ajdacent_list(matrix8_8);
