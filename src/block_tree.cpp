@@ -43,8 +43,8 @@ int main(int argc, char **argv) {
 
 
     typedef hash_table::hash_table_chainning<hash_type, uint64_t> htc_type;
-    std::vector<int64_t> row0 = {0,17};
-    std::vector<int64_t> row1 = {1, 17};
+    std::vector<int64_t> row0 = {0};
+    std::vector<int64_t> row1 = {1};
     std::vector<int64_t> row2 = {0, 1};
     std::vector<int64_t> row3 = {1};
     std::vector<int64_t> row4 = {4};
@@ -81,7 +81,7 @@ int main(int argc, char **argv) {
 
 
     uint64_t k =2;
-    uint64_t dimensions = 32;
+    uint64_t dimensions = 8;
     //for(size_t i = 0; i < 100; ++i){
         std::vector< std::vector<int64_t>> matrix8_8;
         //util::adjacency_list::read(matrix8_8, "adjacency_lists.txt");std::vector< std::vector<int64_t>> matrix8_8;

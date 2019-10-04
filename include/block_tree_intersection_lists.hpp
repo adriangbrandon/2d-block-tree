@@ -58,7 +58,7 @@ namespace block_tree_2d {
 
         size_type m_minimum_level;
         size_type m_zeroes;
-        static constexpr size_type large_block_size = 512;
+        static constexpr size_type large_block_size = 2;
 
         std::pair<size_type, size_type> minimum_block_size(input_type &adjacency_lists, const size_type height){
 

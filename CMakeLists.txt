@@ -116,3 +116,6 @@ target_link_libraries(times sdsl divsufsort divsufsort64)
 
 add_executable(check_blocks src/check_blocks.cpp)
 target_link_libraries(check_blocks sdsl divsufsort divsufsort64)
+
+add_executable(roll_replacement src/roll_replacement.cpp)
+target_link_libraries(roll_replacement sdsl divsufsort divsufsort64)

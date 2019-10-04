@@ -689,11 +689,11 @@ namespace block_tree_2d {
             auto ex = sx + block_size-1;
             auto ey = sy + block_size-1;
             delete_info_block(adjacent_lists, sx, sy, ex, ey, block_size);
-            for(auto y = sy; y <= ey; ++y){
+            /*for(auto y = sy; y <= ey; ++y){
                 for(auto x = sx; x <= ex; ++x){
                     sources.erase({x, y});
                 }
-            }
+            }*/
         }
 
         template <class input_type>

@@ -80,16 +80,6 @@ install/fast: preinstall/fast
 	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -P cmake_install.cmake
 .PHONY : install/fast
 
-# Special rule for the target list_install_components
-list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
-.PHONY : list_install_components
-
-# Special rule for the target list_install_components
-list_install_components/fast: list_install_components
-
-.PHONY : list_install_components/fast
-
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -123,6 +113,16 @@ package: preinstall
 package/fast: package
 
 .PHONY : package/fast
+
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+
+.PHONY : list_install_components/fast
 
 # Special rule for the target rebuild_cache
 rebuild_cache:
@@ -179,30 +179,30 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named karp_rabin
+# Target rules for targets named build_k2tree
 
 # Build rule for target.
-karp_rabin: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 karp_rabin
-.PHONY : karp_rabin
+build_k2tree: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 build_k2tree
+.PHONY : build_k2tree
 
 # fast build rule for target.
-karp_rabin/fast:
-	$(MAKE) -f CMakeFiles/karp_rabin.dir/build.make CMakeFiles/karp_rabin.dir/build
-.PHONY : karp_rabin/fast
+build_k2tree/fast:
+	$(MAKE) -f CMakeFiles/build_k2tree.dir/build.make CMakeFiles/build_k2tree.dir/build
+.PHONY : build_k2tree/fast
 
 #=============================================================================
-# Target rules for targets named adjacency_lists_test
+# Target rules for targets named roll_replacement
 
 # Build rule for target.
-adjacency_lists_test: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 adjacency_lists_test
-.PHONY : adjacency_lists_test
+roll_replacement: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 roll_replacement
+.PHONY : roll_replacement
 
 # fast build rule for target.
-adjacency_lists_test/fast:
-	$(MAKE) -f CMakeFiles/adjacency_lists_test.dir/build.make CMakeFiles/adjacency_lists_test.dir/build
-.PHONY : adjacency_lists_test/fast
+roll_replacement/fast:
+	$(MAKE) -f CMakeFiles/roll_replacement.dir/build.make CMakeFiles/roll_replacement.dir/build
+.PHONY : roll_replacement/fast
 
 #=============================================================================
 # Target rules for targets named build_k2_tree_test
@@ -257,19 +257,6 @@ display/fast:
 .PHONY : display/fast
 
 #=============================================================================
-# Target rules for targets named build_k2tree
-
-# Build rule for target.
-build_k2tree: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 build_k2tree
-.PHONY : build_k2tree
-
-# fast build rule for target.
-build_k2tree/fast:
-	$(MAKE) -f CMakeFiles/build_k2tree.dir/build.make CMakeFiles/build_k2tree.dir/build
-.PHONY : build_k2tree/fast
-
-#=============================================================================
 # Target rules for targets named block_tree_skip_levels
 
 # Build rule for target.
@@ -294,6 +281,32 @@ load_webgraph: cmake_check_build_system
 load_webgraph/fast:
 	$(MAKE) -f CMakeFiles/load_webgraph.dir/build.make CMakeFiles/load_webgraph.dir/build
 .PHONY : load_webgraph/fast
+
+#=============================================================================
+# Target rules for targets named karp_rabin
+
+# Build rule for target.
+karp_rabin: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 karp_rabin
+.PHONY : karp_rabin
+
+# fast build rule for target.
+karp_rabin/fast:
+	$(MAKE) -f CMakeFiles/karp_rabin.dir/build.make CMakeFiles/karp_rabin.dir/build
+.PHONY : karp_rabin/fast
+
+#=============================================================================
+# Target rules for targets named adjacency_lists_test
+
+# Build rule for target.
+adjacency_lists_test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 adjacency_lists_test
+.PHONY : adjacency_lists_test
+
+# fast build rule for target.
+adjacency_lists_test/fast:
+	$(MAKE) -f CMakeFiles/adjacency_lists_test.dir/build.make CMakeFiles/adjacency_lists_test.dir/build
+.PHONY : adjacency_lists_test/fast
 
 #=============================================================================
 # Target rules for targets named build_webgraph
@@ -3647,6 +3660,33 @@ src/load_webgraph.cpp.s:
 	$(MAKE) -f CMakeFiles/load_webgraph.dir/build.make CMakeFiles/load_webgraph.dir/src/load_webgraph.cpp.s
 .PHONY : src/load_webgraph.cpp.s
 
+src/roll_replacement.o: src/roll_replacement.cpp.o
+
+.PHONY : src/roll_replacement.o
+
+# target to build an object file
+src/roll_replacement.cpp.o:
+	$(MAKE) -f CMakeFiles/roll_replacement.dir/build.make CMakeFiles/roll_replacement.dir/src/roll_replacement.cpp.o
+.PHONY : src/roll_replacement.cpp.o
+
+src/roll_replacement.i: src/roll_replacement.cpp.i
+
+.PHONY : src/roll_replacement.i
+
+# target to preprocess a source file
+src/roll_replacement.cpp.i:
+	$(MAKE) -f CMakeFiles/roll_replacement.dir/build.make CMakeFiles/roll_replacement.dir/src/roll_replacement.cpp.i
+.PHONY : src/roll_replacement.cpp.i
+
+src/roll_replacement.s: src/roll_replacement.cpp.s
+
+.PHONY : src/roll_replacement.s
+
+# target to generate assembly for a file
+src/roll_replacement.cpp.s:
+	$(MAKE) -f CMakeFiles/roll_replacement.dir/build.make CMakeFiles/roll_replacement.dir/src/roll_replacement.cpp.s
+.PHONY : src/roll_replacement.cpp.s
+
 src/times.o: src/times.cpp.o
 
 .PHONY : src/times.o
@@ -3844,19 +3884,20 @@ help:
 	@echo "... depend"
 	@echo "... install/local"
 	@echo "... install"
-	@echo "... karp_rabin"
-	@echo "... adjacency_lists_test"
-	@echo "... list_install_components"
 	@echo "... edit_cache"
+	@echo "... build_k2tree"
+	@echo "... roll_replacement"
 	@echo "... build_k2_tree_test"
 	@echo "... check_blocks"
 	@echo "... install/strip"
 	@echo "... times"
 	@echo "... display"
-	@echo "... build_k2tree"
 	@echo "... package"
 	@echo "... block_tree_skip_levels"
 	@echo "... load_webgraph"
+	@echo "... list_install_components"
+	@echo "... karp_rabin"
+	@echo "... adjacency_lists_test"
 	@echo "... build_webgraph"
 	@echo "... block_tree_skip_levels_test"
 	@echo "... hash_table"
@@ -4127,6 +4168,9 @@ help:
 	@echo "... src/load_webgraph.o"
 	@echo "... src/load_webgraph.i"
 	@echo "... src/load_webgraph.s"
+	@echo "... src/roll_replacement.o"
+	@echo "... src/roll_replacement.i"
+	@echo "... src/roll_replacement.s"
 	@echo "... src/times.o"
 	@echo "... src/times.i"
 	@echo "... src/times.s"

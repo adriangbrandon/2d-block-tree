@@ -37,129 +37,119 @@
 					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="karp_rabin">
-				<Option output="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/karp_rabin" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir=""/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="clang"/>
-				<Compiler>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/googletest/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/external/libdivsufsort/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/external/FastPFor/headers"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
-					<Add directory="/System/Library/Frameworks"/>
-					<Add directory="/Library/Frameworks"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 karp_rabin"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="karp_rabin/fast">
-				<Option output="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/karp_rabin" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir=""/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="clang"/>
-				<Compiler>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/googletest/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/external/libdivsufsort/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/external/FastPFor/headers"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
-					<Add directory="/System/Library/Frameworks"/>
-					<Add directory="/Library/Frameworks"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 karp_rabin/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="adjacency_lists_test">
-				<Option output="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/adjacency_lists_test" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir=""/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="clang"/>
-				<Compiler>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/googletest/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/external/libdivsufsort/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/external/FastPFor/headers"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
-					<Add directory="/System/Library/Frameworks"/>
-					<Add directory="/Library/Frameworks"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 adjacency_lists_test"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="adjacency_lists_test/fast">
-				<Option output="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/adjacency_lists_test" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir=""/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="clang"/>
-				<Compiler>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/googletest/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/external/libdivsufsort/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/external/FastPFor/headers"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
-					<Add directory="/System/Library/Frameworks"/>
-					<Add directory="/Library/Frameworks"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 adjacency_lists_test/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="list_install_components">
-				<Option working_dir="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 list_install_components"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
 			<Target title="edit_cache">
 				<Option working_dir="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
 					<Build command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="build_k2tree">
+				<Option output="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/build_k2tree" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir=""/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/googletest/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/external/libdivsufsort/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/external/FastPFor/headers"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 build_k2tree"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="build_k2tree/fast">
+				<Option output="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/build_k2tree" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir=""/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/googletest/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/external/libdivsufsort/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/external/FastPFor/headers"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 build_k2tree/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="roll_replacement">
+				<Option output="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/roll_replacement" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir=""/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/googletest/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/external/libdivsufsort/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/external/FastPFor/headers"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 roll_replacement"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="roll_replacement/fast">
+				<Option output="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/roll_replacement" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir=""/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/googletest/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/external/libdivsufsort/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/external/FastPFor/headers"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 roll_replacement/fast"/>
 					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
@@ -391,60 +381,6 @@
 					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="build_k2tree">
-				<Option output="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/build_k2tree" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir=""/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="clang"/>
-				<Compiler>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/googletest/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/external/libdivsufsort/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/external/FastPFor/headers"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
-					<Add directory="/System/Library/Frameworks"/>
-					<Add directory="/Library/Frameworks"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 build_k2tree"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="build_k2tree/fast">
-				<Option output="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/build_k2tree" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir=""/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="clang"/>
-				<Compiler>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/googletest/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/external/libdivsufsort/include"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/external/FastPFor/headers"/>
-					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
-					<Add directory="/System/Library/Frameworks"/>
-					<Add directory="/Library/Frameworks"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 build_k2tree/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
 			<Target title="package">
 				<Option working_dir="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug"/>
 				<Option type="4"/>
@@ -558,6 +494,124 @@
 				</Compiler>
 				<MakeCommands>
 					<Build command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 load_webgraph/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="list_install_components">
+				<Option working_dir="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 list_install_components"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="karp_rabin">
+				<Option output="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/karp_rabin" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir=""/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/googletest/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/external/libdivsufsort/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/external/FastPFor/headers"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 karp_rabin"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="karp_rabin/fast">
+				<Option output="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/karp_rabin" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir=""/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/googletest/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/external/libdivsufsort/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/external/FastPFor/headers"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 karp_rabin/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="adjacency_lists_test">
+				<Option output="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/adjacency_lists_test" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir=""/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/googletest/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/external/libdivsufsort/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/external/FastPFor/headers"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 adjacency_lists_test"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="adjacency_lists_test/fast">
+				<Option output="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/adjacency_lists_test" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir=""/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/googletest/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/external/sdsl-lite/external/libdivsufsort/include"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/external/FastPFor/headers"/>
+					<Add directory="/Users/adrian/CLionProjects/2d-block-tree/external/sdsl-lite/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 adjacency_lists_test/fast"/>
 					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
@@ -5026,6 +5080,9 @@
 		</Unit>
 		<Unit filename="/Users/adrian/CLionProjects/2d-block-tree/src/load_webgraph.cpp">
 			<Option target="load_webgraph"/>
+		</Unit>
+		<Unit filename="/Users/adrian/CLionProjects/2d-block-tree/src/roll_replacement.cpp">
+			<Option target="roll_replacement"/>
 		</Unit>
 		<Unit filename="/Users/adrian/CLionProjects/2d-block-tree/src/times.cpp">
 			<Option target="times"/>

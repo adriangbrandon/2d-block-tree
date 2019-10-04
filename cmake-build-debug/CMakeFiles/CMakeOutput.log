@@ -2935,3 +2935,211 @@ Linking CXX executable cmTC_17be1
 
 Source file was:
 int main() { return 0; }
+Performing C++ SOURCE FILE Test HAVE_CLANG_STD=C__11 succeeded with the following output:
+Change Dir: /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_6c704/fast 
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_6c704.dir/build.make CMakeFiles/cmTC_6c704.dir/build
+Building CXX object CMakeFiles/cmTC_6c704.dir/src.cxx.o
+/Library/Developer/CommandLineTools/usr/bin/c++    -DHAVE_CLANG_STD=C__11 -std=c++11 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_6c704.dir/src.cxx.o -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_6c704
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6c704.dir/link.txt --verbose=1
+/Library/Developer/CommandLineTools/usr/bin/c++   -DHAVE_CLANG_STD=C__11 -std=c++11 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_6c704.dir/src.cxx.o  -o cmTC_6c704 
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test HAVE_CLANG_STDLIB=LIBC__ succeeded with the following output:
+Change Dir: /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_2afca/fast 
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_2afca.dir/build.make CMakeFiles/cmTC_2afca.dir/build
+Building CXX object CMakeFiles/cmTC_2afca.dir/src.cxx.o
+/Library/Developer/CommandLineTools/usr/bin/c++    -std=c++11 -DHAVE_CLANG_STDLIB=LIBC__ -stdlib=libc++ -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_2afca.dir/src.cxx.o -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_2afca
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2afca.dir/link.txt --verbose=1
+/Library/Developer/CommandLineTools/usr/bin/c++   -std=c++11 -DHAVE_CLANG_STDLIB=LIBC__ -stdlib=libc++ -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_2afca.dir/src.cxx.o  -o cmTC_2afca 
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test HAVE_CLANG_STD=C__11__DNDEBUG succeeded with the following output:
+Change Dir: /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_1bc66/fast 
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_1bc66.dir/build.make CMakeFiles/cmTC_1bc66.dir/build
+Building CXX object CMakeFiles/cmTC_1bc66.dir/src.cxx.o
+/Library/Developer/CommandLineTools/usr/bin/c++    -std=c++11 -stdlib=libc++ -msse4.2 -DHAVE_CLANG_STD=C__11__DNDEBUG -std=c++11 -DNDEBUG -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_1bc66.dir/src.cxx.o -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_1bc66
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1bc66.dir/link.txt --verbose=1
+/Library/Developer/CommandLineTools/usr/bin/c++   -std=c++11 -stdlib=libc++ -msse4.2 -DHAVE_CLANG_STD=C__11__DNDEBUG -std=c++11 -DNDEBUG -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_1bc66.dir/src.cxx.o  -o cmTC_1bc66 
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test HAVE_CLANG_O3__FFAST_MATH__FUNROLL_LOOPS__D__EXTERN_ALWAYS_INLINE="EXTERN___ALWAYS_INLINE"_ succeeded with the following output:
+Change Dir: /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_77ffe/fast 
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_77ffe.dir/build.make CMakeFiles/cmTC_77ffe.dir/build
+Building CXX object CMakeFiles/cmTC_77ffe.dir/src.cxx.o
+/Library/Developer/CommandLineTools/usr/bin/c++    -std=c++11 -stdlib=libc++ -msse4.2 -std=c++11 -DNDEBUG -stdlib=libc++ -DHAVE_CLANG_O3__FFAST_MATH__FUNROLL_LOOPS__D__EXTERN_ALWAYS_INLINE="EXTERN___ALWAYS_INLINE"_ -O3 -ffast-math -funroll-loops -D__extern_always_inline="extern __always_inline" -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_77ffe.dir/src.cxx.o -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_77ffe
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E cmake_link_script CMakeFiles/cmTC_77ffe.dir/link.txt --verbose=1
+/Library/Developer/CommandLineTools/usr/bin/c++   -std=c++11 -stdlib=libc++ -msse4.2 -std=c++11 -DNDEBUG -stdlib=libc++ -DHAVE_CLANG_O3__FFAST_MATH__FUNROLL_LOOPS__D__EXTERN_ALWAYS_INLINE="EXTERN___ALWAYS_INLINE"_ -O3 -ffast-math -funroll-loops -D__extern_always_inline="extern __always_inline" -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_77ffe.dir/src.cxx.o  -o cmTC_77ffe 
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test HAVE_CLANG_STD=C__11 succeeded with the following output:
+Change Dir: /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_91015/fast 
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_91015.dir/build.make CMakeFiles/cmTC_91015.dir/build
+Building CXX object CMakeFiles/cmTC_91015.dir/src.cxx.o
+/Library/Developer/CommandLineTools/usr/bin/c++    -DHAVE_CLANG_STD=C__11 -std=c++11 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_91015.dir/src.cxx.o -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_91015
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E cmake_link_script CMakeFiles/cmTC_91015.dir/link.txt --verbose=1
+/Library/Developer/CommandLineTools/usr/bin/c++   -DHAVE_CLANG_STD=C__11 -std=c++11 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_91015.dir/src.cxx.o  -o cmTC_91015 
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test HAVE_CLANG_STDLIB=LIBC__ succeeded with the following output:
+Change Dir: /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_7cfb6/fast 
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_7cfb6.dir/build.make CMakeFiles/cmTC_7cfb6.dir/build
+Building CXX object CMakeFiles/cmTC_7cfb6.dir/src.cxx.o
+/Library/Developer/CommandLineTools/usr/bin/c++    -std=c++11 -DHAVE_CLANG_STDLIB=LIBC__ -stdlib=libc++ -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_7cfb6.dir/src.cxx.o -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_7cfb6
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7cfb6.dir/link.txt --verbose=1
+/Library/Developer/CommandLineTools/usr/bin/c++   -std=c++11 -DHAVE_CLANG_STDLIB=LIBC__ -stdlib=libc++ -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_7cfb6.dir/src.cxx.o  -o cmTC_7cfb6 
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test HAVE_CLANG_STD=C__11__DNDEBUG succeeded with the following output:
+Change Dir: /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_fceb4/fast 
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_fceb4.dir/build.make CMakeFiles/cmTC_fceb4.dir/build
+Building CXX object CMakeFiles/cmTC_fceb4.dir/src.cxx.o
+/Library/Developer/CommandLineTools/usr/bin/c++    -std=c++11 -stdlib=libc++ -msse4.2 -DHAVE_CLANG_STD=C__11__DNDEBUG -std=c++11 -DNDEBUG -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_fceb4.dir/src.cxx.o -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_fceb4
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E cmake_link_script CMakeFiles/cmTC_fceb4.dir/link.txt --verbose=1
+/Library/Developer/CommandLineTools/usr/bin/c++   -std=c++11 -stdlib=libc++ -msse4.2 -DHAVE_CLANG_STD=C__11__DNDEBUG -std=c++11 -DNDEBUG -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_fceb4.dir/src.cxx.o  -o cmTC_fceb4 
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test HAVE_CLANG_O3__FFAST_MATH__FUNROLL_LOOPS__D__EXTERN_ALWAYS_INLINE="EXTERN___ALWAYS_INLINE"_ succeeded with the following output:
+Change Dir: /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_a985d/fast 
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_a985d.dir/build.make CMakeFiles/cmTC_a985d.dir/build
+Building CXX object CMakeFiles/cmTC_a985d.dir/src.cxx.o
+/Library/Developer/CommandLineTools/usr/bin/c++    -std=c++11 -stdlib=libc++ -msse4.2 -std=c++11 -DNDEBUG -stdlib=libc++ -DHAVE_CLANG_O3__FFAST_MATH__FUNROLL_LOOPS__D__EXTERN_ALWAYS_INLINE="EXTERN___ALWAYS_INLINE"_ -O3 -ffast-math -funroll-loops -D__extern_always_inline="extern __always_inline" -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_a985d.dir/src.cxx.o -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_a985d
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a985d.dir/link.txt --verbose=1
+/Library/Developer/CommandLineTools/usr/bin/c++   -std=c++11 -stdlib=libc++ -msse4.2 -std=c++11 -DNDEBUG -stdlib=libc++ -DHAVE_CLANG_O3__FFAST_MATH__FUNROLL_LOOPS__D__EXTERN_ALWAYS_INLINE="EXTERN___ALWAYS_INLINE"_ -O3 -ffast-math -funroll-loops -D__extern_always_inline="extern __always_inline" -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_a985d.dir/src.cxx.o  -o cmTC_a985d 
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test HAVE_CLANG_STD=C__11 succeeded with the following output:
+Change Dir: /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_bf197/fast 
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_bf197.dir/build.make CMakeFiles/cmTC_bf197.dir/build
+Building CXX object CMakeFiles/cmTC_bf197.dir/src.cxx.o
+/Library/Developer/CommandLineTools/usr/bin/c++    -DHAVE_CLANG_STD=C__11 -std=c++11 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_bf197.dir/src.cxx.o -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_bf197
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bf197.dir/link.txt --verbose=1
+/Library/Developer/CommandLineTools/usr/bin/c++   -DHAVE_CLANG_STD=C__11 -std=c++11 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_bf197.dir/src.cxx.o  -o cmTC_bf197 
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test HAVE_CLANG_STDLIB=LIBC__ succeeded with the following output:
+Change Dir: /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_1b3a1/fast 
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_1b3a1.dir/build.make CMakeFiles/cmTC_1b3a1.dir/build
+Building CXX object CMakeFiles/cmTC_1b3a1.dir/src.cxx.o
+/Library/Developer/CommandLineTools/usr/bin/c++    -std=c++11 -DHAVE_CLANG_STDLIB=LIBC__ -stdlib=libc++ -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_1b3a1.dir/src.cxx.o -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_1b3a1
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1b3a1.dir/link.txt --verbose=1
+/Library/Developer/CommandLineTools/usr/bin/c++   -std=c++11 -DHAVE_CLANG_STDLIB=LIBC__ -stdlib=libc++ -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_1b3a1.dir/src.cxx.o  -o cmTC_1b3a1 
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test HAVE_CLANG_STD=C__11__DNDEBUG succeeded with the following output:
+Change Dir: /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_ab112/fast 
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_ab112.dir/build.make CMakeFiles/cmTC_ab112.dir/build
+Building CXX object CMakeFiles/cmTC_ab112.dir/src.cxx.o
+/Library/Developer/CommandLineTools/usr/bin/c++    -std=c++11 -stdlib=libc++ -msse4.2 -DHAVE_CLANG_STD=C__11__DNDEBUG -std=c++11 -DNDEBUG -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_ab112.dir/src.cxx.o -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_ab112
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ab112.dir/link.txt --verbose=1
+/Library/Developer/CommandLineTools/usr/bin/c++   -std=c++11 -stdlib=libc++ -msse4.2 -DHAVE_CLANG_STD=C__11__DNDEBUG -std=c++11 -DNDEBUG -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_ab112.dir/src.cxx.o  -o cmTC_ab112 
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test HAVE_CLANG_O3__FFAST_MATH__FUNROLL_LOOPS__D__EXTERN_ALWAYS_INLINE="EXTERN___ALWAYS_INLINE"_ succeeded with the following output:
+Change Dir: /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_73c74/fast 
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_73c74.dir/build.make CMakeFiles/cmTC_73c74.dir/build
+Building CXX object CMakeFiles/cmTC_73c74.dir/src.cxx.o
+/Library/Developer/CommandLineTools/usr/bin/c++    -std=c++11 -stdlib=libc++ -msse4.2 -std=c++11 -DNDEBUG -stdlib=libc++ -DHAVE_CLANG_O3__FFAST_MATH__FUNROLL_LOOPS__D__EXTERN_ALWAYS_INLINE="EXTERN___ALWAYS_INLINE"_ -O3 -ffast-math -funroll-loops -D__extern_always_inline="extern __always_inline" -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_73c74.dir/src.cxx.o -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_73c74
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E cmake_link_script CMakeFiles/cmTC_73c74.dir/link.txt --verbose=1
+/Library/Developer/CommandLineTools/usr/bin/c++   -std=c++11 -stdlib=libc++ -msse4.2 -std=c++11 -DNDEBUG -stdlib=libc++ -DHAVE_CLANG_O3__FFAST_MATH__FUNROLL_LOOPS__D__EXTERN_ALWAYS_INLINE="EXTERN___ALWAYS_INLINE"_ -O3 -ffast-math -funroll-loops -D__extern_always_inline="extern __always_inline" -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_73c74.dir/src.cxx.o  -o cmTC_73c74 
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test HAVE_CLANG_STD=C__11 succeeded with the following output:
+Change Dir: /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_58ead/fast 
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_58ead.dir/build.make CMakeFiles/cmTC_58ead.dir/build
+Building CXX object CMakeFiles/cmTC_58ead.dir/src.cxx.o
+/Library/Developer/CommandLineTools/usr/bin/c++    -DHAVE_CLANG_STD=C__11 -std=c++11 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_58ead.dir/src.cxx.o -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_58ead
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E cmake_link_script CMakeFiles/cmTC_58ead.dir/link.txt --verbose=1
+/Library/Developer/CommandLineTools/usr/bin/c++   -DHAVE_CLANG_STD=C__11 -std=c++11 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_58ead.dir/src.cxx.o  -o cmTC_58ead 
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test HAVE_CLANG_STDLIB=LIBC__ succeeded with the following output:
+Change Dir: /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_c32f6/fast 
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_c32f6.dir/build.make CMakeFiles/cmTC_c32f6.dir/build
+Building CXX object CMakeFiles/cmTC_c32f6.dir/src.cxx.o
+/Library/Developer/CommandLineTools/usr/bin/c++    -std=c++11 -DHAVE_CLANG_STDLIB=LIBC__ -stdlib=libc++ -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_c32f6.dir/src.cxx.o -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_c32f6
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c32f6.dir/link.txt --verbose=1
+/Library/Developer/CommandLineTools/usr/bin/c++   -std=c++11 -DHAVE_CLANG_STDLIB=LIBC__ -stdlib=libc++ -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_c32f6.dir/src.cxx.o  -o cmTC_c32f6 
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test HAVE_CLANG_STD=C__11__DNDEBUG succeeded with the following output:
+Change Dir: /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_ce184/fast 
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_ce184.dir/build.make CMakeFiles/cmTC_ce184.dir/build
+Building CXX object CMakeFiles/cmTC_ce184.dir/src.cxx.o
+/Library/Developer/CommandLineTools/usr/bin/c++    -std=c++11 -stdlib=libc++ -msse4.2 -DHAVE_CLANG_STD=C__11__DNDEBUG -std=c++11 -DNDEBUG -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_ce184.dir/src.cxx.o -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_ce184
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ce184.dir/link.txt --verbose=1
+/Library/Developer/CommandLineTools/usr/bin/c++   -std=c++11 -stdlib=libc++ -msse4.2 -DHAVE_CLANG_STD=C__11__DNDEBUG -std=c++11 -DNDEBUG -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_ce184.dir/src.cxx.o  -o cmTC_ce184 
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test HAVE_CLANG_O3__FFAST_MATH__FUNROLL_LOOPS__D__EXTERN_ALWAYS_INLINE="EXTERN___ALWAYS_INLINE"_ succeeded with the following output:
+Change Dir: /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_1edff/fast 
+/Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_1edff.dir/build.make CMakeFiles/cmTC_1edff.dir/build
+Building CXX object CMakeFiles/cmTC_1edff.dir/src.cxx.o
+/Library/Developer/CommandLineTools/usr/bin/c++    -std=c++11 -stdlib=libc++ -msse4.2 -std=c++11 -DNDEBUG -stdlib=libc++ -DHAVE_CLANG_O3__FFAST_MATH__FUNROLL_LOOPS__D__EXTERN_ALWAYS_INLINE="EXTERN___ALWAYS_INLINE"_ -O3 -ffast-math -funroll-loops -D__extern_always_inline="extern __always_inline" -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_1edff.dir/src.cxx.o -c /Users/adrian/CLionProjects/2d-block-tree/cmake-build-debug/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_1edff
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1edff.dir/link.txt --verbose=1
+/Library/Developer/CommandLineTools/usr/bin/c++   -std=c++11 -stdlib=libc++ -msse4.2 -std=c++11 -DNDEBUG -stdlib=libc++ -DHAVE_CLANG_O3__FFAST_MATH__FUNROLL_LOOPS__D__EXTERN_ALWAYS_INLINE="EXTERN___ALWAYS_INLINE"_ -O3 -ffast-math -funroll-loops -D__extern_always_inline="extern __always_inline" -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_1edff.dir/src.cxx.o  -o cmTC_1edff 
+
+Source file was:
+int main() { return 0; }
