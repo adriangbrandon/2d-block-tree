@@ -164,7 +164,7 @@ namespace block_tree_2d {
             std::unordered_map<size_type, char> untouchable_block;
             block_tree_2d::algorithm::get_block_replacements(adjacency_lists, this->k, sources_map,
                     this->dimensions, block_size, hash, nodes, untouchable_block);
-            block_tree_2d::algorithm::get_roll_replacements(adjacency_lists, this->k, sources_map,
+            block_tree_2d::algorithm::get_roll_replacements_v2(adjacency_lists, this->k, sources_map,
                                                              this->dimensions, block_size, hash, nodes, untouchable_block);
             block_tree_2d::algorithm::clear_adjacency_lists(adjacency_lists);
             util::logger::log("Compacting level=" + std::to_string(level));
