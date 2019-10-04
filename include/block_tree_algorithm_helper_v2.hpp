@@ -871,6 +871,133 @@ namespace block_tree_2d {
             m_progress_bar.done();
         }
 
+        template <class input_type>
+        static void get_roll_replacements_v2(input_type &adjacent_lists, const size_type k,
+                                          sources_map_type &sources,
+                                          const size_type dimensions, const size_type block_size,
+                                          hash_type &hash, std::vector<node_type> &nodes, std::unordered_map<size_type, char> &untouchable_block){
+
+            // typedef uint64_t iterators_type;
+            size_type hashes = 0;
+            auto blocks_per_row = adjacent_lists.size() / block_size;
+            //Total number of blocks
+            auto total_blocks = (dimensions-block_size+1) * (dimensions-block_size+1);
+            std::vector<point_type> points_to_check;
+            for(const auto &s : sources){
+                auto p = s.first;
+                if(p.first % block_size != 0 || p.second % block_size != 0){
+                    points_to_check.push_back(p);
+                }
+            }
+            std::sort(points_to_check.begin(), points_to_check.end());
+            util::progress_bar m_progress_bar(points_to_check.size());
+            size_type processed_blocks = 0;
+            for(const auto &p : points_to_check){
+                //for(size_type x = 0; x < dimensions-block_size+1; ++x){
+                auto x = p.first;
+                auto y = p.second;
+                auto it_src = sources.find({x, y});
+                //std::cout << "Sources find: " << (it_src != sources.end()) << std::endl;
+                if(it_src != sources.end()){
+                    //Compute offsets and top-left block
+                    size_type x_block, y_block;
+                    size_type source_ptr;
+                    value_type source_off_x, source_off_y, off_x, off_y;
+                    compute_topleft_and_offsets(x, y, block_size, x_block, y_block, off_x, off_y);
+                    //bottom-right block
+                    std::vector<size_type> blocks_to_untouchable;
+                    //bool exists = false;
+                    if(off_x && off_y){
+                        auto z_bottom_right = codes::zeta_order::encode(x_block + 1, y_block + 1);
+                        auto it_bottom_right = hash.find(z_bottom_right);
+                        if(it_bottom_right != hash.end()){
+                            auto pos_bottom_right = it_bottom_right->second;
+                            if(nodes[pos_bottom_right].type == NODE_LEAF){
+                                continue;
+                            }
+                            source_ptr = pos_bottom_right;
+                            source_off_x = x - (x_block + 1)*block_size;
+                            source_off_y = y - (y_block + 1)*block_size;
+                            blocks_to_untouchable.push_back(z_bottom_right);
+                        }
+
+                    }
+
+                    //bottom-left block
+                    if(off_y){
+                        auto z_bottom_left = codes::zeta_order::encode(x_block, y_block + 1);
+                        auto it_bottom_left = hash.find(z_bottom_left);
+                        if(it_bottom_left != hash.end()){
+                            auto pos_bottom_left = it_bottom_left->second;
+                            if(nodes[pos_bottom_left].type == NODE_LEAF){
+                                continue;
+                            }
+                            source_ptr = pos_bottom_left;
+                            source_off_x = x - x_block *block_size;
+                            source_off_y = y - (y_block + 1)*block_size;
+                            blocks_to_untouchable.push_back(z_bottom_left);
+                        }
+                    }
+
+                    //top-right block
+                    if(off_x){
+                        auto z_top_right = codes::zeta_order::encode(x_block+1, y_block);
+                        auto it_top_right = hash.find(z_top_right);
+                        if(it_top_right != hash.end()){
+                            auto pos_top_right = it_top_right->second;
+                            if(nodes[pos_top_right].type == NODE_LEAF){
+                                continue;
+                            }
+                            source_ptr = pos_top_right;
+                            source_off_x = x - (x_block+1 )*block_size;
+                            source_off_y = y - y_block *block_size;
+                            blocks_to_untouchable.push_back(z_top_right);
+                        }
+                    }
+
+                    //Since all of them has to be internal or empty, we point to the top-left block
+                    //top-left block
+                    auto z_top_left = codes::zeta_order::encode(x_block, y_block);
+                    auto it_top_left = hash.find(z_top_left);
+                    if(it_top_left != hash.end()){
+                        auto pos_top_left = it_top_left->second;
+                        if(nodes[pos_top_left].type == NODE_LEAF){
+                            continue;
+                        }
+                        source_ptr = pos_top_left;
+                        source_off_x = x - x_block*block_size;
+                        source_off_y = y - y_block *block_size;
+                        blocks_to_untouchable.push_back(z_top_left);
+                    }
+
+                    for(const auto &b : it_src->second){
+                        if(untouchable_block.find(b) != untouchable_block.end() || hash.find(b) == hash.end()) continue;
+
+
+                        //untouchable_block.insert({z_top_left, 1});
+
+                        auto it_target = hash.find(b);
+                        auto pos_target = it_target->second;
+                        nodes[pos_target].type = NODE_LEAF;
+                        nodes[pos_target].ptr = source_ptr;
+                        nodes[pos_target].z_order = b;
+                        nodes[pos_target].offset_x = source_off_x;
+                        nodes[pos_target].offset_y = source_off_y;
+                        remove_target(adjacent_lists, sources, b, block_size);
+                    }
+
+                    //hash.erase(it_target);
+                    for(const auto &b_to_ut : blocks_to_untouchable){
+                        if(untouchable_block.find(b_to_ut) == untouchable_block.end()){
+                            untouchable_block.insert({b_to_ut, 1});
+                        }
+                    }
+                }
+                ++processed_blocks;
+                m_progress_bar.update(processed_blocks);
+            }
+            m_progress_bar.done();
+        }
 
         /*static void block_replacement_lists(replacements_map_type &replacements_map, replacements_list_type &list_new_block,
                                              const size_type sx_source, const size_type sy_source,
