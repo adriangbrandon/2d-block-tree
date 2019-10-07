@@ -1,2 +1,0 @@
-/Library/Developer/CommandLineTools/usr/bin/ar qc libdivsufsort.a  CMakeFiles/divsufsort.dir/divsufsort.o CMakeFiles/divsufsort.dir/sssort.o CMakeFiles/divsufsort.dir/trsort.o CMakeFiles/divsufsort.dir/utils.o
-/Library/Developer/CommandLineTools/usr/bin/ranlib libdivsufsort.a
