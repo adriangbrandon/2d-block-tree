@@ -64,17 +64,22 @@ namespace hash_table {
                                     iterator_hash_type &it_hash){
             it_table = table.begin() + h(hash);
             it_hash = it_table->begin();
+            auto i = 0;
             while(it_hash != it_table->end()){
+                ++i;
                 if(it_hash->first == hash){
+                    //if(i > 5)std::cout << "check_collision: " << i << std::endl;
                     return true;
                 }
                 ++it_hash;
             }
+            //if(i > 5)std::cout << "check_collision: " << i << std::endl;
             return false;
         }
 
         void resize() {
             m_table_size = nearest_prime(m_table_size * 2);
+            std::cout << "resize: " << m_table_size << std::endl;
             m_used = 0;
             iterator_table_type aux_it_table;
             iterator_hash_type aux_it_hash;
@@ -85,9 +90,7 @@ namespace hash_table {
                 while(it_hash != it_table->end()){
                     auto hash = it_hash->first;
                     check_collision(aux_table, hash, aux_it_table, aux_it_hash);
-                    if(it_table->empty()){
-                        ++m_used;
-                    }
+                    ++m_used;
                     aux_it_table->emplace_back(std::move(*it_hash));
                     ++it_hash;
                 }
@@ -107,22 +110,24 @@ namespace hash_table {
         }
 
         bool hash_collision(const hash_type hash, iterator_table_type &it_table, iterator_hash_type &it_hash){
-            if(m_used > m_table_size * 0.75){
+            if(m_used > m_table_size * 0.7){
                 resize();
             }
+            //std::cout << "hash: " << hash << std::endl;
             return check_collision(m_table, hash, it_table, it_hash);
         }
 
 
         void insert_no_hash_collision(const iterator_table_type &it_table, const hash_type &hash, value_type &value){
-            if(it_table->empty()){
-                ++m_used;
-            }
+            ++m_used;
+            //std::cout << "list_hashes: " << it_table->size() << std::endl;
             value_list_type value_list = {{value, false}};
             it_table->emplace_back(hash, value_list);
         }
 
         void insert_hash_collision(const iterator_hash_type &it_hash, value_type &value){
+            // std::cout << "list_values: " << it_hash->second.size() << std::endl;
+            ++m_used;
             it_hash->second.emplace_back(value, false);
         }
 

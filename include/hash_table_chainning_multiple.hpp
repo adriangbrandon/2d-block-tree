@@ -64,6 +64,13 @@ namespace hash_table {
                                     iterator_hash_type &it_hash){
             it_table = table.begin() + h(hash);
             it_hash = it_table->begin();
+            /*size_type i =0;
+            while(it_hash != it_table->end() && it_hash->first != hash){
+                ++it_hash;
+                ++i;
+            }*/
+            //if(i > 5) std::cout << "check_collision: " << i << std::endl;
+            //4return it_hash != it_table->end();
             while(it_hash != it_table->end()){
                 if(it_hash->first == hash){
                     return true;
@@ -75,6 +82,7 @@ namespace hash_table {
 
         void resize() {
             m_table_size = nearest_prime(m_table_size * 2);
+            std::cout << "resize_mult: " << m_table_size << std::endl;
             m_used = 0;
             iterator_table_type aux_it_table;
             iterator_hash_type aux_it_hash;
@@ -85,9 +93,7 @@ namespace hash_table {
                 while(it_hash != it_table->end()){
                     auto hash = it_hash->first;
                     check_collision(aux_table, hash, aux_it_table, aux_it_hash);
-                    if(it_table->empty()){
-                        ++m_used;
-                    }
+                    ++m_used;
                     aux_it_table->emplace_back(std::move(*it_hash));
                     ++it_hash;
                 }
@@ -107,22 +113,24 @@ namespace hash_table {
         }
 
         bool hash_collision(const hash_type hash, iterator_table_type &it_table, iterator_hash_type &it_hash){
-            if(m_used > m_table_size * 0.75){
+            if(m_used > m_table_size * 0.7){
                 resize();
             }
+           // std::cout << "hash_mult: " << hash << std::endl;
             return check_collision(m_table, hash, it_table, it_hash);
         }
 
 
         void insert_no_hash_collision(const iterator_table_type &it_table, const hash_type &hash, value_type &value){
-            if(it_table->empty()){
-                ++m_used;
-            }
+            ++m_used;
+            //std::cout << "list_hashes_mult: " << it_table->size() << std::endl;
             value_list_type value_list = {{value, {}}};
             it_table->emplace_back(hash, value_list);
         }
 
         void insert_hash_collision(const iterator_hash_type &it_hash, value_type &value){
+            //std::cout << "list_values_mult: " << it_hash->second.size() << std::endl;
+            ++m_used;
             it_hash->second.emplace_back(value, std::vector<value_type>());
         }
 
@@ -247,6 +255,33 @@ namespace hash_table {
                 }
                 std::cout << "-----------------------------" << std::endl;
             }
+        }
+
+        void print_stats(){
+            std::cout << "Hash Table Double Chainning Multiple" << std::endl;
+            std::cout << "Entries: " << m_table.size() << std::endl;
+            size_type sum = 0;
+            std::unordered_map<uint64_t , uint64_t > lengths;
+            for(size_type i = 0; i < m_table.size();i++){
+                size_type length = m_table[i].size();
+                auto it_length = lengths.find(length);
+                if( it_length != lengths.end()){
+                    it_length->second = it_length->second+1;
+                }else{
+                    lengths.insert({length, 1});
+                }
+                sum = length + sum;
+            }
+            std::cout << "Avg: " << sum / (float) m_table.size() << std::endl;
+            std::vector<std::pair<uint64_t , uint64_t >> values;
+           for(auto v : lengths){
+               values.emplace_back(v);
+           }
+           lengths.clear();
+           std::sort(values.begin(), values.end());
+           for(auto v : values){
+               std::cout << "Length: " << v.first << " Freq: " << v.second << std::endl;
+           }
         }
 
 

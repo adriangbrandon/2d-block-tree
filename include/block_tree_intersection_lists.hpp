@@ -58,11 +58,11 @@ namespace block_tree_2d {
 
         size_type m_minimum_level;
         size_type m_zeroes;
-        static constexpr size_type large_block_size = 2;
+        static constexpr size_type large_block_size = 1024;
 
         std::pair<size_type, size_type> minimum_block_size(input_type &adjacency_lists, const size_type height){
 
-            std::cout << "minimum_block_size" << std::endl;
+            std::cout << "minimum_block_size_aaa" << std::endl;
             if(height <= 1) return {this->k, 1};
 
             size_type l = height-1;
@@ -88,10 +88,13 @@ namespace block_tree_2d {
             }
             if(l == 0) return {block_size, l};
             //2. Looking for repetitions by using intersection of lists
+            std::cout << "blocks: " << blocks * this->m_k2 << std::endl;
             htc_multiple_type m_htc_multiple(std::min(static_cast<size_type>(10240), 2*blocks * this->m_k2));
+            //htc_multiple_type m_htc_multiple( blocks * this->m_k2);
             block_tree_2d::algorithm::replacements_map_type replacements_map;
             util::logger::log("Checking replacements at blocks=" + std::to_string(l+1) + " with block_size=" + std::to_string(block_size/ this->k));
             block_tree_2d::algorithm::list_blocks(adjacency_lists, this->k, m_htc_multiple, this->dimensions, large_block_size, replacements_map);
+            m_htc_multiple.print_stats();
             util::logger::log("Checking replacements at rolls=" + std::to_string(l+1) + " with block_size=" + std::to_string(block_size / this->k));
             block_tree_2d::algorithm::list_rolls(adjacency_lists, this->k, m_htc_multiple, this->dimensions, large_block_size, replacements_map);
             while(l > 0){
@@ -189,7 +192,7 @@ namespace block_tree_2d {
             //size_type min_block_size = 16;
             //m_minimum_level = 16;
             size_type min_block_size;
-            std::tie(min_block_size, m_minimum_level) = minimum_block_size(adjacency_lists, h);
+            std::tie(min_block_size, m_minimum_level) = this->minimum_block_size(adjacency_lists, h);
             util::logger::log("Minimum level=" + std::to_string(m_minimum_level) + " and block_size=" + std::to_string(min_block_size));
             //exit(10);
 

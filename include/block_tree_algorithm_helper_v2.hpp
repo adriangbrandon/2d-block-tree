@@ -45,6 +45,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <bithacks.hpp>
 #include <progress_bar.hpp>
 #include <search_util.hpp>
+#include "logger.hpp"
 
 #define NODE_EMPTY 0
 #define NODE_LEAF 1
@@ -417,6 +418,11 @@ namespace block_tree_2d {
 
 
     public:
+        //first prime lower than 2**32
+        //const uint64_t prime = 3355443229;     // next prime(2**31+2**30+2**27)
+        //first prime lower than 2**55
+        //const uint64_t prime = 27162335252586509; // next prime (2**54 + 2**53 + 2**47 + 2**13)
+
         static constexpr uint64_t prime = 3355443229;
 
         template<class input_type>
@@ -1300,7 +1306,7 @@ namespace block_tree_2d {
                 if(kr_roll.col == 241664 && kr_roll.row == 512){
                     std::cout << "Pointer to source in (x,y): " << kr_roll.col << ", " << kr_roll.row << std::endl;
                 }*/
-
+                //util::logger::log("next done:" + std::to_string(kr_roll.hash));
                 auto processed_rolls = kr_roll.row * rolls_per_row + kr_roll.col+1;
                 //check if kr_block.hash exists in map
                 if(ht.hash_collision(kr_roll.hash, it_table, it_hash)){
@@ -1308,20 +1314,17 @@ namespace block_tree_2d {
                     value_type ex_source = kr_roll.col + block_size-1;
                     value_type ey_source = kr_roll.row + block_size-1;
                     iterator_hash_value_type target;
-
                     if(exist_identical_mult(adjacent_lists, kr_roll.col, kr_roll.row, ex_source, ey_source,
                                        kr_roll.iterators, it_hash->second, block_size,
                                        sx_target, sy_target, ex_target, ey_target, iterators_target, target)){ //check if they are identical
-
-
 
 #if BT_VERBOSE
                         std::cout << "Target: (" << sx_target << ", " << sy_target << ")" << std::endl;
                         std::cout << "Pointer to source in (x,y): " << kr_roll.col << ", " << kr_roll.row << std::endl;
 #endif
-
                         roll_replacement_lists(replacements_map, kr_roll.col, kr_roll.row, ex_source, ey_source,
                                 sx_target, sy_target, ex_target, ey_target);
+                        //util::logger::log("roll_replacement.");
                         for(auto it_target = target->second.begin(); it_target != target->second.end(); ++it_target){
                             auto point = codes::zeta_order::decode(*it_target);
                             sx_target = point.first * block_size;
@@ -1331,12 +1334,15 @@ namespace block_tree_2d {
                             roll_replacement_lists(replacements_map, kr_roll.col, kr_roll.row, ex_source, ey_source,
                                                    sx_target, sy_target, ex_target, ey_target);
                         }
+                        //util::logger::log("for ends.");
 
                     }
+                    //util::logger::log("no identical.");
                 }
 #if BT_VERBOSE
                 std::cout << std::endl;
 #endif
+               // util::logger::log("no collision.");
                 m_progress_bar.update(processed_rolls);
                 ++hashes;
             }
@@ -1371,7 +1377,6 @@ namespace block_tree_2d {
         static void lists_intersection(const replacements_map_type &replacements_map,
                                        const std::vector<replacements_map_iterator> &lists_to_check, replacements_list_type &sol){
 
-
             if(lists_to_check.empty()) return;
             if(lists_to_check.size() == 1){
                 sol = lists_to_check[0]->second;
@@ -1390,7 +1395,6 @@ namespace block_tree_2d {
                                       std::back_inserter(sol));
                 ++i;
             }
-
 
         }
 
@@ -1463,7 +1467,8 @@ namespace block_tree_2d {
                     std::vector<replacements_map_iterator> lists_to_check;
                     replacements_list_type sol;
                     std::vector<point_type> empty_positions;
-                    compute_lists_to_check(replacements_map, lists_to_check, empty_positions, x, y, block_size, lower_level_block_size);
+                    compute_lists_to_check(replacements_map, lists_to_check, empty_positions,
+                            x, y, block_size, lower_level_block_size);
                     if(!lists_to_check.empty()){ //Not empty area
                         //check_blocks << "Not empty" << std::endl;
                         lists_intersection(replacements_map, lists_to_check, sol);
@@ -1479,7 +1484,6 @@ namespace block_tree_2d {
                         b = b || !sol.empty();
                     }
                     //check_blocks << "Done." << std::endl;
-
 
                 }
             }
@@ -1504,25 +1508,24 @@ namespace block_tree_2d {
                     std::vector<replacements_map_iterator> lists_to_check;
                     replacements_list_type sol;
                     std::vector<point_type> empty_positions;
-                    compute_lists_to_check(replacements_map, lists_to_check, empty_positions, x, y, block_size, block_size_replacements);
+                    compute_lists_to_check(replacements_map, lists_to_check, empty_positions, x, y,
+                            block_size, block_size_replacements);
                     if(!lists_to_check.empty()){ //Not empty area
-                        //check_blocks << "Not empty" << std::endl;
+                        //check_blocks << "Not empty:" << lists_to_check.size() << std::endl;
                         lists_intersection(replacements_map, lists_to_check, sol);
                         //check_blocks << "Intersection: " << sol.size() << std::endl;
                         filter_solution_overlapped_areas(block_size, sol);
                         //check_blocks << "Overlapping: " << sol.size() << std::endl;
                         filter_solution_with_empty_areas(adjacency_lists, block_size_replacements, empty_positions, sol);
                         //check_blocks << "Solution: " << !sol.empty() << std::endl;
-                        /*check_blocks << "{";
-                        for(const auto &s : sol){
-                            check_blocks << "(" << s.first << ", " << s.second << "), ";
-                        }
-                        check_blocks << "}" << std::endl;*/
+                        //check_blocks << "{";
+                        //for(const auto &s : sol){
+                        //    check_blocks << "(" << s.first << ", " << s.second << "), ";
+                        //}
+                        //check_blocks << "}" << std::endl;
                         b = b || !sol.empty();
                     }
                     //check_blocks << "Done." << std::endl;
-
-
                 }
             }
             //check_blocks.close();

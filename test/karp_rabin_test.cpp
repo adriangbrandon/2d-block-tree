@@ -76,6 +76,7 @@ uint64_t comp_hash(const std::vector<std::vector<int64_t>> &adjacency_list,
 
 void print_adjacency_lists(const std::vector<std::vector<int64_t>> &adjacency_list){
 
+    std::vector<std::vector<std::vector<int >>> array(1000000, std::vector<std::vector<int>>(1000000, std::vector<int>(1000000)));
     auto i = 0;
     for(const auto &list : adjacency_list){
         std::cout << "List " << i << ": { ";

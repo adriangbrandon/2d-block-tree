@@ -37,7 +37,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cstdint>
 #include <vector>
 #include <queue>
-#include <heap.hpp>
+#include <heap_v2.hpp>
 #include <iostream>
 #include <bithacks.hpp>
 
@@ -65,7 +65,7 @@ namespace karp_rabin {
             }
         };
 
-        typedef util::heap<pq_element_type, std::vector<pq_element_type>, compare_pq> heap_type;
+        typedef util::heap_v2<pq_element_type, std::vector<pq_element_type>> heap_type;
 
 
     private:

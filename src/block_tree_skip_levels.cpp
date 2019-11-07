@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <adjacency_list_helper.hpp>
 #include <block_tree_skip_levels.hpp>
+#include <block_tree_intersection_lists.hpp>
 
 int main(int argc, char **argv) {
 
@@ -42,22 +43,22 @@ int main(int argc, char **argv) {
 
 
     typedef hash_table::hash_table_chainning<hash_type, uint64_t> htc_type;
-    std::vector<int64_t> row0 = {2};
-    std::vector<int64_t> row1 = {2};
-    std::vector<int64_t> row2 = {};
+    std::vector<int64_t> row0 = {0};
+    std::vector<int64_t> row1 = {1};
+    std::vector<int64_t> row2 = {2};
     std::vector<int64_t> row3 = {};
     std::vector<int64_t> row4 = {};
-    std::vector<int64_t> row5 = {6};
+    std::vector<int64_t> row5 = {};
     std::vector<int64_t> row6 = {};
     std::vector<int64_t> row7 = {};
     std::vector<int64_t> row8 = {8};
-    std::vector<int64_t> row9 = {8};
-    std::vector<int64_t> row10 = {};
+    std::vector<int64_t> row9 = {9};
+    std::vector<int64_t> row10 = {10};
     std::vector<int64_t> row11 = {};
     std::vector<int64_t> row12 = {};
-    std::vector<int64_t> row13 = {13,14,15};
-    std::vector<int64_t> row14 = {12,13,14,15};
-    std::vector<int64_t> row15 = {12,13,14,15};
+    std::vector<int64_t> row13 = {};
+    std::vector<int64_t> row14 = {};
+    std::vector<int64_t> row15 = {};
 
 
 
@@ -91,7 +92,7 @@ int main(int argc, char **argv) {
         block_tree_2d::algorithm::print_ajdacent_list(matrix8_8);
 
         std::cout << "Building Block-tree dimensions=" << dimensions << std::endl;
-        block_tree_2d::block_tree_skip_levels<> m_block_tree(matrix8_8, k);
+        block_tree_2d::block_tree_intersection_lists<> m_block_tree(matrix8_8, k);
         std::cout << "Done." << std::endl;
         m_block_tree.print();
         std::cout << "Retrieving adjacency lists...";
@@ -105,7 +106,7 @@ int main(int argc, char **argv) {
         m_block_tree.serialize(out);
         out.close();
 
-        block_tree_2d::block_tree_skip_levels<> m_block_tree2;
+        block_tree_2d::block_tree_intersection_lists<> m_block_tree2;
         std::ifstream in("test.2dbt");
         m_block_tree2.load(in);
         in.close();

@@ -57,7 +57,7 @@ namespace karp_rabin {
         typedef std::pair<iterator_value_type, size_type > pq_element_type;
         class compare_pq{
         public:
-            bool operator()(const pq_element_type &x, const pq_element_type &y){
+            inline bool operator()(const pq_element_type &x, const pq_element_type &y){
                 if(*(x.first) == *(y.first)){
                     return x.second > y.second;
                 }

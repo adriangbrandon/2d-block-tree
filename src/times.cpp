@@ -108,7 +108,7 @@ int main(int argc, char **argv) {
     }else if (type == "skip_levels"){
         run_times<block_tree_2d::block_tree_skip_levels<>>(dataset, k, limit);
     }else if (type == "skip_levels_lists"){
-    run_times<block_tree_2d::block_tree_intersection_lists<>>(dataset, k, limit);
+        run_times<block_tree_2d::block_tree_intersection_lists<>>(dataset, k, limit);
     }else{
         std::cout << "Type: " << type << " is not supported." << std::endl;
     }

@@ -119,3 +119,6 @@ target_link_libraries(check_blocks sdsl divsufsort divsufsort64)
 
 add_executable(roll_replacement src/roll_replacement.cpp)
 target_link_libraries(roll_replacement sdsl divsufsort divsufsort64)
+
+add_executable(proba test/proba.cpp)
+target_link_libraries(proba sdsl divsufsort divsufsort64)
