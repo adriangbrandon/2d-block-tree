@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
 
 
 
-    uint64_t size = 100;
+    /*uint64_t size = 100;
     std::vector<std::vector<uint8_t >> v(size, std::vector<uint8_t>(size));
     for(uint i = 0;  i < v.size(); ++i){
         for(uint j = 0; j < v[i].size(); ++j){
@@ -100,6 +100,22 @@ int main(int argc, char **argv) {
     }
     auto t3 = std::chrono::high_resolution_clock::now();
     auto time2 = std::chrono::duration_cast<std::chrono::nanoseconds>(t3-t2).count();
-    std::cout << "Semantrix: " << time2 << std::endl;
+    std::cout << "Semantrix: " << time2 << std::endl;*/
+
+    /*int number = 16;
+    int size_file = 1048576;
+    std::ofstream out("sixteen.txt");
+    for(size_t i = 0; i < size_file/4; ++i){
+        out.write((char*) &number, sizeof(int));
+    }
+    out.close();*/
+
+    std::ifstream in("out.dat");
+    int v;
+    while(!in.eof()){
+        in.read((char*) &v, sizeof(int));
+        std::cout << "v: " << v << std::endl;
+    }
+
 
 }
