@@ -204,7 +204,7 @@ namespace karp_rabin {
                 int64_t prev_value = -1;
                 //1.2. Iterate over the elements of an adjacent list
                 auto &it_element = m_iterators_end_first_block[list_id];
-                size_type hash_row = 0;
+                hash_type hash_row = 0;
                 while(it_element != it_list->end() && std::abs(*it_element) < m_block_size){
                     if((*it_element) >= 0){
                         //2.1 Compute hash_value with 0s

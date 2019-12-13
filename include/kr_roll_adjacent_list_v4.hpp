@@ -238,9 +238,10 @@ namespace karp_rabin {
                 //1.4 Init the hash value per row and compute the hash of the submatrix
                 m_prev_kr[list_id] = hash_row;
                 hash_value += (hash_row * m_h_in_right[list_id]) % m_prime;
+                hash_value = hash_value % m_prime;
                 ++list_id;
             }
-            m_hash = hash_value % m_prime;
+            m_hash = hash_value;
             m_prev_hash = m_hash;
             //Initial iterators at the end of first block
             m_iterators = m_iterators_end_first_block;
