@@ -92,11 +92,15 @@ namespace block_tree_2d {
             htc_multiple_type m_htc_multiple(std::min(static_cast<size_type>(10240), 2*blocks * this->m_k2));
             //htc_multiple_type m_htc_multiple( blocks * this->m_k2);
             block_tree_2d::algorithm::replacements_map_type replacements_map;
+            //block_tree_2d::algorithm::replacements_point_lists_type replacements_point_lists;
             util::logger::log("Checking replacements at blocks=" + std::to_string(l+1) + " with block_size=" + std::to_string(block_size/ this->k));
             block_tree_2d::algorithm::list_blocks(adjacency_lists, this->k, m_htc_multiple, this->dimensions, large_block_size, replacements_map);
+            //block_tree_2d::algorithm::list_blocks_v2(adjacency_lists, this->k, m_htc_multiple, this->dimensions, large_block_size);
             m_htc_multiple.print_stats();
+
             util::logger::log("Checking replacements at rolls=" + std::to_string(l+1) + " with block_size=" + std::to_string(block_size / this->k));
             block_tree_2d::algorithm::list_rolls(adjacency_lists, this->k, m_htc_multiple, this->dimensions, large_block_size, replacements_map);
+            //block_tree_2d::algorithm::list_rolls_v2(adjacency_lists, this->k, m_htc_multiple, this->dimensions, large_block_size, replacements_point_lists);
             while(l > 0){
                 bool b = block_tree_2d::algorithm::exist_replacements(adjacency_lists, replacements_map, block_size,
                          large_block_size, this->dimensions, this->k);

@@ -70,6 +70,7 @@ namespace block_tree_2d {
         typedef std::pair<value_type , value_type > diff_cord_type;
         typedef std::pair<size_type , size_type > point_type;
         typedef typename std::vector< diff_cord_type > replacements_list_type;
+        typedef typename std::vector<std::vector< point_type >> replacements_point_lists_type;
         typedef typename std::unordered_map<point_type, replacements_list_type, pair_hash> replacements_map_type;
         typedef std::unordered_map<point_type, std::vector<size_type>, pair_hash> sources_map_type;
         typedef typename std::unordered_map<size_type, char> blocks_replace_map_type;
@@ -283,20 +284,45 @@ namespace block_tree_2d {
 
         template <class input_type, class list_hash_values_type, class iterators_type>
         static bool exist_identical_mult(input_type &adjacent_lists,
-                                    const value_type sx_b2, const value_type sy_b2,
-                                    const value_type ex_b2, const value_type ey_b2,
-                                    const iterators_type &current_iterators,
-                                    list_hash_values_type &hash_values,
-                                    const size_type block_size,
-                                    value_type &sx_b1, value_type &sy_b1,
-                                    value_type &ex_b1, value_type &ey_b1,
-                                    iterators_type &iterators_b1,
-                                    typename list_hash_values_type::iterator &result){
+                                         const value_type sx_b2, const value_type sy_b2,
+                                         const value_type ex_b2, const value_type ey_b2,
+                                         const iterators_type &current_iterators,
+                                         list_hash_values_type &hash_values,
+                                         const size_type block_size,
+                                         value_type &sx_b1, value_type &sy_b1,
+                                         value_type &ex_b1, value_type &ey_b1,
+                                         iterators_type &iterators_b1,
+                                         typename list_hash_values_type::iterator &result){
 
             auto it = hash_values.begin();
             while(it != hash_values.end()){
                 if(are_identical(adjacent_lists, it->first, sx_b2, ex_b2, sy_b2, ey_b2, current_iterators,
                                  block_size, sx_b1, sy_b1, ex_b1, ey_b1, iterators_b1, false)){
+                    result = it;
+                    return true;
+                }
+                ++it;
+            }
+            return false;
+
+        }
+
+        template <class input_type, class list_hash_values_type, class iterators_type>
+        static bool exist_identical_mult_v2(input_type &adjacent_lists,
+                                         const value_type sx_b2, const value_type sy_b2,
+                                         const value_type ex_b2, const value_type ey_b2,
+                                         const iterators_type &current_iterators,
+                                         list_hash_values_type &hash_values,
+                                         const size_type block_size,
+                                         value_type &sx_b1, value_type &sy_b1,
+                                         value_type &ex_b1, value_type &ey_b1,
+                                         iterators_type &iterators_b1,
+                                         typename list_hash_values_type::iterator &result){
+
+            auto it = hash_values.begin();
+            while(it != hash_values.end()){
+                if(!it->second.empty() && are_identical(adjacent_lists, it->second[0], sx_b2, ex_b2, sy_b2, ey_b2, current_iterators,
+                                                        block_size, sx_b1, sy_b1, ex_b1, ey_b1, iterators_b1, false)){
                     result = it;
                     return true;
                 }
@@ -706,7 +732,8 @@ namespace block_tree_2d {
         static void get_block_replacements(input_type &adjacent_lists, const size_type k,
                                                       sources_map_type &sources,
                                                       const size_type dimensions, const size_type block_size,
-                                                      hash_type &hash, std::vector<node_type> &nodes, std::unordered_map<size_type, char> &untouchable_block){
+                                                      hash_type &hash, std::vector<node_type> &nodes,
+                                                      std::unordered_map<size_type, char> &untouchable_block){
 
             // typedef uint64_t iterators_type;
             size_type hashes = 0;
@@ -1044,6 +1071,7 @@ namespace block_tree_2d {
             }
         }
 
+
         template <class input_type, class hash_table_type>
         static void list_blocks(input_type &adjacent_lists, const size_type k, hash_table_type &ht,
                                                       const size_type dimensions, const size_type block_size,
@@ -1111,6 +1139,87 @@ namespace block_tree_2d {
                     size_type z_order = codes::zeta_order::encode(kr_block.col, kr_block.row);
                     ht.insert_no_hash_collision(it_table, kr_block.hash, z_order);
                     replacements_map.insert({{kr_block.col*block_size, kr_block.row*block_size}, replacements_list_type()});
+                }
+                m_progress_bar.update(processed_blocks);
+                ++hashes;
+#if BT_VERBOSE
+                std::cout << std::endl;
+#endif
+            }
+            //Delete sources of hash_table
+            m_progress_bar.done();
+            std::cout << "Total hashes: " << hashes << std::endl;
+            //print_ajdacent_list(adjacent_lists);
+        }
+
+        template <class input_type, class hash_table_type>
+        static void list_blocks_v2(input_type &adjacent_lists, const size_type k, hash_table_type &ht,
+                                const size_type dimensions, const size_type block_size){
+
+            typedef karp_rabin::kr_block_adjacent_list_v4<input_type> kr_type;
+            typedef typename kr_type::hash_type hash_type;
+            typedef std::vector<typename kr_type::iterator_value_type> iterators_value_type;
+            // typedef uint64_t iterators_type;
+            typedef typename hash_table_type::iterator_table_type iterator_table_type;
+            typedef typename hash_table_type::iterator_hash_type  iterator_hash_type;
+            typedef typename hash_table_type::iterator_value_type iterator_hash_value_type;
+            //typedef std::vector<std::pair< size_type , size_type > > replacements_list_type;
+
+            kr_type kr_block(block_size, prime, adjacent_lists);
+            iterator_table_type it_table;
+            iterator_hash_type it_hash;
+            iterators_value_type iterators_source = iterators_value_type(block_size);
+
+            size_type hashes = 0;
+            auto blocks_per_row = adjacent_lists.size() / block_size;
+            //Total number of blocks
+            auto total_blocks = blocks_per_row * blocks_per_row;
+            util::progress_bar m_progress_bar(total_blocks);
+            //IMPORTANT: kr_block, skips every empty block. For this reason, every node of the current level has to be
+            //           initialized as empty node.
+            while(kr_block.next()){
+#if BT_VERBOSE
+                std::cout << "Target: (" << kr_block.col << ", " << kr_block.row << ")" << std::endl;
+                std::cout << "Hash: " << kr_block.hash << std::endl;
+#endif
+                //check if kr_block.hash exists in map
+                //Target z-order
+                auto z_order_target = codes::zeta_order::encode(kr_block.col, kr_block.row);
+                auto processed_blocks = kr_block.row * blocks_per_row + kr_block.col+1;
+                /*if(kr_block.row == 1){
+                    std::cout << "Block at (" << kr_block.col * block_size << ", " << kr_block.row * block_size << ") with hash: " << kr_block.hash << std::endl;
+                }*/
+                if(ht.hash_collision(kr_block.hash, it_table, it_hash)){
+                    value_type sx_source, sy_source, ex_source, ey_source;
+                    value_type sx_target = kr_block.col * block_size;
+                    value_type sy_target = kr_block.row * block_size;
+                    value_type ex_target = sx_target + block_size-1;
+                    value_type ey_target = sy_target + block_size-1;
+                    iterator_hash_value_type bucket;
+                    if(exist_identical_mult_v2(adjacent_lists, sx_target, sy_target, ex_target, ey_target,
+                                            kr_block.iterators, it_hash->second, block_size,
+                                            sx_source, sy_source, ex_source, ey_source, iterators_source, bucket)){ //check if they are identical
+#if BT_VERBOSE
+                        std::cout << "Pointer to source in z-order: " << (source->first) << " offset: <0,0>" << std::endl;
+#endif
+                        size_type z_order = codes::zeta_order::encode(kr_block.col, kr_block.row);
+                        ht.insert_value_collision(bucket, z_order);
+
+
+                        //replacements_map.insert({{sx_target, sy_target}, replacements_list_type()});
+                        /*size_type z_order = codes::zeta_order::encode(kr_block.col, kr_block.row);
+                        ht.insert_hash_collision(it_hash, z_order);*/
+                    }else {
+                        //add <z_order> to chain in map
+                        size_type z_order = codes::zeta_order::encode(kr_block.col, kr_block.row);
+                        ht.insert_hash_collision(it_hash, z_order);
+                        //replacements_map.insert({{sx_target, sy_target}, replacements_list_type()});
+                    }
+                }else{
+                    //add <z_order> to map [chain should be empty]
+                    size_type z_order = codes::zeta_order::encode(kr_block.col, kr_block.row);
+                    ht.insert_no_hash_collision(it_table, kr_block.hash, z_order);
+                    //replacements_map.insert({{kr_block.col*block_size, kr_block.row*block_size}, replacements_list_type()});
                 }
                 m_progress_bar.update(processed_blocks);
                 ++hashes;
@@ -1354,6 +1463,93 @@ namespace block_tree_2d {
             //print_ajdacent_list(adjacent_lists);
         }
 
+        template <class input_type, class hash_table_type>
+        static void list_rolls_v2(input_type &adjacent_lists, const size_type k, hash_table_type &ht,
+                               const size_type dimensions, const size_type block_size,
+                               replacements_point_lists_type &replacements_point_lists){
+
+            typedef karp_rabin::kr_roll_adjacent_list_v4<input_type> kr_type;
+            typedef typename kr_type::hash_type hash_type;
+            typedef std::vector<typename kr_type::iterator_value_type> iterators_value_type;
+            // typedef uint64_t iterators_type;
+            typedef typename hash_table_type::iterator_table_type iterator_table_type;
+            typedef typename hash_table_type::iterator_hash_type  iterator_hash_type;
+            typedef typename hash_table_type::iterator_value_type iterator_hash_value_type;
+
+            size_type hashes = 0;
+            auto rolls_per_row = adjacent_lists.size() - block_size + 1;
+            //Total number of blocks
+            auto total_rolls = rolls_per_row * rolls_per_row;
+            util::progress_bar m_progress_bar(total_rolls);
+
+            kr_type kr_roll(block_size, prime, adjacent_lists);
+            iterator_table_type it_table;
+            iterator_hash_type it_hash;
+            iterators_value_type iterators_target = iterators_value_type(block_size);
+            while(kr_roll.next()){
+#if BT_VERBOSE
+                std::cout << "Source: (" << kr_roll.col << ", " << kr_roll.row << ")" << std::endl;
+                std::cout << "Hash: " << kr_roll.hash << std::endl;
+#endif
+
+                /*if(kr_roll.row == 512 && kr_roll.col % 512 == 0){
+                    std::cout << "Roll at (" << kr_roll.col << ", " << kr_roll.row << ") with hash: " << kr_roll.hash << std::endl;
+                }
+
+                if(kr_roll.col == 241664 && kr_roll.row == 512){
+                    std::cout << "Pointer to source in (x,y): " << kr_roll.col << ", " << kr_roll.row << std::endl;
+                }*/
+                //util::logger::log("next done:" + std::to_string(kr_roll.hash));
+                auto processed_rolls = kr_roll.row * rolls_per_row + kr_roll.col+1;
+                //check if kr_block.hash exists in map
+                if(ht.hash_collision(kr_roll.hash, it_table, it_hash)){
+                    value_type sx_target, sy_target, ex_target, ey_target;
+                    value_type ex_source = kr_roll.col + block_size-1;
+                    value_type ey_source = kr_roll.row + block_size-1;
+                    iterator_hash_value_type target;
+                    if(exist_identical_mult_v2(adjacent_lists, kr_roll.col, kr_roll.row, ex_source, ey_source,
+                                            kr_roll.iterators, it_hash->second, block_size,
+                                            sx_target, sy_target, ex_target, ey_target, iterators_target, target)){ //check if they are identical
+
+#if BT_VERBOSE
+                        std::cout << "Target: (" << sx_target << ", " << sy_target << ")" << std::endl;
+                        std::cout << "Pointer to source in (x,y): " << kr_roll.col << ", " << kr_roll.row << std::endl;
+#endif
+                        auto pos_replacement_list = target->first;
+                        replacements_point_lists[pos_replacement_list].emplace_back(kr_roll.col, kr_roll.row);
+                        //roll_replacement_lists(replacements_point_lists, kr_roll.col, kr_roll.row, ex_source, ey_source,
+                        //                       sx_target, sy_target, ex_target, ey_target);
+                        //util::logger::log("roll_replacement.");
+                        /*for(auto it_target = target->second.begin(); it_target != target->second.end(); ++it_target){
+                            auto point = codes::zeta_order::decode(*it_target);
+                            sx_target = point.first * block_size;
+                            sy_target = point.second * block_size;
+                            if(kr_roll.col % block_size == 0 && kr_roll.row % block_size == 0){
+
+                            }
+
+                        }*/
+
+                        //util::logger::log("for ends.");
+
+                    }
+                    //util::logger::log("no identical.");
+                }
+#if BT_VERBOSE
+                std::cout << std::endl;
+#endif
+                // util::logger::log("no collision.");
+                m_progress_bar.update(processed_rolls);
+                ++hashes;
+            }
+            m_progress_bar.done();
+            for(auto &it : replacements_point_lists){
+                std::sort(it.begin(), it.end());
+            }
+            std::cout << "Total hashes: " << hashes << std::endl;
+            //print_ajdacent_list(adjacent_lists);
+        }
+
         static void compute_lists_to_check(replacements_map_type &replacements_map,
                                           std::vector<replacements_map_iterator> &lists_to_check,
                                           std::vector<point_type> &empty_positions,
@@ -1510,6 +1706,68 @@ namespace block_tree_2d {
                     std::vector<point_type> empty_positions;
                     compute_lists_to_check(replacements_map, lists_to_check, empty_positions, x, y,
                             block_size, block_size_replacements);
+                    if(!lists_to_check.empty()){ //Not empty area
+                        //check_blocks << "Not empty:" << lists_to_check.size() << std::endl;
+                        lists_intersection(replacements_map, lists_to_check, sol);
+                        //check_blocks << "Intersection: " << sol.size() << std::endl;
+                        filter_solution_overlapped_areas(block_size, sol);
+                        //check_blocks << "Overlapping: " << sol.size() << std::endl;
+                        filter_solution_with_empty_areas(adjacency_lists, block_size_replacements, empty_positions, sol);
+                        //check_blocks << "Solution: " << !sol.empty() << std::endl;
+                        //check_blocks << "{";
+                        //for(const auto &s : sol){
+                        //    check_blocks << "(" << s.first << ", " << s.second << "), ";
+                        //}
+                        //check_blocks << "}" << std::endl;
+                        b = b || !sol.empty();
+                    }
+                    //check_blocks << "Done." << std::endl;
+                }
+            }
+            //check_blocks.close();
+            return b;
+        }
+
+        static void compute_lists_to_check_v2(std::unordered_map<size_type, size_type> &map_blocks_keys,
+                                           std::vector<size_type> &lists_to_check,
+                                           std::vector<size_type> &empty_positions,
+                                           const size_type x, const size_type y, const size_type block_size,
+                                           const size_type lower_level_block_size){
+
+            size_type k2 = 0;
+            for(size_type y_i = y; y_i < y + block_size; y_i += lower_level_block_size){
+                for(size_type x_i = x; x_i < x + block_size; x_i += lower_level_block_size){
+                    auto z_order = codes::zeta_order::encode(x / lower_level_block_size, y/lower_level_block_size);
+                    auto it = map_blocks_keys.find(z_order);
+                    if(it != map_blocks_keys.end()){
+                        lists_to_check.push_back(it->second);
+                    }else{
+                        empty_positions.emplace_back(z_order);
+                    }
+                    ++k2;
+                }
+            }
+        }
+
+
+        template <class input_type>
+        static bool exist_replacements_v2(input_type &adjacency_lists, replacements_point_lists_type &replacements_point_lists,
+                                       const size_type block_size, const size_type block_size_replacements,
+                                       const size_type matrix_size, const size_type k){
+
+
+
+            bool b = false;
+            //std::string file_name = "checking_blocks" + std::to_string(block_size) + ".out";
+            //std::ofstream check_blocks(file_name);
+            for(size_type y = 0; y < matrix_size; y += block_size){
+                for(size_type x = 0; x < matrix_size; x += block_size){
+                    //check_blocks << "Check block: (" << x << ", " << y << ") " << std::endl;
+                    std::vector<replacements_map_iterator> lists_to_check;
+                    replacements_list_type sol;
+                    std::vector<point_type> empty_positions;
+                    compute_lists_to_check(lists_to_check, empty_positions, x, y,
+                                           block_size, block_size_replacements);
                     if(!lists_to_check.empty()){ //Not empty area
                         //check_blocks << "Not empty:" << lists_to_check.size() << std::endl;
                         lists_intersection(replacements_map, lists_to_check, sol);

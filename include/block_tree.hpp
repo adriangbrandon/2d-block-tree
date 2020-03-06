@@ -41,6 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <block_tree_algorithm_helper_v2.hpp>
 #include "alternative_code.hpp"
 #include "hash_table_chainning_multiple.hpp"
+#include "hash_table_chainning_multiple_v2.hpp"
 #include <logger.hpp>
 
 

@@ -37,6 +37,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <sdsl/int_vector.hpp>
 #include <sdsl/suffix_arrays.hpp>
+#include <intersection_lists.hpp>
+#include <trie.hpp>
 
 int main(int argc, char **argv) {
 
@@ -110,12 +112,43 @@ int main(int argc, char **argv) {
     }
     out.close();*/
 
-    std::ifstream in("out.dat");
+    /*std::ifstream in("out.dat");
     int v;
     while(!in.eof()){
         in.read((char*) &v, sizeof(int));
         std::cout << "v: " << v << std::endl;
+    }*/
+
+
+    std::vector<std::pair<uint32_t, uint32_t>> sol;
+    std::vector<std::pair<uint32_t, uint32_t>> l0 = {{0,0}, {0, 0}, {4, 0}, {4,0}};
+    std::vector<std::pair<uint32_t, uint32_t>> l1 = {{0,0}, {0, 0}, {4, 0}, {6,0}};
+    std::vector<std::pair<uint32_t, uint32_t>> l2 = {{0,2}, {2, 2}, {4, 2}, {6,2}};
+
+
+    //util::intersection_lists_no_reps(l0.begin(), l0.end(), l1.begin(), l1.end(), std::back_inserter(sol));
+    util::intersection_lists_no_reps(l0, l1);
+
+    for(const auto &s : l0){
+        std::cout << "(" << s.first << ", " << s.second << ")" << std::endl;
     }
+
+    util::trie<> m_trie(4);
+    std::vector<uint32_t> v1 = {1,2,3,4};
+    std::vector<uint32_t> v2 = {2,1,3,4};
+
+    std::cout << std::endl;
+    m_trie.insert(v1, 5);
+    m_trie.insert(v1, 7);
+    m_trie.insert(v2, 8);
+
+    m_trie.print_subtree(0, 0);
+
+    std::vector<std::unordered_map<uint32_t , uint32_t >> vec_map(10);
+    auto map = &vec_map[3];
+    map->insert({1,1});
+    map = &vec_map[4];
+    map->insert({5,5});
 
 
 }
