@@ -88,6 +88,7 @@ namespace block_tree_2d {
             block_tree_2d::algorithm::hash_type hash;
             m_zeroes = block_tree_2d::algorithm::build_k2_tree(adjacency_lists, this->k, h, min_block_size, this->m_topology, hash);
 
+            std::cout << "Topology (bytes): " << this->m_topology.size() / 8 << std::endl;
             /*for(size_type i = 0; i < this->m_topology.size(); ++i){
                 std::cout << this->m_topology[i] << ", ";
             }*/

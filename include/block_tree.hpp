@@ -43,7 +43,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "hash_table_chainning_multiple.hpp"
 #include "hash_table_chainning_multiple_v2.hpp"
 #include <logger.hpp>
-
+#include <algorithm>
 
 namespace block_tree_2d {
 
@@ -383,7 +383,8 @@ namespace block_tree_2d {
                             size_type &topology_index, size_type &is_pointer_index,
                             typename block_tree_2d::algorithm::hash_type &hash, std::vector<node_type> &nodes){
 
-            htc_type m_htc(2*nodes.size()); //2* nodes, in order to reduce resize operations
+            //htc_type m_htc(2*nodes.size()); //2* nodes, in order to reduce resize operations
+            htc_type m_htc(std::min(10240UL, 2*nodes.size()));
             util::logger::log("Computing fingerprint of blocks at level=" + std::to_string(level));
             block_tree_2d::algorithm::get_fingerprint_blocks_stack_lite(adjacency_lists, k, m_htc, dimensions, block_size, hash, nodes);
             util::logger::log("Computing fingerprint of shifts at level=" + std::to_string(level));
