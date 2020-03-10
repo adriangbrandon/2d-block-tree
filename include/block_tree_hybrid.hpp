@@ -91,6 +91,8 @@ namespace block_tree_2d {
             /*for(size_type i = 0; i < this->m_topology.size(); ++i){
                 std::cout << this->m_topology[i] << ", ";
             }*/
+            std::cout << "Hash Size: " << hash.size() << std::endl;
+            std::cout << "Nodes (bytes): " << hash.size() * sizeof(node_type) << std::endl;
             std::cout << std::endl;
             std::vector<node_type> nodes(hash.size());
             size_type topology_index = this->m_topology.size(), is_pointer_index = 0;
