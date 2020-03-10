@@ -36,6 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <adjacency_list_helper.hpp>
 #include <block_tree_intersection_lists.hpp>
+#include <block_tree_hybrid.hpp>
 
 int main(int argc, char **argv) {
 
@@ -122,7 +123,7 @@ int main(int argc, char **argv) {
         block_tree_2d::algorithm::print_ajdacent_list(matrix8_8);
 
         std::cout << "Building Block-tree dimensions=" << dimensions;
-        block_tree_2d::block_tree_intersection_lists<> m_block_tree(matrix8_8, k);
+        block_tree_2d::block_tree_hybrid<> m_block_tree(matrix8_8, k, 4);
         std::cout << "Done." << std::endl;
         m_block_tree.print();
         std::cout << "Retrieving adjacency lists...";
@@ -133,7 +134,7 @@ int main(int argc, char **argv) {
         block_tree_2d::algorithm::print_ajdacent_list(result);
         sdsl::store_to_file(m_block_tree, "test.2dbt");
 
-        block_tree_2d::block_tree_intersection_lists<> m_block_tree2;
+        block_tree_2d::block_tree_hybrid<> m_block_tree2;
         sdsl::load_from_file(m_block_tree2, "test.2dbt");
 
         m_block_tree2.access_region(0, 0, dimensions - 1, dimensions - 1, result2);

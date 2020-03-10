@@ -58,6 +58,7 @@ namespace block_tree_2d {
         typedef typename block_tree_2d::algorithm::node_type node_type;
         typedef hash_table::hash_table_chainning<uint64_t , uint64_t> htc_type;
         typedef hash_table::hash_table_chainning_multiple<uint64_t , uint64_t> htc_multiple_type;
+        typedef hash_table::hash_table_chainning_multiple_v2<uint64_t , uint64_t> htc_multiple_v2_type;
 
     protected:
         size_type m_k;

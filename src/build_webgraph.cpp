@@ -36,15 +36,26 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <adjacency_list_helper.hpp>
 #include <sdsl/io.hpp>
 #include <block_tree_intersection_lists.hpp>
+#include <block_tree_hybrid.hpp>
 
 template<class t_block_tree>
-void run_build(const std::string &dataset, const uint64_t k, const uint64_t limit){
+void build(t_block_tree &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k){
+    b = t_block_tree(adjacency_lists, k);
+}
+
+void build(block_tree_2d::block_tree_hybrid<> &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k){
+    b = block_tree_2d::block_tree_hybrid<>(adjacency_lists, k, 4);
+}
+
+template<class t_block_tree>
+void run_build(const std::string &type, const std::string &dataset, const uint64_t k, const uint64_t limit){
     std::vector<std::vector<int64_t>> adjacency_lists;
     dataset_reader::web_graph::read(dataset, adjacency_lists, limit);
     const auto copy_lists = adjacency_lists;
 
     std::cout << "Building Block-tree..." << std::endl;
-    t_block_tree m_block_tree(adjacency_lists, k);
+    t_block_tree m_block_tree;
+    build(m_block_tree, adjacency_lists, k);
     std::cout << "The Block-tree was built." << std::endl;
     std::string name_file = dataset;
     if(limit != -1){
@@ -120,11 +131,13 @@ int main(int argc, char **argv) {
     }
 
     if(type == "naive"){
-        run_build<block_tree_2d::block_tree<>>(dataset, k, limit);
+        run_build<block_tree_2d::block_tree<>>(type, dataset, k, limit);
     }else if (type == "skip_levels"){
-        run_build<block_tree_2d::block_tree_skip_levels<>>(dataset, k, limit);
+        run_build<block_tree_2d::block_tree_skip_levels<>>(type, dataset, k, limit);
     }else if (type == "skip_levels_lists"){
-        run_build<block_tree_2d::block_tree_intersection_lists<>>(dataset, k, limit);
+        run_build<block_tree_2d::block_tree_intersection_lists<>>(type, dataset, k, limit);
+    }else if (type == "block_tree_hybrid2"){
+        run_build<block_tree_2d::block_tree_hybrid<>>(type, dataset, k, limit);
     } else{
         std::cout << "Type: " << type << " is not supported." << std::endl;
     }

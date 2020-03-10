@@ -46,6 +46,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <progress_bar.hpp>
 #include <search_util.hpp>
 #include "logger.hpp"
+#include "intersection_lists.hpp"
 
 #define NODE_EMPTY 0
 #define NODE_LEAF 1
@@ -70,7 +71,8 @@ namespace block_tree_2d {
         typedef std::pair<value_type , value_type > diff_cord_type;
         typedef std::pair<size_type , size_type > point_type;
         typedef typename std::vector< diff_cord_type > replacements_list_type;
-        typedef typename std::vector<std::vector< point_type >> replacements_point_lists_type;
+        typedef typename std::vector< point_type > replacements_point_list_type;
+        typedef typename std::vector<replacements_point_list_type> replacements_point_lists_type;
         typedef typename std::unordered_map<point_type, replacements_list_type, pair_hash> replacements_map_type;
         typedef std::unordered_map<point_type, std::vector<size_type>, pair_hash> sources_map_type;
         typedef typename std::unordered_map<size_type, char> blocks_replace_map_type;
@@ -679,8 +681,8 @@ namespace block_tree_2d {
                         nodes[pos_target].ptr = pos_source;
                         nodes[pos_target].hash = kr_block.hash;
                         nodes[pos_target].z_order = z_order_target;
-                        //nodes[pos_target].bits = bits_subtree(adjacent_lists, sx_target, sy_target, ex_target, ey_target,
-                        //                                      kr_block.iterators, block_size, k);
+                        /*nodes[pos_target].bits = bits_subtree(adjacent_lists, sx_target, sy_target, ex_target, ey_target,
+                                                              kr_block.iterators, block_size, k);*/
                         hash.erase(it_target);
                         //Delete info of <target> from adjacency list
                         delete_info_block(adjacent_lists, sx_target, sy_target, ex_target, ey_target, kr_block.iterators,  block_size);
@@ -1594,6 +1596,26 @@ namespace block_tree_2d {
 
         }
 
+        static void lists_intersection_v2(replacements_point_lists_type &replacements_point_lists,
+                                          const std::vector<size_type> &lists_to_check,
+                                          replacements_point_list_type &sol){
+
+            if(lists_to_check.empty()) return;
+            if(lists_to_check.size() == 1){
+                sol = replacements_point_lists[lists_to_check[0]];
+                return;
+            }
+
+            util::intersection_lists_no_reps(replacements_point_lists[lists_to_check[0]],
+                    replacements_point_lists[lists_to_check[1]], sol);
+            size_type i = 2;
+            while(i < lists_to_check.size() && !sol.empty()){
+                util::intersection_lists_no_reps(sol, replacements_point_lists[lists_to_check[2]]);
+                ++i;
+            }
+
+        }
+
         /*static void replacements_init(replacements_map_type &replacements_map, size_type block_size, size_type matrix_size, size_type k){
             for(size_type y = 0; y < matrix_size; y += block_size){
                 for(size_type x = 0; x < matrix_size; x += block_size){
@@ -1633,11 +1655,56 @@ namespace block_tree_2d {
             sol = std::move(aux_sol);
         };
 
+        template <class input_type>
+        static void filter_solution_with_empty_areas_v2(input_type &adjacency_lists,
+                                                     const size_type x, const size_type y,
+                                                     const size_type block_size,
+                                                     const std::vector<size_type > &empty_positions,
+                                                     replacements_point_list_type &sol){
+            replacements_point_list_type aux_sol;
+            for (const auto &s_i : sol) {
+                bool sol_ok = false;
+                for (const auto &e_i : empty_positions) {
+                    auto p_i = codes::zeta_order::decode(e_i);
+                    value_type x_i = (p_i.first - x) + s_i.first;
+                    value_type y_i = (p_i.second - y) + s_i.second;
+                    if(x_i < 0 || y_i < 0){
+                        sol_ok = false;
+                        break;
+                    }
+                    if(is_empty(adjacency_lists, x_i, y_i, block_size)) {
+                        sol_ok = true;
+                    } else {
+                        sol_ok = false;
+                        break;
+                    }
+                }
+                if (sol_ok) {
+                    aux_sol.push_back(s_i);
+                }
+            }
+            sol = std::move(aux_sol);
+        };
+
         static void filter_solution_overlapped_areas(const size_type block_size,
                                                      replacements_list_type &sol){
             replacements_list_type aux_sol;
             for (const auto &s_i : sol) {
                 if(std::abs(s_i.first) >= block_size || std::abs(s_i.second) >= block_size){
+                    aux_sol.push_back(s_i);
+                }
+            }
+            sol = std::move(aux_sol);
+
+        }
+
+        static void filter_solution_overlapped_areas_v2(const size_type x, const size_type y,
+                                                        const size_type block_size,
+                                                        replacements_point_list_type &sol){
+            replacements_point_list_type aux_sol;
+            for (const auto &s_i : sol) {
+                if(std::abs(static_cast<long>(s_i.first - x)) >= block_size ||
+                   std::abs(static_cast<long>(s_i.second - y)) >= block_size){
                     aux_sol.push_back(s_i);
                 }
             }
@@ -1751,43 +1818,41 @@ namespace block_tree_2d {
 
 
         template <class input_type>
-        static bool exist_replacements_v2(input_type &adjacency_lists, replacements_point_lists_type &replacements_point_lists,
+        static bool exist_replacements_v2(input_type &adjacency_lists,
+                                       std::unordered_map<size_type, size_type> &map_blocks_keys,
+                                       replacements_point_lists_type &replacements_point_lists,
                                        const size_type block_size, const size_type block_size_replacements,
                                        const size_type matrix_size, const size_type k){
 
-
-
-            bool b = false;
             //std::string file_name = "checking_blocks" + std::to_string(block_size) + ".out";
             //std::ofstream check_blocks(file_name);
             for(size_type y = 0; y < matrix_size; y += block_size){
                 for(size_type x = 0; x < matrix_size; x += block_size){
                     //check_blocks << "Check block: (" << x << ", " << y << ") " << std::endl;
-                    std::vector<replacements_map_iterator> lists_to_check;
-                    replacements_list_type sol;
-                    std::vector<point_type> empty_positions;
-                    compute_lists_to_check(lists_to_check, empty_positions, x, y,
+                    std::vector<size_type > lists_to_check, empty_positions;
+                    replacements_point_list_type sol;
+                    compute_lists_to_check_v2(map_blocks_keys, lists_to_check, empty_positions, x, y,
                                            block_size, block_size_replacements);
                     if(!lists_to_check.empty()){ //Not empty area
                         //check_blocks << "Not empty:" << lists_to_check.size() << std::endl;
-                        lists_intersection(replacements_map, lists_to_check, sol);
+                        lists_intersection_v2(replacements_point_lists, lists_to_check, sol);
                         //check_blocks << "Intersection: " << sol.size() << std::endl;
-                        filter_solution_overlapped_areas(block_size, sol);
+                        filter_solution_overlapped_areas_v2(x, y, block_size, sol);
                         //check_blocks << "Overlapping: " << sol.size() << std::endl;
-                        filter_solution_with_empty_areas(adjacency_lists, block_size_replacements, empty_positions, sol);
+                        filter_solution_with_empty_areas_v2(adjacency_lists, x, y, block_size_replacements, empty_positions, sol);
                         //check_blocks << "Solution: " << !sol.empty() << std::endl;
                         //check_blocks << "{";
                         //for(const auto &s : sol){
                         //    check_blocks << "(" << s.first << ", " << s.second << "), ";
                         //}
                         //check_blocks << "}" << std::endl;
-                        b = b || !sol.empty();
+                        if(!sol.empty()) return true;
                     }
                     //check_blocks << "Done." << std::endl;
                 }
             }
             //check_blocks.close();
-            return b;
+            return false;
         }
 
         template <class input_type>
@@ -1940,6 +2005,56 @@ namespace block_tree_2d {
             }
             bits.resize(t);
             return zeroes;
+
+        }
+
+        template <class input_type, class hash_type>
+        void build_last_k2_tree(const input_type &adjacent_lists, const size_type k,
+                                            const size_type height, const size_type block_size_start,
+                                            sdsl::bit_vector &bits, hash_type &hash){
+
+
+            typedef std::tuple<size_type , size_type, size_type,size_type> t_part_tuple;
+            auto k_2 = k * k;
+
+            //1. Edges z-order
+            std::vector<size_type> edges_z_order;
+            for(size_type y = 0; y < adjacent_lists.size(); ++y){
+                for(size_type x : adjacent_lists[y]){
+                    edges_z_order.push_back(codes::zeta_order::encode(x, y));
+                }
+            }
+
+            //2. Sort edges z-order
+            std::sort(edges_z_order.begin(), edges_z_order.end());
+
+            //4. Resize topology bitmap
+            size_type t = bits.size();
+            bits.resize(t + k_2 * height * edges_z_order.size());
+
+            //5. Split the front of q into its children
+            size_type i, j, z_0;
+            size_type l = adjacent_lists.size();
+            std::queue<t_part_tuple> q;
+            q.push(t_part_tuple(0, edges_z_order.size()-1, l/k , 0));
+            while (!q.empty()) {
+                std::tie(i, j, l, z_0) = q.front();
+                q.pop();
+                auto elements = l * l;
+                for(size_type z_child = 0; z_child < k_2; ++z_child){
+                    auto le = util::search::lower_or_equal_search(i, j, edges_z_order, z_0+elements-1);
+                    if(le != -1 && edges_z_order[le] >= z_0){
+                        if(l <= block_size_start){
+                            bits[t] = 1;
+                        }
+                        q.push(t_part_tuple(i, le, l/k, z_0));
+                        i = le + 1;
+                    }
+                    ++t;
+                    z_0 += elements;
+                }
+            }
+            bits.resize(t);
 
         }
     };
