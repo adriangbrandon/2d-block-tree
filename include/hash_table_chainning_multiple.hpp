@@ -257,7 +257,36 @@ namespace hash_table {
             }
         }
 
-        void print_stats(){
+        void print_stats() {
+
+            void print_stats(){
+                std::cout << "Hash Table Double Chainning Multiple" << std::endl;
+                std::cout << "Entries: " << m_table.size() << std::endl;
+                size_type sum = 0;
+                std::unordered_map<uint64_t , uint64_t > lengths;
+                for(size_type i = 0; i < m_table.size();i++){
+                    size_type length = m_table[i].size();
+                    auto it_length = lengths.find(length);
+                    if( it_length != lengths.end()){
+                        it_length->second = it_length->second+1;
+                    }else{
+                        lengths.insert({length, 1});
+                    }
+                    sum = length + sum;
+                }
+                std::cout << "Avg: " << sum / (float) m_table.size() << std::endl;
+                std::vector<std::pair<uint64_t , uint64_t >> values;
+                for(auto v : lengths){
+                    values.emplace_back(v);
+                }
+                lengths.clear();
+                std::sort(values.begin(), values.end());
+                for(auto v : values){
+                    std::cout << "Length: " << v.first << " Freq: " << v.second << std::endl;
+                }
+        }
+
+        /*void print_stats(){
             std::cout << "Hash Table Double Chainning Multiple" << std::endl;
             std::cout << "Entries: " << m_table.size() << std::endl;
             size_type sum = 0;
@@ -293,7 +322,7 @@ namespace hash_table {
                std::cout << "Length: " << v.first << " Freq: " << v.second << std::endl;
             }
 
-        }
+        }*/
 
 
     };
