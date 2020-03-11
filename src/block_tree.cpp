@@ -141,6 +141,8 @@ int main(int argc, char **argv) {
         m_block_tree2.access_region(0, 0, dimensions - 1, dimensions - 1, result2);
         std::cout << "Done." << std::endl;
 
+        std::cout << "Block tree starts from level " << m_block_tree2.minimum_level+1
+        << " up to level " << m_block_tree2.maximum_level-1 << std::endl;
         block_tree_2d::algorithm::print_ajdacent_list(result2);
     //}
 

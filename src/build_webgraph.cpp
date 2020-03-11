@@ -50,6 +50,8 @@ void build(block_tree_2d::block_tree_hybrid<> &b, std::vector<std::vector<int64_
 
 void build(block_tree_2d::block_tree_double_hybrid<> &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k, const uint64_t last_block_size_k2_tree){
     b = block_tree_2d::block_tree_double_hybrid<>(adjacency_lists, k, last_block_size_k2_tree);
+    std::cout << "Block tree height=" << b.height << std::endl;
+    std::cout << "There are pointers from level " << b.minimum_level+1 << " up to level " << b.maximum_level-1 << std::endl;
 }
 
 template<class t_block_tree>
@@ -60,8 +62,11 @@ void run_build(const std::string &type, const std::string &dataset, const uint64
 
     std::cout << "Building Block-tree..." << std::endl;
     t_block_tree m_block_tree;
+    auto t0 = std::chrono::high_resolution_clock::now();
     build(m_block_tree, adjacency_lists, k, last_block_size_k2_tree);
-    std::cout << "The Block-tree was built." << std::endl;
+    auto t1 = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::seconds>(t1-t0).count();
+    std::cout << "The Block-tree was built in: " << duration << " (sec.)" << std::endl;
     std::string name_file = dataset;
     if(limit != -1){
         name_file = name_file + "_" + std::to_string(limit);

@@ -177,6 +177,8 @@ namespace block_tree_2d {
 
     public:
 
+        const size_type &minimum_level = m_minimum_level;
+        const size_type &maximum_level = m_maximum_level;
         block_tree_double_hybrid() = default;
 
         block_tree_double_hybrid(input_type &adjacency_lists, const size_type kparam, const size_type level) {
