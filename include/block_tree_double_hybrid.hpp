@@ -65,6 +65,9 @@ namespace block_tree_2d {
 
 
 
+
+
+
         void construction(input_type &adjacency_lists, size_type h, size_type block_size, size_type blocks,
                           size_type last_block_size_k2_tree){
 
@@ -78,7 +81,6 @@ namespace block_tree_2d {
             //1. Obtaining minimum block size where there are identical blocks
             //size_type min_block_size = 16;
             //m_minimum_level = 16;
-
 
             size_type min_block_size = last_block_size_k2_tree;
             m_minimum_level = h - log2(min_block_size);
@@ -97,22 +99,64 @@ namespace block_tree_2d {
             size_type topology_index = this->m_topology.size(), is_pointer_index = 0;
             size_type l = m_minimum_level;
             block_size = min_block_size / this->m_k;
-            while (block_size > 1) {
+            bool last_k2_tree = false;
+            while (!last_k2_tree && block_size > 1) {
                 ++l;
                 util::logger::log("Processing level " + std::to_string(l) + " of " + std::to_string(h));
                 util::logger::log("Block size: " + std::to_string(block_size));
-                auto pointers = this->processing_level(l - m_minimum_level, adjacency_lists, block_size,
-                        topology_index, is_pointer_index, hash, nodes);
-                util::logger::log("Pointers: " + std::to_string(pointers));
-                block_size = block_size / this->k;
+                htc_type m_htc(std::min(10240UL, 2*nodes.size()));
+                util::logger::log("Computing fingerprint of blocks at level=" + std::to_string(l));
+                block_tree_2d::algorithm::get_fingerprint_blocks_stack_lite(adjacency_lists, this->k, m_htc, this->dimensions, block_size, hash, nodes, true);
+                util::logger::log("Computing fingerprint of shifts at level=" + std::to_string(l));
+                block_tree_2d::algorithm::get_type_of_nodes_stack_lite(adjacency_lists, this->k, m_htc, this->dimensions, block_size, hash, nodes);
+
+                size_type bits_k2_tree = 0, leaf_nodes = 0, bits_per_offset = 0, bits_per_pointer = 0;
+                for(const auto &node: nodes){
+                    if(node.type == NODE_LEAF){
+                        bits_k2_tree += node.bits;
+                        auto b_offx = sdsl::bits::hi(codes::alternative_code::encode(node.offset_x))+1;
+                        if(bits_per_offset < b_offx){
+                            bits_per_offset = b_offx;
+                        }
+                        auto b_offy = sdsl::bits::hi(codes::alternative_code::encode(node.offset_y))+1;
+                        if(bits_per_offset < b_offy){
+                            bits_per_offset = b_offy;
+                        }
+                        auto b_ptr = sdsl::bits::hi(node.ptr)+1;
+                        if(bits_per_pointer < b_ptr){
+                            bits_per_pointer = b_ptr;
+                        }
+                        ++leaf_nodes;
+                    }
+                }
+                last_k2_tree = (bits_k2_tree < leaf_nodes*(bits_per_pointer + 2*bits_per_offset + 2));
+                if(last_k2_tree){
+                    m_maximum_level = l;
+                    size_type height_subtree = h - l +1; //TODO: ojo con +1
+                    std::cout << "Height: " << h << " current_level: " << l << " height_subtree: " << height_subtree << std::endl;
+                    block_tree_2d::algorithm::build_last_k2_tree(adjacency_lists, this->k, height_subtree, block_size, this->m_topology);
+                }else{
+                    util::logger::log("Clearing adjacency lists at level=" + std::to_string(l));
+                    block_tree_2d::algorithm::clear_adjacency_lists(adjacency_lists);
+                    util::logger::log("Compacting level=" + std::to_string(l));
+                    auto pointers = this->compact_current_level(nodes, l, topology_index, is_pointer_index);
+                    util::logger::log("Number of new pointers=" + std::to_string(pointers));
+                    util::logger::log("Preparing next level");
+                    block_tree_2d::algorithm::prepare_next_level(adjacency_lists, hash, this->m_k2, nodes);
+                    block_size = block_size / this->k;
+                }
+
             }
-            ++l;
-            util::logger::log("Processing last level (" + std::to_string(l) + ")");
-            block_tree_2d::algorithm::compute_last_level(adjacency_lists, hash, nodes);
-            util::logger::log("Compacting last level (" + std::to_string(l) + ")");
-            this->compact_last_level(nodes, topology_index);
-            this->m_height = l;
-            this->m_topology.resize(topology_index);
+            if(!last_k2_tree){
+                ++l;
+                util::logger::log("Processing last level (" + std::to_string(l) + ")");
+                block_tree_2d::algorithm::compute_last_level(adjacency_lists, hash, nodes);
+                util::logger::log("Compacting last level (" + std::to_string(l) + ")");
+                this->compact_last_level(nodes, topology_index);
+                this->m_topology.resize(topology_index);
+            }
+
+            this->m_height = h;
             this->m_is_pointer.resize(is_pointer_index);
             this->m_level_ones.resize(2*(this->m_height - m_minimum_level));
             sdsl::util::init_support(this->m_topology_rank, &this->m_topology);
@@ -123,10 +167,11 @@ namespace block_tree_2d {
         }
 
 
-        void copy(const block_tree_hybrid &p){
+        void copy(const block_tree_double_hybrid &p){
             block_tree<input_type >::copy(p);
             m_zeroes = p.m_zeroes;
             m_minimum_level = p.m_minimum_level;
+            m_maximum_level = p.m_maximum_level;
         }
 
 
@@ -143,7 +188,7 @@ namespace block_tree_2d {
 
 
         inline bool taking_pointer_condition(const bool taking_pointer, const size_type level_taking_pointer, const size_type level){
-            return level > m_minimum_level && !(taking_pointer && level <= level_taking_pointer);
+            return level > m_minimum_level && level < m_maximum_level && !(taking_pointer && level <= level_taking_pointer);
         }
 
         inline size_type idx_leaf(const size_type idx){
@@ -166,7 +211,7 @@ namespace block_tree_2d {
         }
 
         bool is_pointer(size_type idx, size_type level, size_type &pos_zero){
-            if(level <= m_minimum_level){
+            if(level <= m_minimum_level || level >= m_maximum_level){
                 return false;
             }
             pos_zero= this->idx_leaf(idx);
@@ -188,6 +233,7 @@ namespace block_tree_2d {
             if (this != &p) {
                 block_tree<input_type>::operator=(p);
                 m_minimum_level = std::move(p.m_minimum_level);
+                m_maximum_level = std::move(p.m_maximum_level);
                 m_zeroes = std::move(p.m_zeroes);
             }
             return *this;
@@ -209,6 +255,7 @@ namespace block_tree_2d {
         void swap(block_tree_double_hybrid &p) {
             block_tree<input_type>::swap(p);
             std::swap(m_minimum_level, p.m_minimum_level);
+            std::swap(m_maximum_level, p.m_maximum_level);
             std::swap(m_zeroes, p.m_zeroes);
         }
 
@@ -222,6 +269,7 @@ namespace block_tree_2d {
             size_type written_bytes = 0;
             written_bytes += block_tree<input_type>::serialize(out, v, name);
             written_bytes += sdsl::write_member(m_minimum_level, out, child, "minimum_level");
+            written_bytes += sdsl::write_member(m_maximum_level, out, child, "maximum_level");
             written_bytes += sdsl::write_member(m_zeroes, out, child, "zeroes");
             return written_bytes;
         }
@@ -231,6 +279,7 @@ namespace block_tree_2d {
         {
             block_tree<input_type>::load(in);
             sdsl::read_member(m_minimum_level, in);
+            sdsl::read_member(m_maximum_level, in);
             sdsl::read_member(m_zeroes, in);
         }
 

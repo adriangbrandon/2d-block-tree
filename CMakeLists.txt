@@ -75,6 +75,9 @@ target_link_libraries(block_tree_test sdsl divsufsort divsufsort64)
 add_executable(block_tree_hybrid_test test/block_tree_hybrid_test.cpp)
 target_link_libraries(block_tree_hybrid_test sdsl divsufsort divsufsort64)
 
+add_executable(block_tree_double_hybrid_test test/block_tree_double_hybrid_test.cpp)
+target_link_libraries(block_tree_double_hybrid_test sdsl divsufsort divsufsort64)
+
 add_executable(block_tree_skip_levels_test test/block_tree_skip_levels_test.cpp)
 target_link_libraries(block_tree_skip_levels_test sdsl divsufsort divsufsort64)
 

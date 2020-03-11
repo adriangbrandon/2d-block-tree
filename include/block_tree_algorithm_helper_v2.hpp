@@ -168,6 +168,8 @@ namespace block_tree_2d {
         }
 
 
+
+
         template <class input_type, class iterators_type>
         static size_type bits_subtree(const input_type &adjacent_lists, const value_type sx_b2, const value_type ex_b2,
                                      const value_type sy_b2, const value_type ey_b2, const iterators_type &iterators_b2,
@@ -177,7 +179,23 @@ namespace block_tree_2d {
             size_type k_pow_2 = k*k;
             hash_type hash0, hash1;
             while(row < block_size){
+
+                /*auto beg_list_b1 = (adjacent_lists.begin() + sy_b1 + row)->begin();
                 auto beg_list_b2 = (adjacent_lists.begin() + sy_b2 + row)->begin();
+                auto it_b2 = iterators_b2[(sy_b2 + row) % block_size];
+                auto it_b1 = std::upper_bound(beg_list_b1, (adjacent_lists.begin()+sy_b1+row)->end(), ex_b1, compare_abs_value());
+                iterators_b1[(sy_b1 + row) % block_size] = it_b1;
+                while(it_b2 != beg_list_b2 && std::abs(*(--it_b2)) >= sx_b2){
+                    if(*it_b2 >= 0){
+                        size_type d2 = *it_b2 - sx_b2;
+                        if(it_b1 == beg_list_b1 || *(--it_b1) < sx_b1) return false;
+                        size_type d1 = *it_b1 - sx_b1;
+                        if(d1 != d2) return false;
+                    }
+                }*/
+
+                auto beg_list_b2 = (adjacent_lists.begin() + sy_b2 + row)->begin();
+                //std::cout << "it_b2 = terators_b2[" << (sy_b2 + row) % block_size << "]" << std::endl;
                 auto it_b2 = iterators_b2[(sy_b2 + row) % block_size];
                 while(it_b2 != beg_list_b2 && *(--it_b2) >= sx_b2){
                     size_type x = *it_b2 - sx_b2;
@@ -627,7 +645,7 @@ namespace block_tree_2d {
         template <class input_type, class hash_table_type>
         static void get_fingerprint_blocks_stack_lite(input_type &adjacent_lists, const size_type k, hash_table_type &ht,
                                            const size_type dimensions, const size_type block_size,
-                                           hash_type &hash, std::vector<node_type> &nodes){
+                                           hash_type &hash, std::vector<node_type> &nodes, const bool compute_bits = false){
 
             typedef karp_rabin::kr_block_adjacent_list_v4<input_type> kr_type;
             typedef typename kr_type::hash_type hash_type;
@@ -681,8 +699,10 @@ namespace block_tree_2d {
                         nodes[pos_target].ptr = pos_source;
                         nodes[pos_target].hash = kr_block.hash;
                         nodes[pos_target].z_order = z_order_target;
-                        /*nodes[pos_target].bits = bits_subtree(adjacent_lists, sx_target, sy_target, ex_target, ey_target,
-                                                              kr_block.iterators, block_size, k);*/
+                        if(compute_bits){
+                            nodes[pos_target].bits = bits_subtree(adjacent_lists, sx_target, ex_target, sy_target, ey_target,
+                                                              kr_block.iterators, block_size, k);
+                        }
                         hash.erase(it_target);
                         //Delete info of <target> from adjacency list
                         delete_info_block(adjacent_lists, sx_target, sy_target, ex_target, ey_target, kr_block.iterators,  block_size);
@@ -2008,10 +2028,10 @@ namespace block_tree_2d {
 
         }
 
-        template <class input_type, class hash_type>
-        void build_last_k2_tree(const input_type &adjacent_lists, const size_type k,
+        template <class input_type>
+        static void build_last_k2_tree(const input_type &adjacent_lists, const size_type k,
                                             const size_type height, const size_type block_size_start,
-                                            sdsl::bit_vector &bits, hash_type &hash){
+                                            sdsl::bit_vector &bits){
 
 
             typedef std::tuple<size_type , size_type, size_type,size_type> t_part_tuple;
@@ -2020,8 +2040,12 @@ namespace block_tree_2d {
             //1. Edges z-order
             std::vector<size_type> edges_z_order;
             for(size_type y = 0; y < adjacent_lists.size(); ++y){
-                for(size_type x : adjacent_lists[y]){
-                    edges_z_order.push_back(codes::zeta_order::encode(x, y));
+                for(value_type x : adjacent_lists[y]){
+                    //taking into account that some values are marked to delete
+                    if(x < 0){
+                        x=(-x)-1;
+                    }
+                    edges_z_order.push_back(codes::zeta_order::encode(static_cast<size_type>(x), y));
                 }
             }
 
@@ -2046,16 +2070,32 @@ namespace block_tree_2d {
                     if(le != -1 && edges_z_order[le] >= z_0){
                         if(l <= block_size_start){
                             bits[t] = 1;
+                            ++t;
                         }
-                        q.push(t_part_tuple(i, le, l/k, z_0));
+                        if(l / k > 0){
+                            q.push(t_part_tuple(i, le, l/k, z_0));
+                        }
                         i = le + 1;
+                    }else{
+                        if(l <= block_size_start) {
+                            bits[t] = 0;
+                            ++t;
+                        }
                     }
-                    ++t;
+
                     z_0 += elements;
                 }
             }
             bits.resize(t);
 
+        }
+
+        static size_type max_bits_k2_tree(const size_type height, const size_type k_2){
+            return static_cast<size_type >(std::pow(k_2, height) - 1) / (k_2 - 1);
+        }
+
+        static size_type max_bits_pointer(const size_type nodes, const size_type block_size){
+            return std::ceil(std::log2(nodes)) + 2*std::ceil(std::log2(block_size));
         }
     };
 }

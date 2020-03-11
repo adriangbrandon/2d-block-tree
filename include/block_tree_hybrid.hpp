@@ -136,11 +136,11 @@ namespace block_tree_2d {
 
         block_tree_hybrid() = default;
 
-        block_tree_hybrid(input_type &adjacency_lists, const size_type kparam, const size_type level) {
+        block_tree_hybrid(input_type &adjacency_lists, const size_type kparam, const size_type last_block_size_k2tree) {
             size_type h, total_size;
             this->init_construction(h, total_size, adjacency_lists, kparam);
             size_type blocks = this->m_k2, block_size = total_size/this->m_k;
-            construction(adjacency_lists, h, block_size, blocks, level);
+            construction(adjacency_lists, h, block_size, blocks, last_block_size_k2tree);
         }
 
 

@@ -37,25 +37,30 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sdsl/io.hpp>
 #include <block_tree_intersection_lists.hpp>
 #include <block_tree_hybrid.hpp>
+#include <block_tree_double_hybrid.hpp>
 
 template<class t_block_tree>
-void build(t_block_tree &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k){
+void build(t_block_tree &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k, const uint64_t last_block_size_k2_tree){
     b = t_block_tree(adjacency_lists, k);
 }
 
-void build(block_tree_2d::block_tree_hybrid<> &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k){
-    b = block_tree_2d::block_tree_hybrid<>(adjacency_lists, k, 4);
+void build(block_tree_2d::block_tree_hybrid<> &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k, const uint64_t last_block_size_k2_tree){
+    b = block_tree_2d::block_tree_hybrid<>(adjacency_lists, k, last_block_size_k2_tree);
+}
+
+void build(block_tree_2d::block_tree_double_hybrid<> &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k, const uint64_t last_block_size_k2_tree){
+    b = block_tree_2d::block_tree_double_hybrid<>(adjacency_lists, k, last_block_size_k2_tree);
 }
 
 template<class t_block_tree>
-void run_build(const std::string &type, const std::string &dataset, const uint64_t k, const uint64_t limit){
+void run_build(const std::string &type, const std::string &dataset, const uint64_t k, const uint64_t limit, const uint64_t last_block_size_k2_tree){
     std::vector<std::vector<int64_t>> adjacency_lists;
     dataset_reader::web_graph::read(dataset, adjacency_lists, limit);
     const auto copy_lists = adjacency_lists;
 
     std::cout << "Building Block-tree..." << std::endl;
     t_block_tree m_block_tree;
-    build(m_block_tree, adjacency_lists, k);
+    build(m_block_tree, adjacency_lists, k, last_block_size_k2_tree);
     std::cout << "The Block-tree was built." << std::endl;
     std::string name_file = dataset;
     if(limit != -1){
@@ -116,9 +121,9 @@ void run_build(const std::string &type, const std::string &dataset, const uint64
 
 int main(int argc, char **argv) {
 
-    if(argc != 5 && argc != 4){
-        std::cout << argv[0] << "<dataset> <type> <k>  [limit]" << std::endl;
-        std::cout << "type: naive, skip_levels" << std::endl;
+    if(argc <= 6  && argc >= 4){
+        std::cout << argv[0] << "<dataset> <type> <k> [last_block_size_k2_tree] [limit]" << std::endl;
+        std::cout << "type: naive, skip_levels, hybrid, double_hybrid" << std::endl;
         return 0;
     }
 
@@ -126,18 +131,37 @@ int main(int argc, char **argv) {
     std::string type = argv[2];
     auto k = static_cast<uint64_t >(atoi(argv[3]));
     auto limit = static_cast<uint64_t>(-1);
-    if(argc == 5){
-        limit = static_cast<uint64_t >(atoi(argv[4]));
+    auto last_block_size_k2_tree = static_cast<uint64_t>(-1);
+    if( (type == "hybrid" || type == "double_hybrid")){
+        if(argc == 5){
+            last_block_size_k2_tree = static_cast<uint64_t >(atoi(argv[4]));
+        }else if(argc == 6){
+            limit = static_cast<uint64_t >(atoi(argv[5]));
+        }else{
+            std::cout << argv[0] << "<dataset> " << type << " <k> <last_block_size_k2_tree> [limit]" << std::endl;
+            //std::cout << "type: naive, skip_levels, hybrid, double_hybrid" << std::endl;
+            return 0;
+        }
+
+    }else{
+        if(argc == 5){
+            limit = static_cast<uint64_t >(atoi(argv[4]));
+        }
     }
 
+
+
+
     if(type == "naive"){
-        run_build<block_tree_2d::block_tree<>>(type, dataset, k, limit);
+        run_build<block_tree_2d::block_tree<>>(type, dataset, k, limit, last_block_size_k2_tree);
     }else if (type == "skip_levels"){
-        run_build<block_tree_2d::block_tree_skip_levels<>>(type, dataset, k, limit);
+        run_build<block_tree_2d::block_tree_skip_levels<>>(type, dataset, k, limit, last_block_size_k2_tree);
     }else if (type == "skip_levels_lists"){
-        run_build<block_tree_2d::block_tree_intersection_lists<>>(type, dataset, k, limit);
-    }else if (type == "block_tree_hybrid2"){
-        run_build<block_tree_2d::block_tree_hybrid<>>(type, dataset, k, limit);
+        run_build<block_tree_2d::block_tree_intersection_lists<>>(type, dataset, k, limit, last_block_size_k2_tree);
+    }else if (type == "hybrid"){
+        run_build<block_tree_2d::block_tree_hybrid<>>(type, dataset, k, limit, last_block_size_k2_tree);
+    }else if (type == "double_hybrid"){
+        run_build<block_tree_2d::block_tree_hybrid<>>(type, dataset, k, limit, last_block_size_k2_tree);
     } else{
         std::cout << "Type: " << type << " is not supported." << std::endl;
     }
