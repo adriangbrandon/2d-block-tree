@@ -126,7 +126,7 @@ void run_build(const std::string &type, const std::string &dataset, const uint64
 
 int main(int argc, char **argv) {
 
-    if(argc <= 6  && argc >= 4){
+    if(argc != 6  && argc != 5 && argc !=4){
         std::cout << argv[0] << "<dataset> <type> <k> [last_block_size_k2_tree] [limit]" << std::endl;
         std::cout << "type: naive, skip_levels, hybrid, double_hybrid" << std::endl;
         return 0;
