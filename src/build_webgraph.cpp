@@ -166,7 +166,7 @@ int main(int argc, char **argv) {
     }else if (type == "hybrid"){
         run_build<block_tree_2d::block_tree_hybrid<>>(type, dataset, k, limit, last_block_size_k2_tree);
     }else if (type == "double_hybrid"){
-        run_build<block_tree_2d::block_tree_hybrid<>>(type, dataset, k, limit, last_block_size_k2_tree);
+        run_build<block_tree_2d::block_tree_double_hybrid<>>(type, dataset, k, limit, last_block_size_k2_tree);
     } else{
         std::cout << "Type: " << type << " is not supported." << std::endl;
     }
