@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
 
 
     uint64_t k =2;
-    uint64_t dimensions = 32;
+    uint64_t dimensions = 16;
     //for(size_t i = 0; i < 100; ++i){
         std::vector< std::vector<int64_t>> matrix8_8;
         //util::adjacency_list::read(matrix8_8, "adjacency_lists.txt");std::vector< std::vector<int64_t>> matrix8_8;
@@ -103,7 +103,7 @@ int main(int argc, char **argv) {
         matrix8_8.push_back(row13);
         matrix8_8.push_back(row14);
         matrix8_8.push_back(row15);
-        matrix8_8.push_back(row16);
+        /*matrix8_8.push_back(row16);
         matrix8_8.push_back(row17);
         matrix8_8.push_back(row18);
         matrix8_8.push_back(row19);
@@ -118,13 +118,13 @@ int main(int argc, char **argv) {
         matrix8_8.push_back(row28);
         matrix8_8.push_back(row29);
         matrix8_8.push_back(row30);
-        matrix8_8.push_back(row31);
+        matrix8_8.push_back(row31);*/
         std::cout << matrix8_8.size() << std::endl;
 
         block_tree_2d::algorithm::print_ajdacent_list(matrix8_8);
 
         std::cout << "Building Block-tree dimensions=" << dimensions;
-        block_tree_2d::block_tree_double_hybrid<> m_block_tree(matrix8_8, k, 4);
+        block_tree_2d::block_tree_double_hybrid<> m_block_tree(matrix8_8, k, 8);
         std::cout << "Done." << std::endl;
         m_block_tree.print();
         std::cout << "Retrieving adjacency lists...";

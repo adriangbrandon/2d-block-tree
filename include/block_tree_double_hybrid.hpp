@@ -129,21 +129,25 @@ namespace block_tree_2d {
                         ++leaf_nodes;
                     }
                 }
-                last_k2_tree = (bits_k2_tree < leaf_nodes*(bits_per_pointer + 2*bits_per_offset + 2));
+                //last_k2_tree = (bits_k2_tree < leaf_nodes*(bits_per_pointer + 2*bits_per_offset + 2));
+                last_k2_tree = block_size < 4;
                 if(last_k2_tree){
+                    this->m_topology.resize(topology_index);
                     m_maximum_level = l;
                     size_type height_subtree = h - l +1; //TODO: ojo con +1
                     std::cout << "Height: " << h << " current_level: " << l << " height_subtree: " << height_subtree << std::endl;
                     block_tree_2d::algorithm::build_last_k2_tree(adjacency_lists, this->k, height_subtree, block_size, this->m_topology);
+                    std::cout << "Topology size: " << this->m_topology.size() << std::endl;
                 }else{
                     util::logger::log("Clearing adjacency lists at level=" + std::to_string(l));
                     block_tree_2d::algorithm::clear_adjacency_lists(adjacency_lists);
                     util::logger::log("Compacting level=" + std::to_string(l));
-                    auto pointers = this->compact_current_level(nodes, l, topology_index, is_pointer_index);
+                    auto pointers = this->compact_current_level(nodes, l - m_minimum_level, topology_index, is_pointer_index);
                     util::logger::log("Number of new pointers=" + std::to_string(pointers));
                     util::logger::log("Preparing next level");
                     block_tree_2d::algorithm::prepare_next_level(adjacency_lists, hash, this->m_k2, nodes);
                     block_size = block_size / this->k;
+                    std::cout << "Topology size: " << this->m_topology.size() << std::endl;
                 }
 
             }
@@ -155,7 +159,7 @@ namespace block_tree_2d {
                 this->compact_last_level(nodes, topology_index);
                 this->m_topology.resize(topology_index);
             }
-
+            //m_maximum_level = h+1;
             this->m_height = h;
             this->m_is_pointer.resize(is_pointer_index);
             this->m_level_ones.resize(2*(this->m_height - m_minimum_level));

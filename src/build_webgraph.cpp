@@ -46,6 +46,7 @@ void build(t_block_tree &b, std::vector<std::vector<int64_t>> adjacency_lists, c
 
 void build(block_tree_2d::block_tree_hybrid<> &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k, const uint64_t last_block_size_k2_tree){
     b = block_tree_2d::block_tree_hybrid<>(adjacency_lists, k, last_block_size_k2_tree);
+    std::cout << "Block tree height=" << b.height << std::endl;
 }
 
 void build(block_tree_2d::block_tree_double_hybrid<> &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k, const uint64_t last_block_size_k2_tree){
@@ -66,7 +67,6 @@ void run_build(const std::string &type, const std::string &dataset, const uint64
     build(m_block_tree, adjacency_lists, k, last_block_size_k2_tree);
     auto t1 = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::seconds>(t1-t0).count();
-    std::cout << "The Block-tree was built in: " << duration << " (sec.)" << std::endl;
     std::string name_file = dataset;
     if(limit != -1){
         name_file = name_file + "_" + std::to_string(limit);
@@ -76,6 +76,8 @@ void run_build(const std::string &type, const std::string &dataset, const uint64
     //m_block_tree.print();
     std::cout << "Retrieving adjacency lists..." << std::flush;
     std::vector<std::vector<int64_t >> result;
+    m_block_tree.access_region(0, 0, copy_lists.size() - 1, 0, result);
+    std::cout << "Result aaa: " << result[0].size() << std::endl;
     m_block_tree.access_region(0, 0, copy_lists.size() - 1, copy_lists.size() - 1, result);
     std::cout << "Adjacency lists were obtained." << std::endl;
 
@@ -92,7 +94,7 @@ void run_build(const std::string &type, const std::string &dataset, const uint64
     }
     bool error = false;
     for (auto i = 0; i < result.size(); ++i) {
-        if (result[i].size() != copy_lists[i].size()) {
+        if (!error && result[i].size() != copy_lists[i].size()) {
             std::cout << "Error: the size of list " << i << " is incorrect." << std::endl;
             std::cout << "Expected: " << copy_lists[i].size() << std::endl;
             std::cout << "Obtained: " << result[i].size() << std::endl;
@@ -107,9 +109,9 @@ void run_build(const std::string &type, const std::string &dataset, const uint64
         for (auto i = 0; i < result.size(); ++i) {
             for (auto j = 0; j < result[i].size(); ++j) {
                 if (result[i][j] != copy_lists[i][j]) {
-                    std::cout << "Error: the " << j << "-th value of list " << i << " is incorrect." << std::endl;
-                    std::cout << "Expected: " << copy_lists[i][j] << std::endl;
-                    std::cout << "Obtained: " << result[i][j] << std::endl;
+                  //  std::cout << "Error: the " << j << "-th value of list " << i << " is incorrect." << std::endl;
+                  //  std::cout << "Expected: " << copy_lists[i][j] << std::endl;
+                  //  std::cout << "Obtained: " << result[i][j] << std::endl;
                     error = true;
                 }
             }
@@ -122,6 +124,9 @@ void run_build(const std::string &type, const std::string &dataset, const uint64
         }
     }
     std::cout << std::endl;
+    auto size_bt = sdsl::size_in_bytes(m_block_tree);
+    std::cout << "The Block-tree was built in " << duration << " seconds and uses " << size_bt << " bytes." << std::endl;
+    std::cout << duration << " " << size_bt << std::endl;
 }
 
 int main(int argc, char **argv) {

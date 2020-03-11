@@ -84,7 +84,7 @@ int main(int argc, char **argv) {
             std::cout << "----------------------------------------------" << std::endl;*/
 
             std::cout << "Building Block-tree rep=" << r << " freq="<< f << " dimensions=" << dimensions << "....";
-            block_tree_2d::block_tree_double_hybrid<> m_block_tree(adjacency_lists, k, 4);
+            block_tree_2d::block_tree_double_hybrid<> m_block_tree(adjacency_lists, k, 64);
             std::cout << "Done." << std::endl;
             //m_block_tree.print();
             std::cout << "Retrieving adjacency lists...";
