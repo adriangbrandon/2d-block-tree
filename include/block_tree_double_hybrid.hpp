@@ -84,6 +84,7 @@ namespace block_tree_2d {
 
             size_type min_block_size = last_block_size_k2_tree;
             m_minimum_level = h - log2(min_block_size);
+            m_maximum_level = h+1;
             util::logger::log("Minimum level=" + std::to_string(m_minimum_level) + " and block_size=" + std::to_string(min_block_size));
             //exit(10);
 
@@ -105,12 +106,15 @@ namespace block_tree_2d {
                 util::logger::log("Processing level " + std::to_string(l) + " of " + std::to_string(h));
                 util::logger::log("Block size: " + std::to_string(block_size));
                 htc_type m_htc(std::min(10240UL, 2*nodes.size()));
+                //util::logger::log("Computing bits required by k2-tree=");
+                //size_type bits_k2_tree = bits_last_k2_tree(adjacency_lists, this->k, block_size);
                 util::logger::log("Computing fingerprint of blocks at level=" + std::to_string(l));
                 block_tree_2d::algorithm::get_fingerprint_blocks_stack_lite(adjacency_lists, this->k, m_htc, this->dimensions, block_size, hash, nodes, true);
                 util::logger::log("Computing fingerprint of shifts at level=" + std::to_string(l));
-                block_tree_2d::algorithm::get_type_of_nodes_stack_lite(adjacency_lists, this->k, m_htc, this->dimensions, block_size, hash, nodes);
+                block_tree_2d::algorithm::get_type_of_nodes_stack_lite(adjacency_lists, this->k, m_htc, this->dimensions, block_size, hash, nodes, true);
 
-                size_type bits_k2_tree = 0, leaf_nodes = 0, bits_per_offset = 0, bits_per_pointer = 0;
+
+                size_type bits_k2_tree = 0, leaf_nodes = 0, empty_nodes = 0, internal_nodes = 0, bits_per_offset = 0, bits_per_pointer = 0;
                 for(const auto &node: nodes){
                     if(node.type == NODE_LEAF){
                         bits_k2_tree += node.bits;
@@ -127,9 +131,14 @@ namespace block_tree_2d {
                             bits_per_pointer = b_ptr;
                         }
                         ++leaf_nodes;
+                    }else if(node.type == NODE_EMPTY){
+                        ++empty_nodes;
+                    }else{
+                        ++internal_nodes;
                     }
                 }
-                last_k2_tree = (bits_k2_tree < leaf_nodes*(bits_per_pointer + 2*bits_per_offset + 2));
+                //size_type bits_block_tree = leaf_nodes*(bits_per_pointer + 2*bits_per_offset + 2) + empty_nodes*2 + internal_nodes;
+                last_k2_tree = (bits_k2_tree < (leaf_nodes*(bits_per_pointer + 2*bits_per_offset + 2) + empty_nodes));
                 //last_k2_tree = block_size < 4;
                 if(last_k2_tree){
                     this->m_topology.resize(topology_index);

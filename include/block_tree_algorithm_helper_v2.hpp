@@ -130,6 +130,57 @@ namespace block_tree_2d {
                                       const value_type sy_b2, const value_type ey_b2, const iterators_type &iterators_b2,
                                       const size_type block_size, const size_type k){
 
+            typedef std::tuple<size_type , size_type, size_type,size_type> t_part_tuple;
+
+            std::vector<size_type> edges_z_order;
+            size_type row = 0, bits = 0;
+            size_type k_2 = k*k;
+            while(row < block_size){
+                auto beg_list_b2 = (adjacent_lists.begin() + sy_b2 + row)->begin();
+                auto it_b2 = iterators_b2[(sy_b2 + row) % block_size];
+                while(it_b2 != beg_list_b2 && *(--it_b2) >= sx_b2){
+                    size_type col = *it_b2 - sx_b2;
+                    auto z_order = codes::zeta_order::encode(col, row);
+                    edges_z_order.push_back(z_order);
+                }
+                ++row;
+            }
+            //2. Sort edges z-order
+            std::sort(edges_z_order.begin(), edges_z_order.end());
+
+            //5. Split the front of q into its children
+            size_type i, j, z_0;
+            size_type l = block_size;
+            std::queue<t_part_tuple> q;
+            q.push(t_part_tuple(0, edges_z_order.size()-1, l/k , 0));
+            while (!q.empty()) {
+                std::tie(i, j, l, z_0) = q.front();
+                q.pop();
+                auto elements = l * l;
+                for(size_type z_child = 0; z_child < k_2; ++z_child){
+                    auto le = util::search::lower_or_equal_search(i, j, edges_z_order, z_0+elements-1);
+                    if(le != -1 && edges_z_order[le] >= z_0){
+                        ++bits;
+                        if(l / k > 0){
+                            q.push(t_part_tuple(i, le, l/k, z_0));
+                        }
+                        i = le + 1;
+                    }else{
+                        ++bits;
+                    }
+
+                    z_0 += elements;
+                }
+            }
+            return bits;
+
+        }
+
+        template <class input_type, class iterators_type>
+        static size_type bits_k2tree_v2(const input_type &adjacent_lists, const value_type sx_b2, const value_type ex_b2,
+                                     const value_type sy_b2, const value_type ey_b2, const iterators_type &iterators_b2,
+                                     const size_type block_size, const size_type k){
+
             size_type row = 0, bits = 0;
             size_type k_pow_2 = k*k;
             hash_type hash0, hash1;
@@ -169,11 +220,72 @@ namespace block_tree_2d {
 
 
 
-
         template <class input_type, class iterators_type>
         static size_type bits_subtree(const input_type &adjacent_lists, const value_type sx_b2, const value_type ex_b2,
                                      const value_type sy_b2, const value_type ey_b2, const iterators_type &iterators_b2,
                                      const size_type block_size, const size_type k){
+
+            size_type row = 0, bits = 0;
+            size_type k_pow_2 = k*k;
+            hash_type hash0, hash1;
+            while(row < block_size){
+
+                /*auto beg_list_b1 = (adjacent_lists.begin() + sy_b1 + row)->begin();
+                auto beg_list_b2 = (adjacent_lists.begin() + sy_b2 + row)->begin();
+                auto it_b2 = iterators_b2[(sy_b2 + row) % block_size];
+                auto it_b1 = std::upper_bound(beg_list_b1, (adjacent_lists.begin()+sy_b1+row)->end(), ex_b1, compare_abs_value());
+                iterators_b1[(sy_b1 + row) % block_size] = it_b1;
+                while(it_b2 != beg_list_b2 && std::abs(*(--it_b2)) >= sx_b2){
+                    if(*it_b2 >= 0){
+                        size_type d2 = *it_b2 - sx_b2;
+                        if(it_b1 == beg_list_b1 || *(--it_b1) < sx_b1) return false;
+                        size_type d1 = *it_b1 - sx_b1;
+                        if(d1 != d2) return false;
+                    }
+                }*/
+
+                auto beg_list_b2 = (adjacent_lists.begin() + sy_b2 + row)->begin();
+                //std::cout << "it_b2 = terators_b2[" << (sy_b2 + row) % block_size << "]" << std::endl;
+                auto it_b2 = iterators_b2[(sy_b2 + row) % block_size];
+                while(it_b2 != beg_list_b2 && *(--it_b2) >= sx_b2){
+                    size_type x = *it_b2 - sx_b2;
+                    auto z_order = codes::zeta_order::encode(x, sy_b2+row)/k_pow_2;
+                    auto it = hash0.find(z_order);
+                    if(it == hash0.end()){
+                        hash0.insert(it, {z_order,1});
+                    }
+                }
+                ++row;
+            }
+            bits += hash0.size() * k_pow_2;
+            auto b = block_size/k;
+            while(b > 1){
+                size_type ones = 0;
+                for(const auto &k_v : hash0){
+                    auto z_order = k_v.first / k_pow_2;
+                    auto it = hash1.find(z_order);
+                    if(it == hash1.end()){
+                        hash1.insert(it, {z_order,1});
+                    }
+                    ++ones;
+                }
+                hash0.clear();
+                auto temp = std::move(hash0);
+                hash0 = std::move(hash1);
+                hash1 = std::move(temp);
+                auto total_elements = hash0.size() * k_pow_2;
+                auto zeroes = total_elements - ones;
+                bits += total_elements + ones;
+                b = b/k;
+            }
+            return bits;
+
+        }
+
+        template <class input_type, class iterators_type>
+        static size_type bits_subtree_v2(const input_type &adjacent_lists, const value_type sx_b2, const value_type ex_b2,
+                                      const value_type sy_b2, const value_type ey_b2, const iterators_type &iterators_b2,
+                                      const size_type block_size, const size_type k){
 
             size_type row = 0, bits = 0;
             size_type k_pow_2 = k*k;
@@ -700,7 +812,7 @@ namespace block_tree_2d {
                         nodes[pos_target].hash = kr_block.hash;
                         nodes[pos_target].z_order = z_order_target;
                         if(compute_bits){
-                            nodes[pos_target].bits = bits_subtree(adjacent_lists, sx_target, ex_target, sy_target, ey_target,
+                            nodes[pos_target].bits = bits_k2tree(adjacent_lists, sx_target, ex_target, sy_target, ey_target,
                                                               kr_block.iterators, block_size, k);
                         }
                         hash.erase(it_target);
@@ -1259,7 +1371,7 @@ namespace block_tree_2d {
         template <class input_type, class hash_table_type>
         static void get_type_of_nodes_stack_lite(input_type &adjacent_lists, const size_type k, hash_table_type &ht,
                                       const size_type dimensions, const size_type block_size,
-                                      hash_type &hash, std::vector<node_type> &nodes){
+                                      hash_type &hash, std::vector<node_type> &nodes, const bool compute_bits = false){
 
             typedef karp_rabin::kr_roll_adjacent_list_v4<input_type> kr_type;
             typedef typename kr_type::hash_type hash_type;
@@ -1354,7 +1466,11 @@ namespace block_tree_2d {
                             source_off_y = off_y;
                         }
 
-
+                        size_type bits_k2 = 0;
+                        if(compute_bits){
+                            bits_k2 = bits_k2tree(adjacent_lists, sx_target, ex_target, sy_target, ey_target,
+                                        iterators_target, block_size, k);
+                        }
                         //Delete info of <target> from adjacency list
                         auto redo_heap_in = delete_info_shift(adjacent_lists, sx_target, sy_target, ex_target, ey_target, iterators_target,
                                                               kr_roll.row, kr_roll.row + block_size-1, kr_roll.iterators, kr_roll.heap_in, kr_roll.heap_out, block_size);
@@ -1384,6 +1500,7 @@ namespace block_tree_2d {
                         size_type pos_target = it->second;
                         hash.erase(it);
                         nodes[pos_target].type = NODE_LEAF;
+                        nodes[pos_target].bits = bits_k2;
                         nodes[pos_target].ptr = source_ptr;
                         nodes[pos_target].offset_x = source_off_x;
                         nodes[pos_target].offset_y = source_off_y;
@@ -2027,6 +2144,66 @@ namespace block_tree_2d {
             return zeroes;
 
         }
+
+
+        template <class input_type>
+        static size_type bits_last_k2_tree(const input_type &adjacent_lists, const size_type k,
+                                           const size_type block_size_start){
+
+
+            typedef std::tuple<size_type , size_type, size_type,size_type> t_part_tuple;
+            auto k_2 = k * k;
+
+            //1. Edges z-order
+            std::vector<size_type> edges_z_order;
+            for(size_type y = 0; y < adjacent_lists.size(); ++y){
+                for(value_type x : adjacent_lists[y]){
+                    //taking into account that some values are marked to delete
+                    if(x < 0){
+                        x=(-x)-1;
+                    }
+                    edges_z_order.push_back(codes::zeta_order::encode(static_cast<size_type>(x), y));
+                }
+            }
+
+            //2. Sort edges z-order
+            std::sort(edges_z_order.begin(), edges_z_order.end());
+
+            //4. Resize topology bitmap
+            size_type bits = 0;
+
+            //5. Split the front of q into its children
+            size_type i, j, z_0;
+            size_type l = adjacent_lists.size();
+            std::queue<t_part_tuple> q;
+            q.push(t_part_tuple(0, edges_z_order.size()-1, l/k , 0));
+            while (!q.empty()) {
+                std::tie(i, j, l, z_0) = q.front();
+                q.pop();
+                auto elements = l * l;
+                for(size_type z_child = 0; z_child < k_2; ++z_child){
+                    auto le = util::search::lower_or_equal_search(i, j, edges_z_order, z_0+elements-1);
+                    if(le != -1 && edges_z_order[le] >= z_0){
+                        if(l <= block_size_start){
+                            ++bits;
+                        }
+                        if(l / k > 0){
+                            q.push(t_part_tuple(i, le, l/k, z_0));
+                        }
+                        i = le + 1;
+                    }else{
+                        if(l <= block_size_start) {
+                           ++bits;
+                        }
+                    }
+
+                    z_0 += elements;
+                }
+            }
+            return bits;
+
+        }
+
 
         template <class input_type>
         static void build_last_k2_tree(const input_type &adjacent_lists, const size_type k,
