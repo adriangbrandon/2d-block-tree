@@ -129,8 +129,8 @@ namespace block_tree_2d {
                         ++leaf_nodes;
                     }
                 }
-                //last_k2_tree = (bits_k2_tree < leaf_nodes*(bits_per_pointer + 2*bits_per_offset + 2));
-                last_k2_tree = block_size < 4;
+                last_k2_tree = (bits_k2_tree < leaf_nodes*(bits_per_pointer + 2*bits_per_offset + 2));
+                //last_k2_tree = block_size < 4;
                 if(last_k2_tree){
                     this->m_topology.resize(topology_index);
                     m_maximum_level = l;
