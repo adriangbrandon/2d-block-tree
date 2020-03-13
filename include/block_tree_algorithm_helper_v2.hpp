@@ -2146,6 +2146,7 @@ namespace block_tree_2d {
         }
 
 
+
         template <class input_type>
         static size_type bits_last_k2_tree(const input_type &adjacent_lists, const size_type k,
                                            const size_type block_size_start){

@@ -34,8 +34,87 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <adjacency_list_helper.hpp>
 #include <sdsl/io.hpp>
 #include <sdsl/k2_tree.hpp>
+#include <block_tree_algorithm_helper_v2.hpp>
+
+template <class Range>
+uint64_t code_block(Range &block){
+    uint64_t v = 0;
+    for(const auto &p : block){
+        auto y = p.first % 8;
+        auto x = p.second % 8;
+        v = v | (1ULL << (y*8 + x));
+    }
+    return v;
+}
+
+
+template <class input_type, class hash_type>
+static uint64_t zeta_order_hash(const input_type &adjacent_lists, const uint64_t k,
+                                const uint64_t block_size_stop, hash_type &hash){
+
+
+    typedef std::tuple<uint64_t , uint64_t, uint64_t,uint64_t> t_part_tuple;
+    auto k_2 = k * k;
+    uint64_t n = 0;
+
+    //1. Edges z-order
+    std::vector<uint64_t> edges_z_order;
+    for(uint64_t y = 0; y < adjacent_lists.size(); ++y){
+        for(uint64_t x : adjacent_lists[y]){
+            edges_z_order.push_back(codes::zeta_order::encode(x, y));
+        }
+    }
+
+    //2. Sort edges z-order
+    std::sort(edges_z_order.begin(), edges_z_order.end());
+
+    uint64_t l = adjacent_lists.size();
+    std::queue<t_part_tuple> q;
+    q.push(t_part_tuple(0, edges_z_order.size()-1, l/k , 0));
+
+    uint64_t i, j, z_0;
+    uint64_t t = k_2;
+    uint64_t n_elem = 0, zeroes = k_2 -1;
+
+    //5. Split the front of q into its children
+    while (!q.empty()) {
+        std::tie(i, j, l, z_0) = q.front();
+        q.pop();
+        auto elements = l * l;
+        for(uint64_t z_child = 0; z_child < k_2; ++z_child){
+            auto le = util::search::lower_or_equal_search(i, j, edges_z_order, z_0+elements-1);
+            if(le != -1 && edges_z_order[le] >= z_0){
+                if(l > block_size_stop){
+                    q.push(t_part_tuple(i, le, l/k, z_0));
+                }else{
+                    //Preparing next level
+                    std::vector<std::pair<uint64_t , uint64_t >> block;
+                    for(uint64_t ii = i; ii <= j; ++ii){
+                        block.emplace_back(codes::zeta_order::decode(edges_z_order[ii]));
+                    }
+                    uint64_t code = code_block(block);
+                    auto it = hash.find(code);
+                    if(it != hash.end()){
+                        it->second++;
+                    }else{
+                        hash.insert({code, 1});
+                    }
+                    ++n;
+                }
+                i = le + 1;
+            }else{
+                ++zeroes;
+            }
+            ++t;
+            z_0 += elements;
+        }
+    }
+    return n;
+
+}
 
 int main(int argc, char **argv) {
+
 
     if(argc != 4 && argc != 3){
         std::cout << argv[0] << "<dataset> <k> [limit]" << std::endl;
@@ -62,6 +141,7 @@ int main(int argc, char **argv) {
     std::cout << "Building K2-tree..." << std::endl;
 
     sdsl::k2_tree<2> k2_tree(al, adjacency_lists.size());
+    al.clear();
     std::cout << "The K2-tree was built." << std::endl;
     std::string name_file = dataset;
     if(limit != -1){
@@ -70,7 +150,25 @@ int main(int argc, char **argv) {
     name_file = name_file + ".k2t";
     sdsl::store_to_file(k2_tree, name_file);
 
-    std::cout << "Size in bytes: " << sdsl::size_in_bytes(k2_tree) << std::endl;
+    std::unordered_map<uint64_t, uint64_t> hash_table;
+    uint64_t n = zeta_order_hash(adjacency_lists, 2, 8, hash_table);
+
+    auto k2_tree_bytes = sdsl::size_in_bytes(k2_tree);
+    std::cout << "Size in bytes: " << k2_tree_bytes << std::endl;
+    //Computing entropy
+    double entropy = 0;
+    for(const auto &v: hash_table){
+        entropy += (v.second/ (double) n) * std::log2(n / (double) v.second);
+        //std::cout << std::log2(n / (double) v.second) << std::endl;
+    }
+    auto bits_to_delete = block_tree_2d::algorithm::bits_last_k2_tree(adjacency_lists, 2, 8);
+    auto nh0 = static_cast<uint64_t >(n*std::ceil(entropy));
+    uint64_t size_k2_tree_leaves = k2_tree_bytes*8 - bits_to_delete + nh0;
+    std::cout << "Entropy: " << entropy << " bits." << std::endl;
+    std::cout << "nH0: " << static_cast<uint64_t >(n*std::ceil(entropy)) << " bits." << std::endl;
+    std::cout << "Bits to delete: " << bits_to_delete  << " bits." << std::endl;
+    std::cout << "Size of k2-tree with leaves compression: " << size_k2_tree_leaves << " bits." << std::endl;
+    std::cout << "Size of k2-tree with leaves compression: " << static_cast<uint64_t >(std::ceil(size_k2_tree_leaves/ (double) 8)) << " bytes." << std::endl;
     sdsl::write_structure<sdsl::JSON_FORMAT>(k2_tree, name_file + ".json");
     sdsl::write_structure<sdsl::HTML_FORMAT>(k2_tree, name_file + ".html");
 
