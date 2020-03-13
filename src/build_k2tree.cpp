@@ -131,6 +131,11 @@ int main(int argc, char **argv) {
 
     std::vector<std::vector<int64_t>> adjacency_lists;
     dataset_reader::web_graph::read(dataset, adjacency_lists, limit);
+    auto h = (uint64_t) std::ceil(std::log(adjacency_lists.size())/std::log(k));
+    auto total_size = (uint64_t) std::pow(k, h);
+    if(adjacency_lists.size() < total_size){
+        adjacency_lists.resize(total_size);
+    }
     std::vector<std::tuple<uint64_t, uint64_t>> al;
     for(uint64_t i = 0; i < adjacency_lists.size(); ++i){
         for(uint64_t j = 0; j < adjacency_lists[i].size(); ++j){
@@ -161,7 +166,26 @@ int main(int argc, char **argv) {
         entropy += (v.second/ (double) n) * std::log2(n / (double) v.second);
         //std::cout << std::log2(n / (double) v.second) << std::endl;
     }
-    auto bits_to_delete = block_tree_2d::algorithm::bits_last_k2_tree(adjacency_lists, 2, 8);
+
+    auto topology = k2_tree.get_t();
+    uint64_t bsize = adjacency_lists.size()/k;
+    uint64_t prev_ones = 1, i = 0;
+    while(bsize > 8){
+        uint64_t n_ones = 0;
+        auto start = i;
+        while(i < start + prev_ones*k*k){
+            if(topology[i]) ++n_ones;
+            ++i;
+        }
+        //std::cout << "[" << start << ", " << i << "] n_ones: " << n_ones << " bsize: " << bsize << std::endl;
+        //i = i+ prev_ones*k*k;
+        prev_ones = n_ones;
+        bsize = bsize/k;
+    }
+    auto bits_to_delete = topology.size()-i + k2_tree.get_l().size();
+
+    //auto bits_to_delete = block_tree_2d::algorithm::bits_last_k2_tree(adjacency_lists, 2, 8);
+    std::cout << topology.size() + k2_tree.get_l().size() << std::endl;
     auto nh0 = static_cast<uint64_t >(n*std::ceil(entropy));
     uint64_t size_k2_tree_leaves = k2_tree_bytes*8 - bits_to_delete + nh0;
     std::cout << "Entropy: " << entropy << " bits." << std::endl;

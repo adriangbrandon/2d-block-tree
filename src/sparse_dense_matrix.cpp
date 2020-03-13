@@ -126,12 +126,75 @@ uint64_t delete_blocks_one_edge(const uint64_t block_size, std::vector<std::vect
     return result;
 }
 
+template <class input_type>
+static uint64_t delete_blocks_one_edge(input_type &adjacent_lists, const uint64_t k,
+                                const uint64_t block_size_stop){
+
+
+    typedef std::tuple<uint64_t , uint64_t, uint64_t,uint64_t> t_part_tuple;
+    auto k_2 = k * k;
+    uint64_t n = 0;
+
+    //1. Edges z-order
+    std::vector<uint64_t> edges_z_order;
+    for(uint64_t y = 0; y < adjacent_lists.size(); ++y){
+        for(uint64_t x : adjacent_lists[y]){
+            edges_z_order.push_back(codes::zeta_order::encode(x, y));
+        }
+    }
+
+    //2. Sort edges z-order
+    std::sort(edges_z_order.begin(), edges_z_order.end());
+
+    uint64_t l = adjacent_lists.size();
+    std::queue<t_part_tuple> q;
+    q.push(t_part_tuple(0, edges_z_order.size()-1, l/k , 0));
+
+    uint64_t i, j, z_0;
+    uint64_t t = k_2;
+    uint64_t zeroes = k_2 -1;
+
+    std::vector<std::pair<uint64_t , uint64_t >> point_to_remove;
+    //5. Split the front of q into its children
+    while (!q.empty()) {
+        std::tie(i, j, l, z_0) = q.front();
+        q.pop();
+        auto elements = l * l;
+        for(uint64_t z_child = 0; z_child < k_2; ++z_child){
+            auto le = util::search::lower_or_equal_search(i, j, edges_z_order, z_0+elements-1);
+            if(le != -1 && edges_z_order[le] >= z_0){
+                if(l > block_size_stop){
+                    q.push(t_part_tuple(i, le, l/k, z_0));
+                }else{
+                    if(i == edges_z_order.size()-1 || edges_z_order[i+1] > z_0+elements-1){
+                        point_to_remove.emplace_back(codes::zeta_order::decode(edges_z_order[i]));
+                    }
+                }
+                i = le + 1;
+            }else{
+                ++zeroes;
+            }
+            ++t;
+            z_0 += elements;
+        }
+    }
+    auto result = point_to_remove.size();
+    std::cout << "Blocks with only one edge: " << result << std::endl;
+    for(const auto &p:point_to_remove){
+        auto it = std::find( adjacent_lists[p.second].begin(),  adjacent_lists[p.second].end(), p.first);
+        adjacent_lists[p.second].erase(it);
+    }
+    return result;
+
+
+}
+
 template<class t_block_tree>
 void run_build(const std::string &type, const std::string &dataset, const uint64_t k, const uint64_t limit, const uint64_t last_block_size_k2_tree){
     std::vector<std::vector<int64_t>> adjacency_lists;
     dataset_reader::web_graph::read(dataset, adjacency_lists, limit);
 
-    auto deleted = delete_blocks_one_edge(32, adjacency_lists);
+    auto deleted = delete_blocks_one_edge( adjacency_lists, 2, 32);
     uint64_t size = deleted*(10);
     std::cout << "Building Block-tree..." << std::endl;
     t_block_tree m_block_tree;

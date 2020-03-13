@@ -2160,9 +2160,9 @@ namespace block_tree_2d {
             for(size_type y = 0; y < adjacent_lists.size(); ++y){
                 for(value_type x : adjacent_lists[y]){
                     //taking into account that some values are marked to delete
-                    if(x < 0){
+                    /*if(x < 0){
                         x=(-x)-1;
-                    }
+                    }*/
                     edges_z_order.push_back(codes::zeta_order::encode(static_cast<size_type>(x), y));
                 }
             }
