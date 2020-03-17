@@ -31,8 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Created by Adrián on 15/07/2019.
 //
 
-#ifndef INC_KARP_RABIN_ROLL_ADJACENT_LIST_V4_HPP
-#define INC_KARP_RABIN_ROLL_ADJACENT_LIST_V4_HPP
+#ifndef INC_KARP_RABIN_ROLL_ADJACENT_LIST_SKIPPING_BLOCK_HPP
+#define INC_KARP_RABIN_ROLL_ADJACENT_LIST_SKIPPING_BLOCK_HPP
 
 #include <cstdint>
 #include <vector>
@@ -44,7 +44,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace karp_rabin {
 
     template <class t_input = std::vector<std::vector<int64_t>>>
-    class kr_roll_adjacent_list_v4 {
+    class kr_roll_adjacent_list_skipping_block {
 
 
     public:
@@ -81,6 +81,7 @@ namespace karp_rabin {
         value_type m_next_block_row = 0;
         value_type m_prev_block_row = 0;
         size_type m_number_ones = 0;
+        size_type m_prev_number_ones = 0;
 
 
         iterator_list_type m_iterator_list;
@@ -96,7 +97,7 @@ namespace karp_rabin {
 
         hash_type m_prev_hash;
         std::vector<hash_type> m_prev_kr;
-        std::vector<size_type> m_prev_ones;
+        std::vector<size_type> m_prev_ones_row;
 
 
        /* bool is_empty(){
@@ -236,20 +237,21 @@ namespace karp_rabin {
 
                 //1.4 Init the hash value per row and compute the hash of the submatrix
                 m_prev_kr[list_id] = hash_row;
-                m_prev_ones[list_id] = n_ones_row;
+                m_prev_ones_row[list_id] = n_ones_row;
                 hash_value += (hash_row * m_h_in_right[list_id]) % m_prime;
                 hash_value = hash_value % m_prime;
                 ++list_id;
             }
             m_hash = hash_value;
             m_prev_hash = m_hash;
+            m_prev_number_ones = m_number_ones;
             //Initial iterators at the end of first block
             m_iterators = m_iterators_end_first_block;
 
             //2. Initialize heaps
             init_heaps();
-            if(m_hash == 0 && is_empty()){
-            //if(m_number_ones == 0){
+            //if(m_hash == 0 && is_empty()){
+            if(m_number_ones < 1){
                 return 0;
             }
             return 1;
@@ -261,21 +263,6 @@ namespace karp_rabin {
          */
         int state_shift_right(){
             ++m_col;
-            /*if(m_col == 772062 && m_row == 775348){
-                std::cout << "col: " << m_col << " row: " << m_row << std::endl;
-                for(auto r = m_row; r < 862664; r++){
-                    //std::cout << "List: " << r << " [";
-                    for(auto it = (m_iterator_list + r)->begin(); it != (m_iterator_list + r)->end(); ++it){
-                        //std::cout << (*it) << ", ";
-                        if(*it >= 0){
-                            std::cout << "Lista " << r << " non baleira" << std::endl;
-                            break;
-                        }
-                    }
-                    //std::cout << "]" << std::endl;
-                }
-                exit(20);
-            }*/
 
             //No more ones to process, so we advance to the next row
             if(m_heap_out.empty() || m_col >= m_total_shifts){
@@ -283,9 +270,16 @@ namespace karp_rabin {
             }
             //Skip
             if(!m_heap_in.empty() && *(m_heap_out.top().first) == *(m_heap_in.top().first)){
+                //std::cout << "Skip: " << m_number_ones << std::endl;
+                if(m_number_ones != 0){
+                    std::cout << "row: " << m_row << " col: " << m_col << std::endl;
+                    exit(10);
+                }
                 m_col = *(m_heap_out.top().first) - m_block_size + 1;
+
             }
             auto hash = m_hash;
+
             //Delete previous part
             while(!m_heap_out.empty() && *(m_heap_out.top().first) == m_col-1){
                 auto out_top = m_heap_out.top();
@@ -328,8 +322,8 @@ namespace karp_rabin {
                 }
             }
             m_hash = hash;
-            if(m_hash == 0 && is_empty()){
-            //if(m_number_ones == 0){
+            //if(m_hash == 0 && is_empty()){
+            if(m_number_ones < 1){
                 return 0;
             }
             return 1;
@@ -351,7 +345,7 @@ namespace karp_rabin {
             hash += (m_prime - first_row);
             hash = hash % m_prime;
             hash = (hash * m_h_in_right[m_block_size-2]) % m_prime;
-            m_number_ones = m_number_ones - m_prev_ones[cyclic_i];
+            m_number_ones = m_prev_number_ones - m_prev_ones_row[cyclic_i];
             // Compute hash of last row
             hash_type hash_row = 0, n_ones = 0;
             size_type last_row = m_row + m_block_size-1;
@@ -386,13 +380,14 @@ namespace karp_rabin {
             hash = (hash + hash_row) % m_prime;
             m_hash = hash;
             m_prev_hash = m_hash;
+            m_prev_number_ones = m_number_ones;
 
             while(it_element != (m_iterator_list + last_row)->end() && (*it_element) < 0){
                 ++it_element;
             }
             //1.5 Store prev hash and position of next one
             m_prev_kr[cyclic_i] = hash_row;
-            m_prev_ones[cyclic_i] = n_ones;
+            m_prev_ones_row[cyclic_i] = n_ones;
             m_iterators_end_first_block[cyclic_i] = it_element;
             m_iterators = m_iterators_end_first_block;
 
@@ -402,16 +397,16 @@ namespace karp_rabin {
                 return 2;
             }
             //1.7 Check if the first area is empty
-            if(m_hash == 0 && (m_heap_in.empty() || *(m_heap_in.top().first) >= m_block_size)){
-            //if(m_number_ones == 0){
+            //if(m_hash == 0 && (m_heap_in.empty() || *(m_heap_in.top().first) >= m_block_size)){
+            if(m_number_ones < 1){
                 return 0;
             }
             //}
-            return true;
+            return 1;
 
         }
 
-        void copy(const kr_roll_adjacent_list_v4 &o){
+        void copy(const kr_roll_adjacent_list_skipping_block &o){
             m_block_size = o.m_block_size;
             m_prime = o.m_prime;
             m_asize = o.m_asize;
@@ -435,7 +430,7 @@ namespace karp_rabin {
             m_prev_hash = o.m_prev_hash;
             m_prev_kr = o.m_prev_kr;
             m_number_ones = o.m_number_ones;
-            m_prev_ones = o.m_prev_ones;
+            m_prev_ones_row = o.m_prev_ones_row;
 
         }
 
@@ -450,7 +445,7 @@ namespace karp_rabin {
         heap_type &heap_in = m_heap_in;
         heap_type &heap_out = m_heap_out;
 
-        kr_roll_adjacent_list_v4(size_type bs, size_type q, input_type &input){
+        kr_roll_adjacent_list_skipping_block(size_type bs, size_type q, input_type &input){
             m_block_size = bs;
             m_prime = q;
             m_total_shifts = std::distance(input.begin(), input.end()) - m_block_size + 1;
@@ -459,7 +454,7 @@ namespace karp_rabin {
             m_h_in_right = std::vector<hash_type>(m_block_size);
             m_h_out_right = std::vector<hash_type>(m_block_size);
             m_prev_kr = std::vector<hash_type>(m_block_size);
-            m_prev_ones = std::vector<hash_type>(m_block_size);
+            m_prev_ones_row = std::vector<hash_type>(m_block_size);
             m_end_list = input.end();
             init_iterators(input.begin());
             init_hs();
@@ -471,25 +466,25 @@ namespace karp_rabin {
         }
 
         //! Copy constructor
-        kr_roll_adjacent_list_v4(const kr_roll_adjacent_list_v4& o)
+        kr_roll_adjacent_list_skipping_block(const kr_roll_adjacent_list_skipping_block& o)
         {
             copy(o);
         }
 
         //! Move constructor
-        kr_roll_adjacent_list_v4(kr_roll_adjacent_list_v4&& o)
+        kr_roll_adjacent_list_skipping_block(kr_roll_adjacent_list_skipping_block&& o)
         {
             *this = std::move(o);
         }
 
 
-        kr_roll_adjacent_list_v4 &operator=(const kr_roll_adjacent_list_v4 &o) {
+        kr_roll_adjacent_list_skipping_block &operator=(const kr_roll_adjacent_list_skipping_block &o) {
             if (this != &o) {
                 copy(o);
             }
             return *this;
         }
-        kr_roll_adjacent_list_v4 &operator=(kr_roll_adjacent_list_v4 &&o) {
+        kr_roll_adjacent_list_skipping_block &operator=(kr_roll_adjacent_list_skipping_block &&o) {
             if (this != &o) {
                 m_block_size = std::move(o.m_block_size);
                 m_prime = std::move(o.m_prime);
@@ -514,12 +509,12 @@ namespace karp_rabin {
                 m_prev_hash = std::move(o.m_prev_hash);
                 m_prev_kr = std::move(o.m_prev_kr);
                 m_number_ones = std::move(o.m_number_ones);
-                m_prev_ones = std::move(o.m_prev_ones);
+                m_prev_ones_row = std::move(o.m_prev_ones_row);
             }
             return *this;
         }
 
-        void swap(kr_roll_adjacent_list_v4 &o) {
+        void swap(kr_roll_adjacent_list_skipping_block &o) {
             // m_bp.swap(bp_support.m_bp); use set_vector to set the supported bit_vector
             std::swap(m_block_size, o.m_block_size);
             std::swap(m_prime, o.m_prime);
@@ -544,7 +539,7 @@ namespace karp_rabin {
             std::swap(m_prev_hash, o.m_prev_hash);
             std::swap(m_prev_kr, o.m_prev_kr);
             std::swap(m_number_ones, o.m_number_ones);
-            std::swap(m_prev_ones, o.m_prev_ones);
+            std::swap(m_prev_ones_row, o.m_prev_ones_row);
         }
 
         bool next(){
@@ -553,13 +548,16 @@ namespace karp_rabin {
                 state = compute_initial_hash_block();
             }else {
                 state = state_shift_right();
+               // std::cout << "a1: " << m_number_ones << " col: " << m_col << " row: " << m_row << std::endl;
             }
             while(state != 1){
                 if(state == 0){
                     state = state_shift_right();
+                   // std::cout << "b1: " << m_number_ones << std::endl;
                 }else{
                     if(m_iterator_list + m_row + m_block_size == m_end_list) return false;
                     state = state_next_row();
+                    //std::cout << "b2: " << m_number_ones << std::endl;
                 }
             }
             return true;
@@ -578,8 +576,10 @@ namespace karp_rabin {
             for(auto cyclic_i = start; cyclic_i < m_block_size; ++cyclic_i){
                 auto row_delete = (m_prev_kr[cyclic_i] * m_h_in_right[cyclic_i]) % m_prime;
                 m_prev_hash = (m_prev_hash + (m_prime - row_delete)) % m_prime;
+                m_prev_number_ones = m_prev_number_ones - m_prev_ones_row[cyclic_i];
                 m_prev_kr[cyclic_i] = 0;
-                m_prev_ones[cyclic_i] = 0;
+                m_prev_ones_row[cyclic_i] = 0;
+
             }
         }
 
@@ -606,8 +606,9 @@ namespace karp_rabin {
             for(auto cyclic_i = 0; cyclic_i < last; ++cyclic_i){
                 auto row_delete = (m_prev_kr[cyclic_i] * m_h_in_right[start + cyclic_i]) % m_prime;
                 m_prev_hash = (m_prev_hash + (m_prime - row_delete)) % m_prime;
+                m_prev_number_ones = m_prev_number_ones - m_prev_ones_row[cyclic_i];
                 m_prev_kr[cyclic_i] = 0;
-                m_prev_ones[cyclic_i] = 0;
+                m_prev_ones_row[cyclic_i] = 0;
             }
         }
 
