@@ -178,7 +178,6 @@ int main(int argc, char **argv) {
             ++i;
         }
         //std::cout << "[" << start << ", " << i << "] n_ones: " << n_ones << " bsize: " << bsize << std::endl;
-        //i = i+ prev_ones*k*k;
         prev_ones = n_ones;
         bsize = bsize/k;
     }

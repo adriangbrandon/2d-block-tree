@@ -88,43 +88,6 @@ void build(block_tree_2d::block_tree_double_hybrid<> &b, std::vector<std::vector
     std::cout << "There are pointers from level " << b.minimum_level+1 << " up to level " << b.maximum_level-1 << std::endl;
 }
 
-uint64_t delete_blocks_one_edge(const uint64_t block_size, std::vector<std::vector<int64_t>> &adjacency_lists){
-
-    std::vector<std::pair<uint64_t , uint64_t >> point_to_remove;
-    uint64_t y = 0;
-    while(y < adjacency_lists.size()){
-        uint64_t x = 0;
-        //uint64_t i = 0, j = 0;
-        std::vector<uint64_t> pos(block_size, 0);
-        while(x < adjacency_lists.size()){
-            uint64_t rem_x, rem_y, number_ones = 0;
-            uint64_t j = y;
-            while(j < y + block_size){
-                while(!adjacency_lists[j].empty() && pos[j-y] < adjacency_lists[j].size() &&
-                       adjacency_lists[j][pos[j-y]] < x + block_size){
-
-                    rem_x = adjacency_lists[j][pos[j-y]];
-                    rem_y = j;
-                    ++number_ones;
-                    ++pos[j-y];
-                }
-                ++j;
-            }
-            if(number_ones == 1) {
-                point_to_remove.emplace_back(rem_x, rem_y);
-            };
-            x = x + block_size;
-        }
-        y += block_size;
-    }
-    auto result = point_to_remove.size();
-    std::cout << "Blocks with only one edge: " << result << std::endl;
-    for(const auto &p:point_to_remove){
-        auto it = std::find( adjacency_lists[p.second].begin(),  adjacency_lists[p.second].end(), p.first);
-        adjacency_lists[p.second].erase(it);
-    }
-    return result;
-}
 
 template <class input_type>
 static uint64_t delete_blocks_one_edge(input_type &adjacent_lists, const uint64_t k,
@@ -166,7 +129,7 @@ static uint64_t delete_blocks_one_edge(input_type &adjacent_lists, const uint64_
                 if(l > block_size_stop){
                     q.push(t_part_tuple(i, le, l/k, z_0));
                 }else{
-                    if(i == edges_z_order.size()-1 || edges_z_order[i+1] > z_0+elements-1){
+                    if(i == edges_z_order.size()-1 || i == le /*edges_z_order[i+1] > z_0+elements-1*/){
                         point_to_remove.emplace_back(codes::zeta_order::decode(edges_z_order[i]));
                     }
                 }
@@ -209,7 +172,7 @@ void run_build(const std::string &type, const std::string &dataset, const uint64
     name_file = name_file + ".2dbt";
     sdsl::store_to_file(m_block_tree, name_file);
 
-    auto size_bt = sdsl::size_in_bytes(m_block_tree);
+    auto size_bt = sdsl::size_in_bytes(m_block_tree) + size / 8;
     std::cout << "The Block-tree was built in " << duration << " seconds and uses " << size_bt << " bytes." << std::endl;
     std::cout << deleted << " blocks of size 32x32 were deleted and require " << size / 8 << " bytes." << std::endl;
     std::cout << duration << " " << size_bt << std::endl;

@@ -35,8 +35,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <block_tree_skip_levels.hpp>
 #include <adjacency_list_helper.hpp>
 #include <sdsl/io.hpp>
-#include <block_tree_intersection_lists.hpp>
-#include <block_tree_hybrid.hpp>
+//#include <block_tree_intersection_lists.hpp>
+//#include <block_tree_hybrid.hpp>
 #include <block_tree_double_hybrid.hpp>
 
 template<class t_block_tree>
@@ -44,10 +44,11 @@ void build(t_block_tree &b, std::vector<std::vector<int64_t>> adjacency_lists, c
     b = t_block_tree(adjacency_lists, k);
 }
 
+/*
 void build(block_tree_2d::block_tree_hybrid<> &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k, const uint64_t last_block_size_k2_tree){
     b = block_tree_2d::block_tree_hybrid<>(adjacency_lists, k, last_block_size_k2_tree);
     std::cout << "Block tree height=" << b.height << std::endl;
-}
+}*/
 
 void build(block_tree_2d::block_tree_double_hybrid<> &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k, const uint64_t last_block_size_k2_tree){
     b = block_tree_2d::block_tree_double_hybrid<>(adjacency_lists, k, last_block_size_k2_tree);
@@ -165,11 +166,11 @@ int main(int argc, char **argv) {
     if(type == "naive"){
         run_build<block_tree_2d::block_tree<>>(type, dataset, k, limit, last_block_size_k2_tree);
     }else if (type == "skip_levels"){
-        run_build<block_tree_2d::block_tree_skip_levels<>>(type, dataset, k, limit, last_block_size_k2_tree);
+        //run_build<block_tree_2d::block_tree_skip_levels<>>(type, dataset, k, limit, last_block_size_k2_tree);
     }else if (type == "skip_levels_lists"){
-        run_build<block_tree_2d::block_tree_intersection_lists<>>(type, dataset, k, limit, last_block_size_k2_tree);
+       // run_build<block_tree_2d::block_tree_intersection_lists<>>(type, dataset, k, limit, last_block_size_k2_tree);
     }else if (type == "hybrid"){
-        run_build<block_tree_2d::block_tree_hybrid<>>(type, dataset, k, limit, last_block_size_k2_tree);
+       // run_build<block_tree_2d::block_tree_hybrid<>>(type, dataset, k, limit, last_block_size_k2_tree);
     }else if (type == "double_hybrid"){
         run_build<block_tree_2d::block_tree_double_hybrid<>>(type, dataset, k, limit, last_block_size_k2_tree);
     } else{

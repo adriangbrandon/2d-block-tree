@@ -80,6 +80,7 @@ namespace karp_rabin {
         value_type m_row = -1;
         value_type m_next_block_row = 0;
         value_type m_prev_block_row = 0;
+        size_type m_number_ones = 0;
 
 
         iterator_list_type m_iterator_list;
@@ -95,6 +96,7 @@ namespace karp_rabin {
 
         hash_type m_prev_hash;
         std::vector<hash_type> m_prev_kr;
+        std::vector<size_type> m_prev_ones;
 
 
        /* bool is_empty(){
@@ -118,11 +120,6 @@ namespace karp_rabin {
             m_iterator_list = iterator;
             for(auto list_id = 0; list_id < m_block_size; ++list_id){
                 m_iterators_end_first_block[list_id] = (m_iterator_list+list_id)->begin();
-                //TODO: ojo esto ao mellor pode quitarse
-                /*auto &it_in = m_iterators_end_first_block[list_id];
-                while(it_in != (m_iterator_list+ list_id)->end() && *it_in < 0){
-                    ++it_in;
-                }*/
             }
 
         }
@@ -207,7 +204,7 @@ namespace karp_rabin {
                 int64_t prev_value = -1;
                 //1.2. Iterate over the elements of an adjacent list
                 auto &it_element = m_iterators_end_first_block[list_id];
-                size_type hash_row = 0;
+                size_type hash_row = 0, n_ones_row = 0;
                 while(it_element != it_list->end() && std::abs(*it_element) < m_block_size){
                     if((*it_element) >= 0){
                         //2.1 Compute hash_value with 0s
@@ -217,6 +214,8 @@ namespace karp_rabin {
                             hash_row = (hash_row * m_asize) % m_prime;
                         }*/
                         //1.2.2 Compute hash_value with 1
+                        ++m_number_ones;
+                        ++n_ones_row;
                         hash_row = (hash_row * m_asize + 1) % m_prime;
                         //1.2.3 Next element of adjacent list
                         prev_value = (*it_element);
@@ -237,6 +236,7 @@ namespace karp_rabin {
 
                 //1.4 Init the hash value per row and compute the hash of the submatrix
                 m_prev_kr[list_id] = hash_row;
+                m_prev_ones[list_id] = n_ones_row;
                 hash_value += (hash_row * m_h_in_right[list_id]) % m_prime;
                 hash_value = hash_value % m_prime;
                 ++list_id;
@@ -248,7 +248,8 @@ namespace karp_rabin {
 
             //2. Initialize heaps
             init_heaps();
-            if(m_hash == 0 && is_empty()){
+            //if(m_hash == 0 && is_empty()){
+            if(m_number_ones == 0){
                 return 0;
             }
             return 1;
@@ -292,13 +293,15 @@ namespace karp_rabin {
                 hash = hash % m_prime;
                 //m_heap_out.pop();
                 ++out_top.first;
+                --m_number_ones;
                 //Skip deleted elements
                 while(out_top.first != (m_iterator_list + m_row + out_top.second)->end() && *out_top.first < 0){
                     ++out_top.first;
                 }
 
                 if(out_top.first != (m_iterator_list + m_row + out_top.second)->end()){
-                    m_heap_out.update_top({out_top.first, out_top.second});
+                    //m_heap_out.update_top({out_top.first, out_top.second});
+                    m_heap_out.update_top(out_top);
                 }else{
                     m_heap_out.pop();
                 }
@@ -310,6 +313,7 @@ namespace karp_rabin {
                 hash = (hash + m_h_in_right[in_top.second]) % m_prime;
                 //m_heap_in.pop();
                 ++in_top.first;
+                ++m_number_ones;
                 //Skip deleted elements
                 while(in_top.first != (m_iterator_list + m_row + in_top.second)->end() && *in_top.first < 0){
                     ++in_top.first;
@@ -317,13 +321,15 @@ namespace karp_rabin {
 
                 m_iterators[(m_row + in_top.second) % m_block_size] = in_top.first;
                 if(in_top.first != (m_iterator_list + m_row + in_top.second)->end()){
-                    m_heap_in.update_top({in_top.first, in_top.second});
+                    //m_heap_in.update_top({in_top.first, in_top.second});
+                    m_heap_in.update_top(in_top);
                 }else{
                     m_heap_in.pop();
                 }
             }
             m_hash = hash;
-            if(m_hash == 0 && is_empty()){
+            //if(m_hash == 0 && is_empty()){
+            if(m_number_ones == 0){
                 return 0;
             }
             return 1;
@@ -345,8 +351,9 @@ namespace karp_rabin {
             hash += (m_prime - first_row);
             hash = hash % m_prime;
             hash = (hash * m_h_in_right[m_block_size-2]) % m_prime;
+            m_number_ones = m_number_ones - m_prev_ones[cyclic_i];
             // Compute hash of last row
-            hash_type hash_row = 0;
+            hash_type hash_row = 0, n_ones = 0;
             size_type last_row = m_row + m_block_size-1;
             auto prev_value = (size_type) -1;
             auto it_element = (m_iterator_list + last_row)->begin();
@@ -359,6 +366,8 @@ namespace karp_rabin {
                         hash_row = (hash_row * m_asize) % m_prime;
                     }*/
                     // Compute hash_value with 1
+                    ++m_number_ones;
+                    ++n_ones;
                     hash_row = (hash_row * m_asize + 1) % m_prime;
                     // Next element of adjacent list
                     prev_value = (*it_element);
@@ -383,6 +392,7 @@ namespace karp_rabin {
             }
             //1.5 Store prev hash and position of next one
             m_prev_kr[cyclic_i] = hash_row;
+            m_prev_ones[cyclic_i] = n_ones;
             m_iterators_end_first_block[cyclic_i] = it_element;
             m_iterators = m_iterators_end_first_block;
 
@@ -392,9 +402,11 @@ namespace karp_rabin {
                 return 2;
             }
             //1.7 Check if the first area is empty
-            if(m_hash == 0 && (m_heap_in.empty() || *(m_heap_in.top().first) >= m_block_size)){
+            //if(m_hash == 0 && (m_heap_in.empty() || *(m_heap_in.top().first) >= m_block_size)){
+            if(m_number_ones == 0){
                 return 0;
             }
+            //}
             return true;
 
         }
@@ -422,6 +434,8 @@ namespace karp_rabin {
 
             m_prev_hash = o.m_prev_hash;
             m_prev_kr = o.m_prev_kr;
+            m_number_ones = o.m_number_ones;
+            m_prev_ones = o.m_prev_ones;
 
         }
 
@@ -445,6 +459,7 @@ namespace karp_rabin {
             m_h_in_right = std::vector<hash_type>(m_block_size);
             m_h_out_right = std::vector<hash_type>(m_block_size);
             m_prev_kr = std::vector<hash_type>(m_block_size);
+            m_prev_ones = std::vector<hash_type>(m_block_size);
             m_end_list = input.end();
             init_iterators(input.begin());
             init_hs();
@@ -498,6 +513,8 @@ namespace karp_rabin {
 
                 m_prev_hash = std::move(o.m_prev_hash);
                 m_prev_kr = std::move(o.m_prev_kr);
+                m_number_ones = std::move(o.m_number_ones);
+                m_prev_ones = std::move(o.m_prev_ones);
             }
             return *this;
         }
@@ -526,6 +543,8 @@ namespace karp_rabin {
 
             std::swap(m_prev_hash, o.m_prev_hash);
             std::swap(m_prev_kr, o.m_prev_kr);
+            std::swap(m_number_ones, o.m_number_ones);
+            std::swap(m_prev_ones, o.m_prev_ones);
         }
 
         bool next(){
@@ -560,6 +579,7 @@ namespace karp_rabin {
                 auto row_delete = (m_prev_kr[cyclic_i] * m_h_in_right[cyclic_i]) % m_prime;
                 m_prev_hash = (m_prev_hash + (m_prime - row_delete)) % m_prime;
                 m_prev_kr[cyclic_i] = 0;
+                m_prev_ones[cyclic_i] = 0;
             }
         }
 
@@ -587,6 +607,7 @@ namespace karp_rabin {
                 auto row_delete = (m_prev_kr[cyclic_i] * m_h_in_right[start + cyclic_i]) % m_prime;
                 m_prev_hash = (m_prev_hash + (m_prime - row_delete)) % m_prime;
                 m_prev_kr[cyclic_i] = 0;
+                m_prev_ones[cyclic_i] = 0;
             }
         }
 

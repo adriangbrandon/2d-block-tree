@@ -790,12 +790,12 @@ namespace block_tree_2d {
                 auto processed_blocks = kr_block.row * blocks_per_row + kr_block.col+1;
                 auto it_target = hash.find(z_order_target);
                 auto pos_target = it_target->second;
+                value_type sx_target = kr_block.col * block_size;
+                value_type sy_target = kr_block.row * block_size;
+                value_type ex_target = sx_target + block_size-1;
+                value_type ey_target = sy_target + block_size-1;
                 if(ht.hash_collision(kr_block.hash, it_table, it_hash)){
                     value_type sx_source, sy_source, ex_source, ey_source;
-                    value_type sx_target = kr_block.col * block_size;
-                    value_type sy_target = kr_block.row * block_size;
-                    value_type ex_target = sx_target + block_size-1;
-                    value_type ey_target = sy_target + block_size-1;
                     iterator_hash_value_type source;
                     if(exist_identical(adjacent_lists, sx_target, sy_target, ex_target, ey_target,
                                        kr_block.iterators, it_hash->second, block_size,
@@ -812,8 +812,9 @@ namespace block_tree_2d {
                         nodes[pos_target].hash = kr_block.hash;
                         nodes[pos_target].z_order = z_order_target;
                         if(compute_bits){
-                            nodes[pos_target].bits = bits_k2tree(adjacent_lists, sx_target, ex_target, sy_target, ey_target,
-                                                              kr_block.iterators, block_size, k);
+                            //nodes[pos_target].bits = bits_k2tree(adjacent_lists, sx_target, ex_target, sy_target, ey_target,
+                            //                                  kr_block.iterators, block_size, k);
+                            nodes[pos_target].bits = nodes[pos_source].bits;
                         }
                         hash.erase(it_target);
                         //Delete info of <target> from adjacency list
@@ -825,6 +826,11 @@ namespace block_tree_2d {
                         nodes[pos_target].type = NODE_INTERNAL;
                         nodes[pos_target].hash = kr_block.hash;
                         nodes[pos_target].z_order = z_order_target;
+                        if(compute_bits){
+                            nodes[pos_target].bits = bits_k2tree(adjacent_lists, sx_target, ex_target, sy_target, ey_target,
+                                                              kr_block.iterators, block_size, k);
+                            //nodes[pos_target].bits = nodes[pos_source].bits;
+                        }
                     }
                 }else{
                     //add <z_order> to map [chain should be empty]
@@ -833,6 +839,10 @@ namespace block_tree_2d {
                     nodes[pos_target].type = NODE_INTERNAL;
                     nodes[pos_target].hash = kr_block.hash;
                     nodes[pos_target].z_order = z_order_target;
+                    if(compute_bits) {
+                        nodes[pos_target].bits = bits_k2tree(adjacent_lists, sx_target, ex_target, sy_target, ey_target,
+                                                             kr_block.iterators, block_size, k);
+                    }
                 }
                 m_progress_bar.update(processed_blocks);
                 ++hashes;
@@ -1371,7 +1381,7 @@ namespace block_tree_2d {
         template <class input_type, class hash_table_type>
         static void get_type_of_nodes_stack_lite(input_type &adjacent_lists, const size_type k, hash_table_type &ht,
                                       const size_type dimensions, const size_type block_size,
-                                      hash_type &hash, std::vector<node_type> &nodes, const bool compute_bits = false){
+                                      hash_type &hash, std::vector<node_type> &nodes){
 
             typedef karp_rabin::kr_roll_adjacent_list_v4<input_type> kr_type;
             typedef typename kr_type::hash_type hash_type;
@@ -1467,10 +1477,6 @@ namespace block_tree_2d {
                         }
 
                         size_type bits_k2 = 0;
-                        if(compute_bits){
-                            bits_k2 = bits_k2tree(adjacent_lists, sx_target, ex_target, sy_target, ey_target,
-                                        iterators_target, block_size, k);
-                        }
                         //Delete info of <target> from adjacency list
                         auto redo_heap_in = delete_info_shift(adjacent_lists, sx_target, sy_target, ex_target, ey_target, iterators_target,
                                                               kr_roll.row, kr_roll.row + block_size-1, kr_roll.iterators, kr_roll.heap_in, kr_roll.heap_out, block_size);
@@ -1500,7 +1506,6 @@ namespace block_tree_2d {
                         size_type pos_target = it->second;
                         hash.erase(it);
                         nodes[pos_target].type = NODE_LEAF;
-                        nodes[pos_target].bits = bits_k2;
                         nodes[pos_target].ptr = source_ptr;
                         nodes[pos_target].offset_x = source_off_x;
                         nodes[pos_target].offset_y = source_off_y;
@@ -2077,7 +2082,7 @@ namespace block_tree_2d {
         template <class input_type, class hash_type>
         static size_type build_k2_tree(const input_type &adjacent_lists, const size_type k,
                                   const size_type height, const size_type block_size_stop,
-                                  sdsl::bit_vector &bits, hash_type &hash){
+                                  sdsl::bit_vector &bits_t, hash_type &hash){
 
 
             typedef std::tuple<size_type , size_type, size_type,size_type> t_part_tuple;
@@ -2095,8 +2100,8 @@ namespace block_tree_2d {
             std::sort(edges_z_order.begin(), edges_z_order.end());
 
             //4. Init bitmap
-            bits = sdsl::bit_vector(k_2 * height * edges_z_order.size(), 0);
-            bits[0] = 1;
+            bits_t = sdsl::bit_vector(k_2 * (height-1) * edges_z_order.size(), 0);
+            bits_t[0] = 1;
 
             size_type l = adjacent_lists.size();
             std::queue<t_part_tuple> q;
@@ -2122,7 +2127,7 @@ namespace block_tree_2d {
                 for(size_type z_child = 0; z_child < k_2; ++z_child){
                     auto le = util::search::lower_or_equal_search(i, j, edges_z_order, z_0+elements-1);
                     if(le != -1 && edges_z_order[le] >= z_0){
-                        bits[t] = 1;
+                        bits_t[t] = 1;
                         if(l > block_size_stop){
                             q.push(t_part_tuple(i, le, l/k, z_0));
                         }else{
@@ -2140,7 +2145,7 @@ namespace block_tree_2d {
                     z_0 += elements;
                 }
             }
-            bits.resize(t);
+            bits_t.resize(t);
             return zeroes;
 
         }
@@ -2160,9 +2165,9 @@ namespace block_tree_2d {
             for(size_type y = 0; y < adjacent_lists.size(); ++y){
                 for(value_type x : adjacent_lists[y]){
                     //taking into account that some values are marked to delete
-                    /*if(x < 0){
+                    if(x < 0){
                         x=(-x)-1;
-                    }*/
+                    }
                     edges_z_order.push_back(codes::zeta_order::encode(static_cast<size_type>(x), y));
                 }
             }
@@ -2209,7 +2214,7 @@ namespace block_tree_2d {
         template <class input_type>
         static void build_last_k2_tree(const input_type &adjacent_lists, const size_type k,
                                             const size_type height, const size_type block_size_start,
-                                            sdsl::bit_vector &bits){
+                                            sdsl::bit_vector &t_bits, sdsl::bit_vector &l_bits){
 
 
             typedef std::tuple<size_type , size_type, size_type,size_type> t_part_tuple;
@@ -2231,40 +2236,53 @@ namespace block_tree_2d {
             std::sort(edges_z_order.begin(), edges_z_order.end());
 
             //4. Resize topology bitmap
-            size_type t = bits.size();
-            bits.resize(t + k_2 * height * edges_z_order.size());
+            size_type t = t_bits.size(), l = 0;
+            t_bits.resize(t + k_2 * (height-1) * edges_z_order.size());
+            l_bits.resize(k_2 * edges_z_order.size());
 
             //5. Split the front of q into its children
             size_type i, j, z_0;
-            size_type l = adjacent_lists.size();
+            size_type block_size = adjacent_lists.size();
             std::queue<t_part_tuple> q;
-            q.push(t_part_tuple(0, edges_z_order.size()-1, l/k , 0));
+            q.push(t_part_tuple(0, edges_z_order.size()-1, block_size/k , 0));
             while (!q.empty()) {
-                std::tie(i, j, l, z_0) = q.front();
+                std::tie(i, j, block_size, z_0) = q.front();
                 q.pop();
-                auto elements = l * l;
+                auto elements = block_size * block_size;
                 for(size_type z_child = 0; z_child < k_2; ++z_child){
                     auto le = util::search::lower_or_equal_search(i, j, edges_z_order, z_0+elements-1);
                     if(le != -1 && edges_z_order[le] >= z_0){
-                        if(l <= block_size_start){
-                            bits[t] = 1;
-                            ++t;
+                        if(block_size <= block_size_start){
+                            if(block_size > 1){
+                                t_bits[t] = 1;
+                                ++t;
+                            }else{
+                                l_bits[l]=1;
+                                ++l;
+                            }
+
                         }
-                        if(l / k > 0){
-                            q.push(t_part_tuple(i, le, l/k, z_0));
+                        if(block_size / k > 0){
+                            q.push(t_part_tuple(i, le, block_size/k, z_0));
                         }
                         i = le + 1;
                     }else{
-                        if(l <= block_size_start) {
-                            bits[t] = 0;
-                            ++t;
+                        if(block_size <= block_size_start) {
+                            if(block_size > 1){
+                                t_bits[t] = 0;
+                                ++t;
+                            }else{
+                                l_bits[l]= 0;
+                                ++l;
+                            }
                         }
                     }
 
                     z_0 += elements;
                 }
             }
-            bits.resize(t);
+            t_bits.resize(t);
+            l_bits.resize(l);
 
         }
 

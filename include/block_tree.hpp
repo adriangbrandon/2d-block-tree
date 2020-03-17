@@ -65,9 +65,14 @@ namespace block_tree_2d {
         size_type m_k2;
         size_type m_dimensions;
         size_type m_height;
-        sdsl::bit_vector m_topology;
-        sdsl::bit_vector::rank_1_type m_topology_rank;
-        sdsl::bit_vector::select_1_type m_topology_select;
+        //sdsl::bit_vector m_topology;
+        //sdsl::bit_vector::rank_1_type m_topology_rank;
+        //sdsl::rank_support_v5<1> m_topology_rank;
+        //sdsl::bit_vector::select_1_type m_topology_select;
+        sdsl::bit_vector m_t;
+        sdsl::bit_vector::rank_1_type m_t_rank;
+        sdsl::bit_vector::select_1_type m_t_select;
+        sdsl::bit_vector m_l;
         sdsl::bit_vector m_is_pointer;
         sdsl::bit_vector::rank_1_type m_is_pointer_rank;
         std::vector<sdsl::int_vector<>> m_pointers;
@@ -85,11 +90,17 @@ namespace block_tree_2d {
             m_k2 = m_k*m_k;
             m_height = p.m_height;
             m_dimensions = p.m_dimensions;
-            m_topology = p.m_topology;
+            /*m_topology = p.m_topology;
             m_topology_rank = p.m_topology_rank;
             m_topology_rank.set_vector(&m_topology);
             m_topology_select = p.m_topology_select;
-            m_topology_select.set_vector(&m_topology);
+            m_topology_select.set_vector(&m_topology);*/
+            m_t = p.m_t;
+            m_t_rank = p.m_t_rank;
+            m_t_rank.set_vector(&m_t);
+            m_t_select = p.m_t_select;
+            m_t_select.set_vector(&m_t);
+            m_l = p.m_l;
             m_is_pointer = p.m_is_pointer;
             m_is_pointer_rank = p.m_is_pointer_rank;
             m_is_pointer_rank.set_vector(&m_is_pointer);
@@ -118,10 +129,11 @@ namespace block_tree_2d {
             for(uint64_t i = 0; i < blocks; ++i){
                 hash.insert({i,i});
             }
-            size_type level = 0, topology_index = m_k2, is_pointer_index = 0;
+            size_type level = 0, topology_index = m_k2, leaves_index = 0, is_pointer_index = 0;
             //std::cout << "Level: " << level << std::endl;
             init_structure();
-            m_topology[0]=1;
+            //m_topology[0]=1;
+            m_t[0] = 1;
             m_offsets[0].resize(0);
             m_pointers[0].resize(0);
             while (block_size > 1) {
@@ -133,17 +145,21 @@ namespace block_tree_2d {
                 block_size = block_size / k;
 
             }
+            m_t.resize(topology_index);
             ++level;
             util::logger::log("Processing last level (" + std::to_string(level) + ")");
             block_tree_2d::algorithm::compute_last_level(adjacency_lists, hash, nodes);
             util::logger::log("Compacting last level (" + std::to_string(level) + ")");
             compact_last_level(nodes, topology_index);
             m_height = level;
-            m_topology.resize(topology_index);
+            m_l.resize(leaves_index);
+            //m_topology.resize(topology_index);
             m_is_pointer.resize(is_pointer_index);
             m_level_ones.resize(2*m_height);
-            sdsl::util::init_support(m_topology_rank, &m_topology);
-            sdsl::util::init_support(m_topology_select, &m_topology);
+            sdsl::util::init_support(m_t_rank, &m_t);
+            sdsl::util::init_support(m_t_select, &m_t);
+           /* sdsl::util::init_support(m_topology_rank, &m_topology);
+            sdsl::util::init_support(m_topology_select, &m_topology);*/
             sdsl::util::init_support(m_is_pointer_rank, &m_is_pointer);
             sdsl::util::bit_compress(m_level_ones);
             util::logger::log("2D Block Tree DONE!!!");
@@ -161,7 +177,9 @@ namespace block_tree_2d {
             std::cout << "array resize: " << ARRAY_RESIZE << std::endl;
             m_is_pointer = sdsl::bit_vector(BITMAP_RESIZE);
             std::cout << "is_pointer" << std::endl;
-            m_topology = sdsl::bit_vector(BITMAP_RESIZE, 0);
+            //m_topology = sdsl::bit_vector(BITMAP_RESIZE, 0);
+            m_t = sdsl::bit_vector(BITMAP_RESIZE, 0);
+            m_l = sdsl::bit_vector(BITMAP_RESIZE, 0);
             std::cout << "topology" << std::endl;
             m_level_ones = sdsl::int_vector<>(ARRAY_RESIZE);
             std::cout << "level_ones" << std::endl;
@@ -187,15 +205,16 @@ namespace block_tree_2d {
             size_type pointers = 0;
             for(const auto &node : nodes) {
                 //Check sizes
-                check_resize(m_topology, topology_index);
+                //check_resize(m_topology, topology_index);
+                check_resize(m_t, topology_index);
                 check_resize(m_is_pointer, is_pointer_index);
                 if(node.type == NODE_INTERNAL){
-                    m_topology[topology_index++] = 1;
+                    m_t[topology_index++] = 1;
                 }else if (node.type == NODE_EMPTY){
-                    m_topology[topology_index++] = 0;
+                    m_t[topology_index++] = 0;
                     m_is_pointer[is_pointer_index++] = 0;
                 }else {
-                    m_topology[topology_index++] = 0;
+                    m_t[topology_index++] = 0;
                     m_is_pointer[is_pointer_index++] = 1;
                     ++m_level_ones[2*level+1];
                     check_resize(m_offsets[level], offset_index+1);
@@ -213,14 +232,15 @@ namespace block_tree_2d {
             return pointers;
         }
 
-        void compact_last_level(const std::vector<node_type> &nodes, size_type &topology_index) {
+        void compact_last_level(const std::vector<node_type> &nodes, size_type &leaves_index) {
+
             for(const auto &node : nodes) {
                 //Check sizes
-                check_resize(m_topology, topology_index);
+                check_resize(m_l, leaves_index);
                 if(node.type == NODE_INTERNAL){
-                    m_topology[topology_index++] = 1;
+                    m_l[leaves_index++] = 1;
                 }else if (node.type == NODE_EMPTY){
-                    m_topology[topology_index++] = 0;
+                    m_l[leaves_index++] = 0;
                 }
             }
         }
@@ -269,15 +289,18 @@ namespace block_tree_2d {
             std::cout << std::endl;
 #endif
             if(level == m_height){
-                if(m_topology[idx]){
+                //if(m_topology[idx]){
+                if(m_l[idx - m_t.size()]){
                     //Adding result
                     add(result, x, y);
                     //result[y].push_back(x);
                 }
             }else{
-                if(m_topology[idx]){
+                //if(m_topology[idx]){
+                if(m_t[idx]){
                     size_type new_min_x, new_max_x, new_min_y, new_max_y;
-                    size_type start_children =  m_topology_rank(idx + 1) * m_k2;
+                    //size_type start_children =  m_topology_rank(idx + 1) * m_k2;
+                    size_type start_children =  m_t_rank(idx + 1) * m_k2;
                     size_type new_block_size = block_size / m_k;
                     size_type disp_x = 0;
                     for (size_type i = min_x / new_block_size; i <= max_x / new_block_size; i++) {
@@ -328,7 +351,8 @@ namespace block_tree_2d {
         }
 
         virtual inline size_type idx_leaf(const size_type idx){
-            return idx - m_topology_rank(idx+1) - (m_k2-1);
+            //return idx - m_topology_rank(idx+1) - (m_k2-1);
+            return idx - m_t_rank(idx+1) - (m_k2-1);
         }
 
         virtual void leaf_node_info(const size_type pos_zero, const size_type level,
@@ -361,7 +385,7 @@ namespace block_tree_2d {
                 new_min_y += p.second * block_size;
                 block_size *= m_k;
                 l--;
-                ptr = m_topology_select(ptr / m_k2);
+                ptr = m_t_select(ptr / m_k2);
             }
             recursive_access_region(static_cast<size_type >(new_min_x),
                                     static_cast<size_type >(new_min_x + length_x),
@@ -418,7 +442,9 @@ namespace block_tree_2d {
 
 
         void print(){
-            print_container(m_topology, "topology");
+            //print_container(m_topology, "topology");
+            print_container(m_t, "t");
+            print_container(m_l, "l");
             print_container(m_is_pointer, "is_pointer");
             print_container(m_level_ones, "level_ones");
             for(auto i = 0; i < m_pointers.size(); ++i){
@@ -484,11 +510,17 @@ namespace block_tree_2d {
                 m_k2 = m_k * m_k;
                 m_height = std::move(p.m_height);
                 m_dimensions = std::move(p.m_dimensions);
-                m_topology = std::move(p.m_topology);
+               /* m_topology = std::move(p.m_topology);
                 m_topology_rank = std::move(p.m_topology_rank);
                 m_topology_rank.set_vector(&m_topology);
                 m_topology_select = std::move(p.m_topology_select);
-                m_topology_select.set_vector(&m_topology);
+                m_topology_select.set_vector(&m_topology);*/
+                m_t = std::move(p.m_t);
+                m_t_rank = std::move(p.m_t_rank);
+                m_t_rank.set_vector(&m_t);
+                m_t_select = std::move(p.m_t_select);
+                m_t_select.set_vector(&m_t);
+                m_l = std::move(p.m_l);
                 m_is_pointer = std::move(p.m_is_pointer);
                 m_is_pointer_rank = std::move(p.m_is_pointer_rank);
                 m_is_pointer_rank.set_vector(&m_is_pointer);
@@ -519,9 +551,13 @@ namespace block_tree_2d {
             std::swap(m_dimensions, p.m_dimensions);
             std::swap(m_level_ones, p.m_level_ones);
             std::swap(m_height, p.m_height);
-            std::swap(m_topology, p.m_topology);
+            /*std::swap(m_topology, p.m_topology);
             sdsl::util::swap_support(m_topology_rank, p.m_topology_rank, &m_topology, &(p.m_topology));
-            sdsl::util::swap_support(m_topology_select, p.m_topology_select, &m_topology, &(p.m_topology));
+            sdsl::util::swap_support(m_topology_select, p.m_topology_select, &m_topology, &(p.m_topology));*/
+            std::swap(m_t, p.m_t);
+            sdsl::util::swap_support(m_t_rank, p.m_t_rank, &m_t, &(p.m_t));
+            sdsl::util::swap_support(m_t_select, p.m_t_select, &m_t, &(p.m_t));
+            std::swap(m_l, p.m_l);
             std::swap(m_is_pointer, p.m_is_pointer);
             sdsl::util::swap_support(m_is_pointer_rank, p.m_is_pointer_rank, &m_is_pointer, &(p.m_is_pointer));
             std::swap(m_pointers, p.m_pointers);
@@ -537,18 +573,33 @@ namespace block_tree_2d {
             written_bytes += sdsl::write_member(m_k, out, child, "k");
             written_bytes += sdsl::write_member(m_height, out, child, "height");
             written_bytes += sdsl::write_member(m_dimensions, out, child, "dimensions");
-            written_bytes += m_topology.serialize(out, child, "topology");
-            written_bytes += m_topology_rank.serialize(out, child, "topology_rank");
-            written_bytes += m_topology_select.serialize(out, child, "topology_select");
+            //written_bytes += m_topology.serialize(out, child, "topology");
+            written_bytes += m_t.serialize(out, child, "t");
+            std::cout << "Bytes after t: "<<  written_bytes << std::endl;
+            // written_bytes += m_topology_rank.serialize(out, child, "topology_rank");
+            written_bytes += m_t_rank.serialize(out, child, "t_rank");
+            std::cout << "Bytes after t_rank: "<<  written_bytes << std::endl;
+            //written_bytes += m_topology_select.serialize(out, child, "topology_select");
+            written_bytes += m_t_select.serialize(out, child, "t_select");
+            std::cout << "Bytes after t_select: "<<  written_bytes << std::endl;
+            written_bytes += m_l.serialize(out, child, "l");
+            std::cout << "Bytes after l: "<<  written_bytes << std::endl;
             written_bytes += m_level_ones.serialize(out, child, "level_ones");
+            std::cout << "level_ones_size: " << m_level_ones.size() << std::endl;
+            std::cout << "Bytes after level_ones: "<<  written_bytes << std::endl;
             written_bytes += m_is_pointer.serialize(out, child, "is_pointer");
+            std::cout << "Bytes after is_pointer: "<<  written_bytes << std::endl;
             written_bytes += m_is_pointer_rank.serialize(out, child, "is_pointer_rank");
             uint64_t m_pointers_size = m_pointers.size();
+            std::cout << "pointers_size: " << m_pointers_size << std::endl;
             sdsl::write_member(m_pointers_size, out, child, "pointers_size");
             written_bytes += sdsl::serialize_vector(m_pointers, out, child, "pointers");
+            std::cout << "Bytes pointers: "<<  written_bytes << std::endl;
             uint64_t m_offsets_size = m_offsets.size();
+            std::cout << "pointers_size: " << m_offsets_size << std::endl;
             sdsl::write_member(m_offsets_size, out, child, "offsets_size");
             written_bytes += sdsl::serialize_vector(m_offsets, out, child, "offsets");
+            std::cout << "Bytes offsets: "<<  written_bytes << std::endl;
             sdsl::structure_tree::add_size(child, written_bytes);
             return written_bytes;
         }
@@ -559,11 +610,17 @@ namespace block_tree_2d {
             sdsl::read_member(m_k, in);
             sdsl::read_member(m_height, in);
             sdsl::read_member(m_dimensions, in);
-            m_topology.load(in);
+            /*m_topology.load(in);
             m_topology_rank.load(in);
             m_topology_rank.set_vector(&m_topology);
             m_topology_select.load(in);
-            m_topology_select.set_vector(&m_topology);
+            m_topology_select.set_vector(&m_topology);*/
+            m_t.load(in);
+            m_t_rank.load(in);
+            m_t_rank.set_vector(&m_t);
+            m_t_select.load(in);
+            m_t_select.set_vector(&m_t);
+            m_l.load(in);
             m_level_ones.load(in);
             m_is_pointer.load(in);
             m_is_pointer_rank.load(in);
@@ -627,7 +684,7 @@ namespace block_tree_2d {
                 size_type i = start;
                 size_type new_elements = 0;
                 while(i < start + elements){
-                    if(m_topology[i]){
+                    if(m_t[i]){
                         auto z_order = map_z_order.find(i-start)->second;
                         auto pos = codes::zeta_order::decode(z_order);
                         auto x = pos.first * block_size;

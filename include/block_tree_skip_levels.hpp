@@ -159,14 +159,14 @@ namespace block_tree_2d {
 
             //2. Building LOUDS of k2_tree until min_block_size and map between z_order and position in vector nodes
             block_tree_2d::algorithm::hash_type hash;
-            m_zeroes = block_tree_2d::algorithm::build_k2_tree(adjacency_lists, this->k, h, min_block_size, this->m_topology, hash);
+            m_zeroes = block_tree_2d::algorithm::build_k2_tree(adjacency_lists, this->k, h, min_block_size, this->m_t, hash);
 
             /*for(size_type i = 0; i < this->m_topology.size(); ++i){
                 std::cout << this->m_topology[i] << ", ";
             }*/
             std::cout << std::endl;
             std::vector<node_type> nodes(hash.size());
-            size_type topology_index = this->m_topology.size(), is_pointer_index = 0;
+            size_type topology_index = this->m_t.size(), leaves_index = 0, is_pointer_index = 0;
             size_type level = m_minimum_level;
             block_size = min_block_size / this->m_k;
             //std::cout << "Level: " << level << std::endl;
@@ -183,13 +183,14 @@ namespace block_tree_2d {
             util::logger::log("Processing last level (" + std::to_string(level) + ")");
             block_tree_2d::algorithm::compute_last_level(adjacency_lists, hash, nodes);
             util::logger::log("Compacting last level (" + std::to_string(level) + ")");
-            this->compact_last_level(nodes, topology_index);
+            this->compact_last_level(nodes, leaves_index);
             this->m_height = level;
-            this->m_topology.resize(topology_index);
+            this->m_t.resize(topology_index);
+            this->m_l.resize(leaves_index);
             this->m_is_pointer.resize(is_pointer_index);
             this->m_level_ones.resize(2*(this->m_height - m_minimum_level));
-            sdsl::util::init_support(this->m_topology_rank, &this->m_topology);
-            sdsl::util::init_support(this->m_topology_select, &this->m_topology);
+            sdsl::util::init_support(this->m_t_rank, &this->m_t);
+            sdsl::util::init_support(this->m_t_select, &this->m_t);
             sdsl::util::init_support(this->m_is_pointer_rank, &this->m_is_pointer);
             sdsl::util::bit_compress(this->m_level_ones);
             util::logger::log("2D Block Tree DONE!!!");
@@ -219,7 +220,7 @@ namespace block_tree_2d {
         }
 
         inline size_type idx_leaf(const size_type idx){
-            return idx - this->m_topology_rank(idx+1) - m_zeroes;
+            return idx - this->m_t_rank(idx+1) - m_zeroes;
         }
 
          void leaf_node_info(const size_type pos_zero, const size_type level,
