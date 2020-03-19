@@ -92,8 +92,8 @@ void print_adjacency_lists(const std::vector<std::vector<int64_t>> &adjacency_li
 int main(int argc, char **argv) {
 
 
-    uint64_t prime = 27162335252586509;
-    //uint64_t prime = 3355443229;
+    //uint64_t prime = 27162335252586509;
+    uint64_t prime = 3355443229;
     uint64_t block_size = 16;
     int64_t size = atoi(argv[1]);
     //uint64_t freq = atoi(argv[2]);

@@ -79,12 +79,12 @@ int main(int argc, char **argv) {
             }
 
             const auto copy_lists = adjacency_lists;
-            /*std::cout << "---------------------Input--------------------" << std::endl;
+            std::cout << "---------------------Input--------------------" << std::endl;
             block_tree_2d::algorithm::print_ajdacent_list(adjacency_lists);
-            std::cout << "----------------------------------------------" << std::endl;*/
+            std::cout << "----------------------------------------------" << std::endl;
 
             std::cout << "Building Block-tree rep=" << r << " freq="<< f << " dimensions=" << dimensions << "....";
-            block_tree_2d::block_tree_double_hybrid<> m_block_tree(adjacency_lists, k, 64);
+            block_tree_2d::block_tree_double_hybrid<> m_block_tree(adjacency_lists, k, 8);
             std::cout << "Done." << std::endl;
             //m_block_tree.print();
             std::cout << "Retrieving adjacency lists...";

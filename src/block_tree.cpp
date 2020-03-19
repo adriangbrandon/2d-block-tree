@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
 
 
     typedef hash_table::hash_table_chainning<hash_type, uint64_t> htc_type;
-    std::vector<int64_t> row0 = {0};
+    /*std::vector<int64_t> row0 = {0};
     std::vector<int64_t> row1 = {1};
     std::vector<int64_t> row2 = {0, 1};
     std::vector<int64_t> row3 = {1};
@@ -76,14 +76,22 @@ int main(int argc, char **argv) {
     std::vector<int64_t> row28 = {3, 5, 11};
     std::vector<int64_t> row29 = {4, 10, 13};
     std::vector<int64_t> row30 = {};
-    std::vector<int64_t> row31 = {};
+    std::vector<int64_t> row31 = {};*/
+    std::vector<int64_t> row0 = {1, 2, 4, 5, 6, 7};
+    std::vector<int64_t> row1 = {1, 3, 4, 6, 7};
+    std::vector<int64_t> row2 = {0, 2, 4, 6};
+    std::vector<int64_t> row3 = {1, 2, 4, 6};
+    std::vector<int64_t> row4 = {1, 3, 5, 7};
+    std::vector<int64_t> row5 = {1, 3, 4, 6, 7};
+    std::vector<int64_t> row6 = {0, 1, 2, 3, 5, 7};
+    std::vector<int64_t> row7 = {0, 1, 3, 4, 6, 7};
 
 
 
 
 
     uint64_t k =2;
-    uint64_t dimensions = 16;
+    uint64_t dimensions = 8;
     //for(size_t i = 0; i < 100; ++i){
         std::vector< std::vector<int64_t>> matrix8_8;
         //util::adjacency_list::read(matrix8_8, "adjacency_lists.txt");std::vector< std::vector<int64_t>> matrix8_8;
@@ -95,7 +103,7 @@ int main(int argc, char **argv) {
         matrix8_8.push_back(row5);
         matrix8_8.push_back(row6);
         matrix8_8.push_back(row7);
-        matrix8_8.push_back(row8);
+        /*matrix8_8.push_back(row8);
         matrix8_8.push_back(row9);
         matrix8_8.push_back(row10);
         matrix8_8.push_back(row11);
@@ -103,7 +111,7 @@ int main(int argc, char **argv) {
         matrix8_8.push_back(row13);
         matrix8_8.push_back(row14);
         matrix8_8.push_back(row15);
-        /*matrix8_8.push_back(row16);
+        matrix8_8.push_back(row16);
         matrix8_8.push_back(row17);
         matrix8_8.push_back(row18);
         matrix8_8.push_back(row19);
