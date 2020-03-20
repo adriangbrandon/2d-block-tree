@@ -38,6 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <block_tree_intersection_lists.hpp>
 #include <block_tree_hybrid.hpp>
 #include <block_tree_double_hybrid.hpp>
+#include <block_tree_double_hybrid_skipping_block.hpp>
 
 int main(int argc, char **argv) {
 
@@ -45,14 +46,14 @@ int main(int argc, char **argv) {
 
 
     typedef hash_table::hash_table_chainning<hash_type, uint64_t> htc_type;
-    /*std::vector<int64_t> row0 = {0};
-    std::vector<int64_t> row1 = {1};
-    std::vector<int64_t> row2 = {0, 1};
-    std::vector<int64_t> row3 = {1};
-    std::vector<int64_t> row4 = {4};
-    std::vector<int64_t> row5 = {4};
+    std::vector<int64_t> row0 = {};
+    std::vector<int64_t> row1 = {};
+    std::vector<int64_t> row2 = {6};
+    std::vector<int64_t> row3 = {};
+    std::vector<int64_t> row4 = {7};
+    std::vector<int64_t> row5 = {2};
     std::vector<int64_t> row6 = {};
-    std::vector<int64_t> row7 = {};
+    std::vector<int64_t> row7 = {3};
     std::vector<int64_t> row8 = {};
     std::vector<int64_t> row9 = {};
     std::vector<int64_t> row10 = {6};
@@ -69,22 +70,22 @@ int main(int argc, char **argv) {
     std::vector<int64_t> row21 = {8};
     std::vector<int64_t> row22 = {};
     std::vector<int64_t> row23 = {};
-    std::vector<int64_t> row24 = {};
+    std::vector<int64_t> row24 = {9};
     std::vector<int64_t> row25 = {};
     std::vector<int64_t> row26 = {};
     std::vector<int64_t> row27 = {2, 10, 13};
     std::vector<int64_t> row28 = {3, 5, 11};
     std::vector<int64_t> row29 = {4, 10, 13};
     std::vector<int64_t> row30 = {};
-    std::vector<int64_t> row31 = {};*/
-    std::vector<int64_t> row0 = {1, 2, 4, 5, 6, 7};
+    std::vector<int64_t> row31 = {};
+    /*std::vector<int64_t> row0 = {1, 2, 4, 5, 6, 7};
     std::vector<int64_t> row1 = {1, 3, 4, 6, 7};
     std::vector<int64_t> row2 = {0, 2, 4, 6};
     std::vector<int64_t> row3 = {1, 2, 4, 6};
     std::vector<int64_t> row4 = {1, 3, 5, 7};
     std::vector<int64_t> row5 = {1, 3, 4, 6, 7};
     std::vector<int64_t> row6 = {0, 1, 2, 3, 5, 7};
-    std::vector<int64_t> row7 = {0, 1, 3, 4, 6, 7};
+    std::vector<int64_t> row7 = {0, 1, 3, 4, 6, 7};*/
 
 
 
@@ -132,7 +133,7 @@ int main(int argc, char **argv) {
         block_tree_2d::algorithm::print_ajdacent_list(matrix8_8);
 
         std::cout << "Building Block-tree dimensions=" << dimensions;
-        block_tree_2d::block_tree_double_hybrid<> m_block_tree(matrix8_8, k, 8);
+        block_tree_2d::block_tree_double_hybrid_skipping_block<> m_block_tree(matrix8_8, k, 8);
         std::cout << "Done." << std::endl;
         m_block_tree.print();
         std::cout << "Retrieving adjacency lists...";
@@ -143,7 +144,7 @@ int main(int argc, char **argv) {
         block_tree_2d::algorithm::print_ajdacent_list(result);
         sdsl::store_to_file(m_block_tree, "test.2dbt");
 
-        block_tree_2d::block_tree_double_hybrid<> m_block_tree2;
+        block_tree_2d::block_tree_double_hybrid_skipping_block<> m_block_tree2;
         sdsl::load_from_file(m_block_tree2, "test.2dbt");
 
         m_block_tree2.access_region(0, 0, dimensions - 1, dimensions - 1, result2);

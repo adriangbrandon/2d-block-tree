@@ -38,6 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //#include <block_tree_intersection_lists.hpp>
 //#include <block_tree_hybrid.hpp>
 #include <block_tree_double_hybrid.hpp>
+#include <block_tree_double_hybrid_skipping_block.hpp>
 
 template<class t_block_tree>
 void build(t_block_tree &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k, const uint64_t last_block_size_k2_tree){
@@ -52,6 +53,12 @@ void build(block_tree_2d::block_tree_hybrid<> &b, std::vector<std::vector<int64_
 
 void build(block_tree_2d::block_tree_double_hybrid<> &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k, const uint64_t last_block_size_k2_tree){
     b = block_tree_2d::block_tree_double_hybrid<>(adjacency_lists, k, last_block_size_k2_tree);
+    std::cout << "Block tree height=" << b.height << std::endl;
+    std::cout << "There are pointers from level " << b.minimum_level+1 << " up to level " << b.maximum_level-1 << std::endl;
+}
+
+void build(block_tree_2d::block_tree_double_hybrid_skipping_block<> &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k, const uint64_t last_block_size_k2_tree){
+    b = block_tree_2d::block_tree_double_hybrid_skipping_block<>(adjacency_lists, k, last_block_size_k2_tree);
     std::cout << "Block tree height=" << b.height << std::endl;
     std::cout << "There are pointers from level " << b.minimum_level+1 << " up to level " << b.maximum_level-1 << std::endl;
 }
@@ -77,11 +84,11 @@ void run_build(const std::string &type, const std::string &dataset, const uint64
     //m_block_tree.print();
     std::cout << "Retrieving adjacency lists..." << std::flush;
     std::vector<std::vector<int64_t >> result;
-    m_block_tree.access_region(0, 0, copy_lists.size() - 1, 0, result);
-    std::cout << "Result aaa: " << result[0].size() << std::endl;
+    m_block_tree.access_region(151, 141, 151, 141, result);
     m_block_tree.access_region(0, 0, copy_lists.size() - 1, copy_lists.size() - 1, result);
     std::cout << "Adjacency lists were obtained." << std::endl;
-
+    auto size_bt = sdsl::size_in_bytes(m_block_tree);
+    std::cout << "The Block-tree was built in " << duration << " seconds and uses " << size_bt << " bytes." << std::endl;
     /*std::cout << "--------------------Result--------------------" << std::endl;
     block_tree_2d::algorithm::print_ajdacent_list(result);
     std::cout << "----------------------------------------------" << std::endl;*/
@@ -99,6 +106,14 @@ void run_build(const std::string &type, const std::string &dataset, const uint64
             std::cout << "Error: the size of list " << i << " is incorrect." << std::endl;
             std::cout << "Expected: " << copy_lists[i].size() << std::endl;
             std::cout << "Obtained: " << result[i].size() << std::endl;
+            for(uint64_t o = 0; o < copy_lists[i].size(); ++o){
+                std::cout << copy_lists[i][o] << ",";
+            }
+            std::cout << std::endl;
+            for(uint64_t o = 0; o < result[i].size(); ++o){
+                std::cout << result[i][o] << ",";
+            }
+            std::cout << std::endl;
             //m_block_tree.access_region(10, 2, 11, 3, result);
             error = true;
         }
@@ -125,7 +140,6 @@ void run_build(const std::string &type, const std::string &dataset, const uint64
         }
     }
     std::cout << std::endl;
-    auto size_bt = sdsl::size_in_bytes(m_block_tree);
     std::cout << "The Block-tree was built in " << duration << " seconds and uses " << size_bt << " bytes." << std::endl;
     std::cout << duration << " " << size_bt << std::endl;
 }
@@ -143,7 +157,7 @@ int main(int argc, char **argv) {
     auto k = static_cast<uint64_t >(atoi(argv[3]));
     auto limit = static_cast<uint64_t>(-1);
     auto last_block_size_k2_tree = static_cast<uint64_t>(-1);
-    if( (type == "hybrid" || type == "double_hybrid")){
+    if( type == "hybrid" || type == "double_hybrid" || type == "god_level"){
         if(argc == 5){
             last_block_size_k2_tree = static_cast<uint64_t >(atoi(argv[4]));
         }else if(argc == 6){
@@ -173,7 +187,9 @@ int main(int argc, char **argv) {
        // run_build<block_tree_2d::block_tree_hybrid<>>(type, dataset, k, limit, last_block_size_k2_tree);
     }else if (type == "double_hybrid"){
         run_build<block_tree_2d::block_tree_double_hybrid<>>(type, dataset, k, limit, last_block_size_k2_tree);
-    } else{
+    }else if (type == "god_level"){
+        run_build<block_tree_2d::block_tree_double_hybrid_skipping_block<>>(type, dataset, k, limit, last_block_size_k2_tree);
+    }else{
         std::cout << "Type: " << type << " is not supported." << std::endl;
     }
 }

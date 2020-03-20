@@ -217,36 +217,33 @@ namespace karp_rabin {
                 return 2;
             }
             //Skip
-            if(!m_heap_in.empty() && m_number_ones == 0){
+            if(!m_heap_in.empty() && m_number_ones < 2){
+                if(m_number_ones == 1){
+                    auto length = *(m_heap_in.top().first) - *(m_heap_out.top().first);
+                    if(length < m_block_size){ //sliding window overlaps both ones
+                        auto shift = *(m_heap_in.top().first) - (m_col + m_block_size-1);
+                        m_hash = (m_hash * m_h_length[shift]) % m_prime; //previous hash
+                    }else{
+                        m_hash = 0; //previous hash
+                        m_number_ones = 0; //previous number ones
+                        auto out_top = m_heap_out.top();
+                        ++out_top.first;
+                        //Skip deleted elements
+                        while(out_top.first != (m_iterator_list + m_row + out_top.second)->end() && *out_top.first < 0){
+                            ++out_top.first;
+                        }
+                        if(out_top.first != (m_iterator_list + m_row + out_top.second)->end()){
+                            //m_heap_out.update_top({out_top.first, out_top.second});
+                            m_heap_out.update_top(out_top);
+                        }else{
+                            m_heap_out.pop();
+                        }
+                    }
+                }
                 m_col = *(m_heap_in.top().first) - m_block_size + 1;
             }
 
-            if(!m_heap_in.empty() && m_number_ones == 1){
-                auto length = *(m_heap_in.top().first) - *(m_heap_out.top().first);
-                if(length < m_block_size){ //sliding window overlaps both ones
-                    auto shift = *(m_heap_in.top().first) - (m_col + m_block_size-1);
-                    m_hash = (m_hash * m_h_length[shift]) % m_prime; //previous hash
-                }else{
-                    m_hash = 0; //previous hash
-                    m_number_ones = 0; //previous number ones
-                    auto out_top = m_heap_out.top();
-                    ++out_top.first;
-                    //Skip deleted elements
-                    while(out_top.first != (m_iterator_list + m_row + out_top.second)->end() && *out_top.first < 0){
-                        ++out_top.first;
-                    }
-                    if(out_top.first != (m_iterator_list + m_row + out_top.second)->end()){
-                        //m_heap_out.update_top({out_top.first, out_top.second});
-                        m_heap_out.update_top(out_top);
-                    }else{
-                        m_heap_out.pop();
-                    }
-
-                    m_col = *(m_heap_in.top().first) - m_block_size + 1;
-                }
-            }
             auto new_hash = m_hash;
-
             //Delete previous part
             while(!m_heap_out.empty() && *(m_heap_out.top().first) == m_col-1){
                 auto out_top = m_heap_out.top();

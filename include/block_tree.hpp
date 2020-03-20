@@ -44,6 +44,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "hash_table_chainning_multiple_v2.hpp"
 #include <logger.hpp>
 #include <algorithm>
+#include <block_tree_result_util.hpp>
 
 namespace block_tree_2d {
 
@@ -181,7 +182,7 @@ namespace block_tree_2d {
             m_t = sdsl::bit_vector(BITMAP_RESIZE, 0);
             m_l = sdsl::bit_vector(BITMAP_RESIZE, 0);
             std::cout << "topology" << std::endl;
-            m_level_ones = sdsl::int_vector<>(ARRAY_RESIZE);
+            m_level_ones = sdsl::int_vector<>(ARRAY_RESIZE, 0);
             std::cout << "level_ones" << std::endl;
             m_pointers = std::vector<sdsl::int_vector<>>(1, sdsl::int_vector<>(0, 0));
             std::cout << "pointers" << std::endl;
@@ -195,7 +196,7 @@ namespace block_tree_2d {
         }
 
 
-        size_type compact_current_level(const std::vector<node_type> &nodes, const size_type level,
+        virtual size_type compact_current_level(const std::vector<node_type> &nodes, const size_type level,
                                    size_type &topology_index, size_type &is_pointer_index) {
             size_type offset_index = 0, pointer_index = 0;
             add_new_pointers_offsets();
@@ -247,35 +248,8 @@ namespace block_tree_2d {
 
 
 
-        struct add_in_region {
-            template<class result_type>
-            void operator() (result_type &result, const size_type x, const size_type y)
-            {
-                result[y].push_back(x);
-            }
-        };
-
-        struct add_in_row {
-            void operator() (std::vector<size_type> &result, const size_type x, const size_type y)
-            {
-                 result.push_back(x);
-            }
-        };
-
-        struct add_in_column {
-            void operator() (std::vector<size_type> &result, const size_type x, const size_type y)
-            {
-                result.push_back(y);
-            }
-        };
-
-
-
-
-
-
         template <class add_function, class result_type>
-        void recursive_access_region(const size_type min_x, const size_type max_x, const size_type min_y, const size_type max_y,
+         void recursive_access_region(const size_type min_x, const size_type max_x, const size_type min_y, const size_type max_y,
                                      const size_type x, const size_type y, const size_type idx, const size_type level,
                                      const size_type block_size, result_type &result, add_function add,
                                      const bool taking_pointer=false, const size_type level_taking_pointer = 0){
