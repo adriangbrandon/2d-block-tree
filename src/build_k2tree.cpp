@@ -170,7 +170,7 @@ int main(int argc, char **argv) {
     auto topology = k2_tree.get_t();
     uint64_t bsize = adjacency_lists.size()/k;
     uint64_t prev_ones = 1, i = 0;
-    while(bsize > 8){
+    while(bsize >= 8){
         uint64_t n_ones = 0;
         auto start = i;
         while(i < start + prev_ones*k*k){
@@ -183,15 +183,23 @@ int main(int argc, char **argv) {
     }
     auto bits_to_delete = topology.size()-i + k2_tree.get_l().size();
 
+    topology.resize(i);
+    sdsl::rank_support_v<1> m_rank;
+    sdsl::util::init_support(m_rank, &topology);
+
+
     //auto bits_to_delete = block_tree_2d::algorithm::bits_last_k2_tree(adjacency_lists, 2, 8);
     std::cout << topology.size() + k2_tree.get_l().size() << std::endl;
     auto nh0 = static_cast<uint64_t >(n*std::ceil(entropy));
     uint64_t size_k2_tree_leaves = k2_tree_bytes*8 - bits_to_delete + nh0;
+    uint64_t other_option = sdsl::size_in_bytes(topology)*8 + sdsl::size_in_bytes(m_rank)*8 + nh0;
     std::cout << "Entropy: " << entropy << " bits." << std::endl;
     std::cout << "nH0: " << static_cast<uint64_t >(n*std::ceil(entropy)) << " bits." << std::endl;
     std::cout << "Bits to delete: " << bits_to_delete  << " bits." << std::endl;
     std::cout << "Size of k2-tree with leaves compression: " << size_k2_tree_leaves << " bits." << std::endl;
     std::cout << "Size of k2-tree with leaves compression: " << static_cast<uint64_t >(std::ceil(size_k2_tree_leaves/ (double) 8)) << " bytes." << std::endl;
+    std::cout << "Other option: " << other_option << " bits." << std::endl;
+    std::cout << "Other option: " << static_cast<uint64_t >(std::ceil(other_option/ (double) 8)) << " bytes." << std::endl;
     sdsl::write_structure<sdsl::JSON_FORMAT>(k2_tree, name_file + ".json");
     sdsl::write_structure<sdsl::HTML_FORMAT>(k2_tree, name_file + ".html");
 

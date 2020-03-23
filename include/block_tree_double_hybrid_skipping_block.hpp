@@ -170,27 +170,40 @@ namespace block_tree_2d {
                 block_tree_2d::algorithm::get_fingerprint_blocks_skipping_blocks_stack_lite(adjacency_lists, this->k,
                         m_htc, this->dimensions, block_size, hash, nodes, iterators_to_delete, true);
                 block_tree_2d::algorithm::mark_to_delete(iterators_to_delete);
+
                 util::logger::log("Computing fingerprint of shifts at level=" + std::to_string(l));
                 block_tree_2d::algorithm::get_type_of_nodes_skipping_blocks_stack_lite(adjacency_lists, this->k, m_htc, this->dimensions, block_size, hash, nodes);
 
 
-                size_type bits_k2_tree = 0, leaf_nodes = 0, empty_nodes = 0, internal_nodes = 0, bits_per_offset = 0, bits_per_pointer = 0;
+                size_type bits_k2_tree = 0, leaf_nodes = 0, empty_nodes = 0, internal_nodes = 0, explicit_nodes = 0;
+                size_type bits_per_offset = 0, bits_per_pointer = 0, bits_per_explicit = 0;
                 for(const auto &node: nodes){
-                    if(node.type == NODE_LEAF){
+                    if(node.type == NODE_LEAF) {
                         bits_k2_tree += node.bits;
-                        auto b_offx = sdsl::bits::hi(codes::alternative_code::encode(node.offset_x))+1;
-                        if(bits_per_offset < b_offx){
+                        auto b_offx = sdsl::bits::hi(codes::alternative_code::encode(node.offset_x)) + 1;
+                        if (bits_per_offset < b_offx) {
                             bits_per_offset = b_offx;
                         }
-                        auto b_offy = sdsl::bits::hi(codes::alternative_code::encode(node.offset_y))+1;
-                        if(bits_per_offset < b_offy){
+                        auto b_offy = sdsl::bits::hi(codes::alternative_code::encode(node.offset_y)) + 1;
+                        if (bits_per_offset < b_offy) {
                             bits_per_offset = b_offy;
                         }
-                        auto b_ptr = sdsl::bits::hi(node.ptr)+1;
-                        if(bits_per_pointer < b_ptr){
+                        auto b_ptr = sdsl::bits::hi(node.ptr) + 1;
+                        if (bits_per_pointer < b_ptr) {
                             bits_per_pointer = b_ptr;
                         }
                         ++leaf_nodes;
+                    }else if(node.type == NODE_EXPLICIT){
+                        bits_k2_tree += block_size*this->m_k;
+                        auto b_offx = sdsl::bits::hi(codes::alternative_code::encode(node.offset_x)) + 1;
+                        if (bits_per_explicit < b_offx) {
+                            bits_per_explicit = b_offx;
+                        }
+                        auto b_offy = sdsl::bits::hi(codes::alternative_code::encode(node.offset_y)) + 1;
+                        if (bits_per_explicit < b_offy) {
+                            bits_per_explicit = b_offy;
+                        }
+                        ++explicit_nodes;
                     }else if(node.type == NODE_EMPTY){
                         ++empty_nodes;
                     }else{
@@ -198,7 +211,8 @@ namespace block_tree_2d {
                     }
                 }
                 //size_type bits_block_tree = leaf_nodes*(bits_per_pointer + 2*bits_per_offset + 2) + empty_nodes*2 + internal_nodes;
-                last_k2_tree = (bits_k2_tree < (leaf_nodes*(bits_per_pointer + 2*bits_per_offset + 2) + empty_nodes));
+                last_k2_tree = (bits_k2_tree < (leaf_nodes*(bits_per_pointer + 2*bits_per_offset + 3)
+                        + empty_nodes + explicit_nodes*(bits_per_explicit*2+3)));
                 //last_k2_tree = block_size < 4;
                 if(last_k2_tree){
                     this->m_t.resize(topology_index);
