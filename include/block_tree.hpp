@@ -151,7 +151,7 @@ namespace block_tree_2d {
             util::logger::log("Processing last level (" + std::to_string(level) + ")");
             block_tree_2d::algorithm::compute_last_level(adjacency_lists, hash, nodes);
             util::logger::log("Compacting last level (" + std::to_string(level) + ")");
-            compact_last_level(nodes, topology_index);
+            compact_last_level(nodes, leaves_index);
             m_height = level;
             m_l.resize(leaves_index);
             //m_topology.resize(topology_index);
