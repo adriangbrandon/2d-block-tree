@@ -143,7 +143,7 @@ namespace karp_rabin {
                     ++it_in;
                 }
                 if(it_in != m_iterator_list[m_row+i].end()){
-                    if(0 > it_in.first ) std::cout << "init heaps" << std::endl;
+                    if(0 > *it_in ) std::cout << "init heaps" << std::endl;
                     v_in.emplace_back(it_in,  i);
                 }
             }
@@ -279,7 +279,7 @@ namespace karp_rabin {
 
                 m_iterators[(m_row + in_top.second) % m_block_size] = in_top.first;
                 if(in_top.first != (m_iterator_list + m_row + in_top.second)->end()){
-                    if(0 > in_top.first ) std::cout << "shift right" << std::endl;
+                    if(0 > *(in_top.first) ) std::cout << "shift right" << std::endl;
                     m_heap_in.update_top(in_top);
                 }else{
                     m_heap_in.pop();
@@ -542,6 +542,7 @@ namespace karp_rabin {
                     ++it_in;
                 }
                 if(it_in != m_iterator_list[m_row+i].end()) {
+                    if(0 > *it_in ) std::cout << "redo heap in" << std::endl;
                     v_in.emplace_back(it_in, i);
                 }
             }
