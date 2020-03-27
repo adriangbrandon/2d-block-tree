@@ -40,6 +40,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <heap_v2.hpp>
 #include <iostream>
 #include <bithacks.hpp>
+#include <string>
+#include "adjacency_list_helper.hpp"
 
 namespace karp_rabin {
 
@@ -143,7 +145,6 @@ namespace karp_rabin {
                     ++it_in;
                 }
                 if(it_in != m_iterator_list[m_row+i].end()){
-                    if(0 > *it_in ) std::cout << "init heaps" << std::endl;
                     v_in.emplace_back(it_in,  i);
                 }
             }
@@ -223,6 +224,8 @@ namespace karp_rabin {
                     auto length = *(m_heap_in.top().first) - *(m_heap_out.top().first);
                     if(length < m_block_size){ //sliding window overlaps both ones
                         auto shift = *(m_heap_in.top().first) - (m_col + m_block_size-1);
+                        //std::cout << "top in: " << *(m_heap_in.top().first) << std::endl;
+                        //std::cout << "m_col: " << m_col << " m_row: " << m_row << std::endl;
                         m_hash = (m_hash * m_h_length[shift]) % m_prime; //previous hash
                     }else{
                         m_hash = 0; //previous hash
@@ -233,9 +236,10 @@ namespace karp_rabin {
                         while(out_top.first != (m_iterator_list + m_row + out_top.second)->end() && *out_top.first < 0){
                             ++out_top.first;
                         }
+
                         if(out_top.first != (m_iterator_list + m_row + out_top.second)->end()){
-                            //m_heap_out.update_top({out_top.first, out_top.second});
-                            m_heap_out.update_top(out_top);
+                            m_heap_out.update_top({out_top.first, out_top.second});
+                            //m_heap_out.update_top(out_top);
                         }else{
                             m_heap_out.pop();
                         }
@@ -259,7 +263,8 @@ namespace karp_rabin {
                 }
 
                 if(out_top.first != (m_iterator_list + m_row + out_top.second)->end()){
-                    m_heap_out.update_top(out_top);
+                    m_heap_out.update_top({out_top.first, out_top.second});
+                    //m_heap_out.update_top(out_top);
                 }else{
                     m_heap_out.pop();
                 }
@@ -269,18 +274,17 @@ namespace karp_rabin {
             while(!m_heap_in.empty() && *(m_heap_in.top().first) == m_col+m_block_size-1){
                 auto in_top = m_heap_in.top();
                 new_hash = (new_hash + m_h_in_right[in_top.second]) % m_prime;
+                ++m_number_ones;
                 //m_heap_in.pop();
                 ++in_top.first;
-                ++m_number_ones;
                 //Skip deleted elements
                 while(in_top.first != (m_iterator_list + m_row + in_top.second)->end() && *in_top.first < 0){
                     ++in_top.first;
                 }
-
                 m_iterators[(m_row + in_top.second) % m_block_size] = in_top.first;
                 if(in_top.first != (m_iterator_list + m_row + in_top.second)->end()){
-                    if(0 > *(in_top.first) ) std::cout << "shift right" << std::endl;
-                    m_heap_in.update_top(in_top);
+                    //m_heap_in.update_top(in_top);
+                    m_heap_in.update_top({in_top.first, in_top.second});
                 }else{
                     m_heap_in.pop();
                 }
@@ -296,6 +300,7 @@ namespace karp_rabin {
         int state_next_row(){
             //if(m_iterator_list + m_row + m_block_size == m_end_list) return false;
             ++m_row;
+            m_prev_block_row = (m_row / m_block_size) * m_block_size;
             m_next_block_row = (m_row / m_block_size+1) * m_block_size;
             m_col = 0;
             auto new_hash = m_prev_hash;
@@ -490,21 +495,25 @@ namespace karp_rabin {
         }
 
         bool next(){
+            //std::cout << "calling next" << std::endl;
             int state;
             if(m_row == -1){
+                //if(m_block_size == 64) std::cout << "initial_block n_ones:" << m_number_ones << std::endl;
                 state = compute_initial_hash_block();
             }else {
+                //if(m_block_size == 64) std::cout << "shift_right n_ones:" << m_number_ones << std::endl;
                 state = state_shift_right();
                 //std::cout << " shift_right" << std::endl;
                // std::cout << "a1: " << m_number_ones << " col: " << m_col << " row: " << m_row << std::endl;
             }
             while(state != 1){
                 if(state == 0){
+                    //if(m_block_size == 64) std::cout << "shift_right 2 n_ones:" << m_number_ones << std::endl;
                     state = state_shift_right();
                     //std::cout << " shift_right" << std::endl;
-                   // std::cout << "b1: " << m_number_ones << std::endl;
                 }else{
                     if(m_iterator_list + m_row + m_block_size == m_end_list) return false;
+                    //if(m_block_size == 64) std::cout << "next_row n_ones:" << m_number_ones << std::endl;
                     state = state_next_row();
                     //std::cout << " next_row" << std::endl;
                     //std::cout << "b2: " << m_number_ones << std::endl;
@@ -534,6 +543,7 @@ namespace karp_rabin {
         }
 
         void redo_heap_in(){
+            //std::cout << "calling redo_heap_in" << std::endl;
             std::vector<pq_element_type> v_in;
             for(size_type i = 0; i < m_block_size; ++i){
                 auto cyclic_i = (m_row + i) % m_block_size;
@@ -542,7 +552,6 @@ namespace karp_rabin {
                     ++it_in;
                 }
                 if(it_in != m_iterator_list[m_row+i].end()) {
-                    if(0 > *it_in ) std::cout << "redo heap in" << std::endl;
                     v_in.emplace_back(it_in, i);
                 }
             }

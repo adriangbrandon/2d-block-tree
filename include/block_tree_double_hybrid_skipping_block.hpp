@@ -39,6 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <logger.hpp>
 #include <block_tree.hpp>
 #include <vector>
+#include <adjacency_list_helper.hpp>
 
 namespace block_tree_2d {
 
@@ -170,6 +171,7 @@ namespace block_tree_2d {
                 block_tree_2d::algorithm::get_fingerprint_blocks_skipping_blocks_stack_lite(adjacency_lists, this->k,
                         m_htc, this->dimensions, block_size, hash, nodes, iterators_to_delete, true);
                 block_tree_2d::algorithm::mark_to_delete(iterators_to_delete);
+
 
                 util::logger::log("Computing fingerprint of shifts at level=" + std::to_string(l));
                 block_tree_2d::algorithm::get_type_of_nodes_skipping_blocks_stack_lite(adjacency_lists, this->k, m_htc, this->dimensions, block_size, hash, nodes);

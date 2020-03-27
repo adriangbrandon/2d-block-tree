@@ -343,6 +343,7 @@ namespace karp_rabin {
             //if(m_iterator_list + m_row + m_block_size == m_end_list) return false;
             ++m_row;
             m_next_block_row = (m_row / m_block_size+1) * m_block_size;
+            m_prev_block_row = (m_row / m_block_size) * m_block_size;
             m_col = 0;
             auto hash = m_prev_hash;
             //Delete previous part

@@ -134,3 +134,6 @@ target_link_libraries(sparse_dense_matrix sdsl divsufsort divsufsort64)
 
 add_executable(proba test/proba.cpp)
 target_link_libraries(proba sdsl divsufsort divsufsort64)
+
+add_executable(segmentation src/segmentation.cpp)
+target_link_libraries(segmentation sdsl divsufsort divsufsort64)

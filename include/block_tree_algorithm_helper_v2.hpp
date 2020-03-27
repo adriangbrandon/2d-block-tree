@@ -1757,6 +1757,10 @@ namespace block_tree_2d {
 
                         size_type bits_k2 = 0;
                         //Delete info of <target> from adjacency list
+                        if(block_size == 64){
+                             std::cout << "Deleting: ("<< sx_target << ", " << sy_target << ")x(" << ex_target << ", " << ey_target << ")" << std::endl;
+                             std::cout << "Kr_rol prev block: " << kr_roll.prev_block_row << " next_block: " << kr_roll.next_block_row << std::endl;
+                        }
                         auto redo_heap_in = delete_info_shift(adjacent_lists, sx_target, sy_target, ex_target, ey_target, iterators_target,
                                                               kr_roll.row, kr_roll.row + block_size-1, kr_roll.iterators, kr_roll.heap_in, kr_roll.heap_out, block_size);
 
