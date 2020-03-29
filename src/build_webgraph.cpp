@@ -79,16 +79,18 @@ void run_build(const std::string &type, const std::string &dataset, const uint64
     if(limit != -1){
         name_file = name_file + "_" + std::to_string(limit);
     }
-    name_file = name_file + ".2dbt";
+    uint64_t first_block_size = last_block_size_k2_tree / k;
+
+    name_file = name_file +"_" + std::to_string(first_block_size) + ".2dbt";
+    std::cout << "Storing the block tree... " << std::flush;
     sdsl::store_to_file(m_block_tree, name_file);
+    std::cout << "Done. " << std::endl;
     //m_block_tree.print();
-    std::cout << "Retrieving adjacency lists..." << std::flush;
+    std::cout << "Retrieving adjacency lists... " << std::flush;
     std::vector<std::vector<int64_t >> result;
-    m_block_tree.access_region(151, 141, 151, 141, result);
     m_block_tree.access_region(0, 0, copy_lists.size() - 1, copy_lists.size() - 1, result);
-    std::cout << "Adjacency lists were obtained." << std::endl;
+    std::cout << "Done." << std::endl;
     auto size_bt = sdsl::size_in_bytes(m_block_tree);
-    std::cout << "The Block-tree was built in " << duration << " seconds and uses " << size_bt << " bytes." << std::endl;
     /*std::cout << "--------------------Result--------------------" << std::endl;
     block_tree_2d::algorithm::print_ajdacent_list(result);
     std::cout << "----------------------------------------------" << std::endl;*/
@@ -142,6 +144,8 @@ void run_build(const std::string &type, const std::string &dataset, const uint64
     std::cout << std::endl;
     std::cout << "The Block-tree was built in " << duration << " seconds and uses " << size_bt << " bytes." << std::endl;
     std::cout << duration << " " << size_bt << std::endl;
+    sdsl::write_structure<sdsl::JSON_FORMAT>(m_block_tree, name_file + ".json");
+    sdsl::write_structure<sdsl::HTML_FORMAT>(m_block_tree, name_file + ".html");
 }
 
 int main(int argc, char **argv) {

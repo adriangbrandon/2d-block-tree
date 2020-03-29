@@ -367,7 +367,6 @@ namespace karp_rabin {
             m_hash = o.m_hash;
             m_col = o.m_col;
             m_row = o.m_row;
-
             m_iterator_list = o.m_iterator_list;
             m_end_list = o.m_end_list;
             m_iterators_end_first_block = o.m_iterators_end_first_block;
