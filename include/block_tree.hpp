@@ -44,7 +44,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "hash_table_chainning_multiple_v2.hpp"
 #include <logger.hpp>
 #include <algorithm>
-#include <block_tree_result_util.hpp>
+#include <result_util.hpp>
 
 namespace block_tree_2d {
 
@@ -71,7 +71,7 @@ namespace block_tree_2d {
         //sdsl::rank_support_v5<1> m_topology_rank;
         //sdsl::bit_vector::select_1_type m_topology_select;
         sdsl::bit_vector m_t;
-        sdsl::bit_vector::rank_1_type m_t_rank;
+        sdsl::rank_support_v5<> m_t_rank;
         sdsl::bit_vector::select_1_type m_t_select;
         sdsl::bit_vector m_l;
         sdsl::bit_vector m_is_pointer;

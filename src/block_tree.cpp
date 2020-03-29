@@ -39,6 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <block_tree_hybrid.hpp>
 #include <block_tree_double_hybrid.hpp>
 #include <block_tree_double_hybrid_skipping_block.hpp>
+#include <k2_tree_compression_leaves.hpp>
 
 int main(int argc, char **argv) {
 
@@ -132,7 +133,7 @@ int main(int argc, char **argv) {
 
         block_tree_2d::algorithm::print_ajdacent_list(matrix8_8);
 
-        std::cout << "Building Block-tree dimensions=" << dimensions;
+       /* std::cout << "Building Block-tree dimensions=" << dimensions;
         block_tree_2d::block_tree_double_hybrid_skipping_block<> m_block_tree(matrix8_8, k, 8);
         std::cout << "Done." << std::endl;
         m_block_tree.print();
@@ -152,6 +153,13 @@ int main(int argc, char **argv) {
 
         std::cout << "Block tree starts from level " << m_block_tree2.minimum_level+1
         << " up to level " << m_block_tree2.maximum_level-1 << std::endl;
+        block_tree_2d::algorithm::print_ajdacent_list(result2);*/
+
+        std::vector<std::vector<int64_t >> result2;
+        block_tree_2d::k2_tree_compression_leaves<> m_k2_tree(matrix8_8, 2);
+        m_k2_tree.access_region(0, 0, dimensions - 1, dimensions - 1, result2);
+
+        std::cout << "aaaaaaaaa" << std::endl;
         block_tree_2d::algorithm::print_ajdacent_list(result2);
     //}
 

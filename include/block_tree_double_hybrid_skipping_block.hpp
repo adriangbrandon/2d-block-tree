@@ -62,7 +62,7 @@ namespace block_tree_2d {
         size_type m_maximum_level; //ends block_tree
         size_type m_zeroes;
         sdsl::bit_vector m_explicit;
-        sdsl::bit_vector::rank_1_type m_rank_explicit;
+        sdsl::rank_support_v5<> m_rank_explicit;
         std::vector<sdsl::int_vector<>> m_explicit_location;
 
         void add_new_pointers_offsets_explicit(){

@@ -111,6 +111,9 @@ target_link_libraries(load_webgraph sdsl divsufsort divsufsort64)
 add_executable(build_k2tree src/build_k2tree.cpp)
 target_link_libraries(build_k2tree sdsl divsufsort divsufsort64)
 
+add_executable(build_k2tree_v1 src/build_k2tree_v1.cpp)
+target_link_libraries(build_k2tree_v1 sdsl divsufsort divsufsort64)
+
 add_executable(build_k2_tree_test test/build_k2_tree_test.cpp)
 target_link_libraries(build_k2_tree_test sdsl divsufsort divsufsort64)
 
