@@ -85,12 +85,15 @@ int main(int argc, char **argv) {
             std::cout << "----------------------------------------------" << std::endl;
 
             std::cout << "Building Block-tree rep=" << r << " freq="<< f << " dimensions=" << dimensions << "....";
-            block_tree_2d::block_tree_double_hybrid_skipping_block<> m_block_tree(adjacency_lists, k, 128);
+            block_tree_2d::block_tree_double_hybrid_skipping_block<> m_block_tree(adjacency_lists, k, 256);
             std::cout << "Done." << std::endl;
             //m_block_tree.print();
+            sdsl::store_to_file(m_block_tree, "index-test.idx");
+            block_tree_2d::block_tree_double_hybrid_skipping_block<> m_block_tree2;
+            sdsl::load_from_file(m_block_tree2, "index-test.idx");
             std::cout << "Retrieving adjacency lists...";
             std::vector<std::vector<int64_t >> result;
-            m_block_tree.access_region(0, 0, dimensions - 1, dimensions - 1, result);
+            m_block_tree2.access_region(0, 0, dimensions - 1, dimensions - 1, result);
             std::cout << "Done." << std::endl;
 
             /*std::cout << "--------------------Result--------------------" << std::endl;
@@ -156,5 +159,7 @@ int main(int argc, char **argv) {
         }
 
     }
+
+
 
 }

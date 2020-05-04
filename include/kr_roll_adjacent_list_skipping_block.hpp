@@ -284,6 +284,7 @@ namespace karp_rabin {
                 m_iterators[(m_row + in_top.second) % m_block_size] = in_top.first;
                 if(in_top.first != (m_iterator_list + m_row + in_top.second)->end()){
                     //m_heap_in.update_top(in_top);
+                    if(*in_top.first < 0) std::cout << "Mete esto: " << *in_top.first << std::endl;
                     m_heap_in.update_top({in_top.first, in_top.second});
                 }else{
                     m_heap_in.pop();
@@ -502,6 +503,11 @@ namespace karp_rabin {
             }else {
                 //if(m_block_size == 64) std::cout << "shift_right n_ones:" << m_number_ones << std::endl;
                 state = state_shift_right();
+                if(m_row == 167165){
+                    std::cout << "After hash of (" << m_col << ", " << m_row << ") " << std::endl;
+                    std::cout << "Top: " << *m_heap_in.top().first << std::endl;
+                    if(*m_heap_in.top().first < 0 ) exit(10);
+                }
                 //std::cout << " shift_right" << std::endl;
                // std::cout << "a1: " << m_number_ones << " col: " << m_col << " row: " << m_row << std::endl;
             }
@@ -529,6 +535,7 @@ namespace karp_rabin {
         }*/
 
         void update_prev_hash_prev_row(){
+            std::cout << "calling prev_hash"  << m_row << ", " << m_col << std::endl;
             auto start = m_row % m_block_size;
             //auto last = m_block_size - start;
             for(auto cyclic_i = start; cyclic_i < m_block_size; ++cyclic_i){
@@ -542,7 +549,7 @@ namespace karp_rabin {
         }
 
         void redo_heap_in(){
-            //std::cout << "calling redo_heap_in" << std::endl;
+            std::cout << "calling redo_heap_in"  << m_row << ", " << m_col<< std::endl;
             std::vector<pq_element_type> v_in;
             for(size_type i = 0; i < m_block_size; ++i){
                 auto cyclic_i = (m_row + i) % m_block_size;
@@ -560,6 +567,7 @@ namespace karp_rabin {
         }
 
         void update_prev_hash_next_row(){
+            std::cout << "calling next_hash en " << m_row << ", " << m_col << std::endl;
             auto last = m_row % m_block_size;
             auto start = m_block_size - last;
             for(auto cyclic_i = 0; cyclic_i < last; ++cyclic_i){

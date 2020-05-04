@@ -287,11 +287,13 @@ namespace block_tree_2d {
             std::cout << "height: " << height << std::endl;
             std::cout << std::endl;
 #endif
-            //std::cout << "level: " << level << " block_size: " << block_size << " min_x: " << min_x << " max_x: " << max_x << " min_y: " << min_y << " max_y: " << max_y << std::endl;
+            std::cout << "x: " << x << " y: " << y << std::endl;
+            std::cout << "level: " << level << " block_size: " << block_size << " min_x: " << min_x << " max_x: " << max_x << " min_y: " << min_y << " max_y: " << max_y << std::endl;
             if(level == this->m_height){
                 //if(m_topology[idx]){
                 if(this->m_l[idx - this->m_t.size()]){
                     //Adding result
+                    std::cout << "adding result: " << x << ", " << y << std::endl;
                     add(result, x, y);
                     //result[y].push_back(x);
                 }
@@ -333,25 +335,29 @@ namespace block_tree_2d {
                         disp_x = 1;
                     }
                 }else if (taking_pointer_condition(taking_pointer, level_taking_pointer, level)){
-                    //std::cout << "taking_pointer" << std::endl;
+                    std::cout << "taking_pointer" << std::endl;
                     size_type pos_leaf = idx_leaf(idx);
                     if(idx > 0 && this->m_is_pointer[pos_leaf]){
-                        //std::cout << "is_pointer" << std::endl;
+                        std::cout << "is_pointer" << std::endl;
                         size_type pos_pointer_or_explicit = idx_pointer_or_explicit(pos_leaf);
                         size_type pos_explicit = idx_explicit(pos_pointer_or_explicit, level);
                         if(m_explicit[pos_pointer_or_explicit]){
                             size_type offset_x, offset_y;
                             explicit_node_info(pos_explicit, level, offset_x, offset_y);
-                            //std::cout << "explicit: " << x + offset_x << ", " << y + offset_y << std::endl;
+                            std::cout << "explicit: " << x + offset_x << ", " << y + offset_y << std::endl;
                             if(min_x <= offset_x && offset_x <= max_x && min_y <= offset_y && offset_y <= max_y){
                                 add(result, x + offset_x - min_x, y + offset_y - min_y);
                             }
                         }else{
-                            //std::cout << "pointer" << std::endl;
+                            std::cout << "pointer" << std::endl;
                             size_type pos_pointer = idx_pointer(pos_explicit, pos_pointer_or_explicit, level);
                             value_type offset_x, offset_y;
                             size_type pointer;
                             leaf_node_info(pos_pointer, level, pointer, offset_x, offset_y);
+                            std::cout << "take pointer min_x: " << min_x << " max_x: " << max_x << "min_y: "
+                            << min_y << " max_y: " << max_y << " x: " << x << " y: " << y << " offset_x: "
+                            << offset_x << " offset_y: " << offset_y<< std::endl;
+                            std::cout << "id: " << idx << " id_pointer: " << pointer << std::endl;
                             take_pointer(min_x, max_x, min_y, max_y, x, y, pointer,
                                          offset_x, offset_y, level, block_size, result, add);
                         }
@@ -392,6 +398,7 @@ namespace block_tree_2d {
 
 
         inline bool taking_pointer_condition(const bool taking_pointer, const size_type level_taking_pointer, const size_type level){
+            //std::cout << "condition-> taking_pointer=" << taking_pointer << " level_taking_pointer=" << level_taking_pointer << " level=" << level << std::endl;
             return level > m_minimum_level && level < m_maximum_level && !(taking_pointer && level <= level_taking_pointer);
         }
 
@@ -549,12 +556,95 @@ namespace block_tree_2d {
             sdsl::read_member(m_maximum_level, in);
             sdsl::read_member(m_zeroes, in);
             m_explicit.load(in);
-            m_rank_explicit.load(in);
-            m_rank_explicit.set_vector(&m_explicit);
+            m_rank_explicit.load(in, &m_explicit);
             uint64_t m_explicit_location_size = 0;
             sdsl::read_member(m_explicit_location_size, in);
             m_explicit_location.resize(m_explicit_location_size);
             sdsl::load_vector(m_explicit_location, in);
+        }
+
+        void display(){
+
+            std::ofstream out("block_tree.json");
+            typedef std::unordered_map<size_type, size_type > map_z_order_type;
+            size_type start = this->m_k2, level = 0, elements = this->m_k2;
+            size_type block_size = std::pow(2, this->m_height) / this->m_k;
+            map_z_order_type map_z_order, next_map_z_order;
+            for(size_type i = 0; i < this->m_k2; ++i){
+                map_z_order.insert({i, i});
+            }
+            while(level < this->m_height){
+                ++level;
+                std::cout << "At level: " << level << " and block_size: " << block_size << std::endl;
+                size_type ones = 0;
+                size_type i = start;
+                size_type new_elements = 0;
+                while(i < start + elements){
+                    if(this->m_t[i]){
+                        auto z_order = map_z_order.find(i-start)->second;
+                        auto pos = codes::zeta_order::decode(z_order);
+                        auto x = pos.first * block_size;
+                        auto y = pos.second * block_size;
+                        auto x_i = x + block_size-1;
+                        auto y_i = y + block_size-1;
+                        for(auto z_next = z_order * this->m_k2; z_next < (z_order+1)*this->m_k2; ++z_next){
+                            next_map_z_order.insert({new_elements, z_next});
+                            ++new_elements;
+                        }
+                        out << this->node_to_json(i, z_order, false, false, false, level, x, y, x_i, y_i) << std::endl;
+                        ++ones;
+                    }else{
+                        if(level > m_minimum_level && level < m_maximum_level){
+                            size_type pos_leaf = idx_leaf(i);
+                            if(i > 0 && this->m_is_pointer[pos_leaf]){
+                                auto z_order = map_z_order.find(i-start)->second;
+                                auto pos = codes::zeta_order::decode(z_order);
+                                auto x = pos.first * block_size;
+                                auto y = pos.second * block_size;
+                                auto x_i = x + block_size-1;
+                                auto y_i = y + block_size-1;
+                                size_type pos_pointer_or_explicit = idx_pointer_or_explicit(pos_leaf);
+                                size_type pos_explicit = idx_explicit(pos_pointer_or_explicit, level);
+                                if(m_explicit[pos_pointer_or_explicit]){
+                                    out << this->node_to_json(i, z_order, true, true, true, level, x, y, x_i, y_i) << std::endl;
+                                }else{
+                                    size_type pos_pointer = this->idx_pointer(pos_explicit, pos_pointer_or_explicit, level);
+                                    value_type offset_x, offset_y;
+                                    size_type pointer;
+                                    this->leaf_node_info(pos_pointer, level, pointer, offset_x, offset_y);
+                                    out << this->node_to_json(i, z_order, true, true, false, level, x, y, x_i, y_i,
+                                                              pointer, offset_x, offset_y) << std::endl;
+                                }
+                            }else{
+                                auto z_order = map_z_order.find(i-start)->second;
+                                auto pos = codes::zeta_order::decode(z_order);
+                                auto x = pos.first * block_size;
+                                auto y = pos.second * block_size;
+                                auto x_i = x + block_size-1;
+                                auto y_i = y + block_size-1;
+                                out << this->node_to_json(i, z_order, true, false, false, level, x, y, x_i, y_i) << std::endl;
+                            };
+                        }else{
+                            auto z_order = map_z_order.find(i-start)->second;
+                            auto pos = codes::zeta_order::decode(z_order);
+                            auto x = pos.first * block_size;
+                            auto y = pos.second * block_size;
+                            auto x_i = x + block_size-1;
+                            auto y_i = y + block_size-1;
+                            out << this->node_to_json(i, z_order, true, false, false, level, x, y, x_i, y_i) << std::endl;
+                        };
+                    }
+                    ++i;
+                }
+                start = i;
+                elements = ones*this->m_k2;
+                block_size = block_size/this->m_k;
+                map_z_order.clear();
+                std::swap(map_z_order, next_map_z_order);
+            }
+            out.close();
+
+
         }
 
 

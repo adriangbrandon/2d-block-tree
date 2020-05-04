@@ -36,6 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <block_tree_intersection_lists.hpp>
 #include <adjacency_list_helper.hpp>
 #include <sdsl/io.hpp>
+#include <block_tree_double_hybrid_skipping_block.hpp>
 
 
 template<class t_block_tree>
@@ -53,12 +54,24 @@ void run_load(const std::string &dataset, const uint64_t k, const uint64_t limit
     std::cout << "Size in bytes: " << sdsl::size_in_bytes(m_block_tree) << std::endl;
     sdsl::write_structure<sdsl::JSON_FORMAT>(m_block_tree, name_file + ".json");
     sdsl::write_structure<sdsl::HTML_FORMAT>(m_block_tree, name_file + ".html");
-    auto results = m_block_tree.neigh(306900);
-    std::cout << "{";
-    for(const auto &r : results){
-        std::cout << r << ", ";
+    auto block_size = (uint64_t) std::pow(m_block_tree.k, m_block_tree.height);
+    std::vector<std::vector<int64_t >> values;
+    auto start_y = 167192;
+    m_block_tree.access_region(0,  167192, 7947, 167192, values);
+    std::cout << "size: " << values.size() << std::endl;
+    for(const auto &r : values){
+        if(start_y == 167192){
+            std::cout << start_y << " (" << r.size() << ") {";
+            for(const auto &v: r){
+                std::cout << v << ", ";
+            }
+            std::cout << "}" << std::endl;
+        }
+        ++start_y;
     }
-    std::cout << "}" << std::endl;
+    //auto result = m_block_tree.neigh(167192);
+    //std::cout << "Result: " << result.size()<< std::endl;
+
     std::cout << "First level with pointer: " << m_block_tree.first_level_with_pointer() << std::endl;
     m_block_tree.display();
 
@@ -86,6 +99,8 @@ int main(int argc, char **argv) {
         run_load<block_tree_2d::block_tree_skip_levels<>>(dataset, k, limit);
     }else if (type == "skip_levels_lists"){
         run_load<block_tree_2d::block_tree_intersection_lists<>>(dataset, k, limit);
+    }else if (type == "god_level"){
+        run_load<block_tree_2d::block_tree_double_hybrid_skipping_block<>>(dataset, k, limit);
     }else{
         std::cout << "Type: " << type << " is not supported." << std::endl;
     }

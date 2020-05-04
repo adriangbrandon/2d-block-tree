@@ -486,23 +486,46 @@ namespace block_tree_2d {
                 auto it_b2 = iterators_b2[cyclic_b2];
                 auto last = it_b2;
                 auto count = 0;
+                if((sx_b2 == 32000 && sy_b2 == 167168) ||(sx_b2 == 10368 && sy_b2 == 167168) ){
+                    std::cout << "FIrst : " << *(kr_iterators[cyclic_b2]) << std::endl;
+                }
                 while(!(adjacent_lists.begin() + sy_b2 + row)->empty() &&
                        it_b2 != beg_list_b2 && *(--it_b2) >= sx_b2) {
                     //auto new_it = (adjacent_lists.begin() + sy_b2 + row)->erase(it_b2);
                     //std::cout << "Remove at " << (sy_b2+row) << " value: " << *it_b2 << std::endl;
+                    //TODO: probando
+                    //IMPORTANT: what happen when the next 1 is going to be deleted?
+                    //- We have to update the heap with the new kr_iterator
+                    /*if(kr_iterators[cyclic_b2] == it_b2){
+                        redo_heap_in = true;
+                    }*/
+                    if((sx_b2 == 32000 && sy_b2 == 167168) ||(sx_b2 == 10368 && sy_b2 == 167168) ){
+                        std::cout << "Bloque: (" << sx_b2 << ", " << sy_b2 << ")" << std::endl;
+                        std::cout << "Check: " << *kr_iterators[cyclic_b2] <<"=="  <<*it_b2<< std::endl;
+                        std::cout << "Removing:  (" << *it_b2 << ", " << sy_b2 + row << ")" << std::endl;
+
+                    }
                     *it_b2 = -(*it_b2+1);
                     last = it_b2;
                     ++count;
+
+
                 }
 
                 //IMPORTANT: what happen when the next 1 is going to be deleted?
                 //- We have to update the iterator of kr_iterator to the next one
                 //- We have to update the heap with the new kr_iterator (if it is pointing to a number)
-                if(sy_b1 <= sy_b2+row && sy_b2+row <= ey_b1 && count > 0
+                /*if(sy_b1 <= sy_b2+row && sy_b2+row <= ey_b1 && count > 0
                     && last == kr_iterators[cyclic_b2]){
                     auto it = last + count; //in case of being negative, redo_heap_in updates it to the next positive
                     kr_iterators[cyclic_b2] = it;
                     redo_heap_in = true;
+                }*/
+                if(sy_b1 <= sy_b2+row && sy_b2+row <= ey_b1 && count > 0 && *kr_iterators[cyclic_b2]<0){
+                    redo_heap_in = true;
+                }
+                if((sx_b2 == 32000 && sy_b2 == 167168) ||(sx_b2 == 10368 && sy_b2 == 167168) ){
+                    std::cout << "Onde : " << *(kr_iterators[cyclic_b2]) << std::endl;
                 }
                 ++row;
             }
@@ -929,6 +952,9 @@ namespace block_tree_2d {
                     if(ht.hash_collision(kr_block.hash, it_table, it_hash)){
                         value_type sx_source, sy_source, ex_source, ey_source;
                         iterator_hash_value_type source;
+                        if(sx_target == 7936 && sy_target == 167168){
+                            std::cout << "Aí vamos" << std::endl;
+                        }
                         if(exist_identical(adjacent_lists, sx_target, sy_target, ex_target, ey_target,
                                            kr_block.iterators, it_hash->second, block_size,
                                            sx_source, sy_source, ex_source, ey_source, iterators_source, source)){ //check if they are identical
@@ -1687,12 +1713,31 @@ namespace block_tree_2d {
 #endif
 
 
+                //std::cout << "next: " << kr_roll.row << ", " << kr_roll.col << std::endl;
+                if(kr_roll.row == 167165){
+                    std::cout << "sx: " << kr_roll.col << ", sy:" << kr_roll.row << std::endl;
+                    std::cout << "ex: " << kr_roll.col + block_size-1 << ", ey:" << kr_roll.row + block_size-1 << std::endl;
+                    std::cout << "24: " <<  *(kr_roll.iterators[(167165+24) % 128]) << std::endl;
+                    std::cout << "67: " <<  *(kr_roll.iterators[(167165+67) % 128]) << std::endl;
+                    std::cout << "110: " << *(kr_roll.iterators[(167165+110) % 128]) << std::endl;
+                }
+                if(kr_roll.col == 17901 && kr_roll.row==167165){
+                    std::cout << "Stop" << std::endl;
+                }
                 auto processed_rolls = kr_roll.row * rolls_per_row + kr_roll.col+1;
                 //check if kr_block.hash exists in map
                 if(ht.hash_collision(kr_roll.hash, it_table, it_hash)){
                     value_type sx_target, sy_target, ex_target, ey_target;
                     value_type ex_source = kr_roll.col + block_size-1;
                     value_type ey_source = kr_roll.row + block_size-1;
+                    /*if(kr_roll.row == 167165){
+                        std::cout << "sx: " << kr_roll.col << ", sy:" << kr_roll.row << std::endl;
+                        std::cout << "ex: " << ex_source << ", ey:" << ey_source << std::endl;
+                        std::cout <<  *(kr_roll.iterators[(167165+24) % 128]) << std::endl;
+                        std::cout <<  *(kr_roll.iterators[(167165+67) % 128]) << std::endl;
+                        std::cout <<  *(kr_roll.iterators[(167165+110) % 128]) << std::endl;
+                    }*/
+
                     iterator_hash_value_type target;
                     if(exist_identical(adjacent_lists, kr_roll.col, kr_roll.row, ex_source, ey_source,
                                        kr_roll.iterators, it_hash->second, block_size,
@@ -1701,6 +1746,10 @@ namespace block_tree_2d {
                         std::cout << "Target: (" << sx_target << ", " << sy_target << ")" << std::endl;
                         std::cout << "Pointer to source in (x,y): " << kr_roll.col << ", " << kr_roll.row << std::endl;
 #endif
+                        if(sx_target == 32000 && sy_target == 167168){
+                            std::cout << *(kr_roll.heap_in.top().first) << std::endl;
+                            std::cout << "Aí vamos 2" << std::endl;
+                        }
                         //Compute offsets and top-left block
                         size_type x_block, y_block;
                         size_type source_ptr;

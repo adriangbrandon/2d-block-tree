@@ -83,6 +83,7 @@ namespace block_tree_2d {
     public:
         const size_type &k = m_k;
         const size_type &height = m_height;
+        const size_type &dimensions = m_dimensions;
 
     protected:
 
@@ -400,8 +401,6 @@ namespace block_tree_2d {
 
     public:
 
-        const size_type &dimensions = m_dimensions;
-
         block_tree() = default;
 
         //Pre: adjacency_lists have to contain at least one element
@@ -590,15 +589,12 @@ namespace block_tree_2d {
             m_topology_select.load(in);
             m_topology_select.set_vector(&m_topology);*/
             m_t.load(in);
-            m_t_rank.load(in);
-            m_t_rank.set_vector(&m_t);
-            m_t_select.load(in);
-            m_t_select.set_vector(&m_t);
+            m_t_rank.load(in, &m_t);
+            m_t_select.load(in, &m_t);
             m_l.load(in);
             m_level_ones.load(in);
             m_is_pointer.load(in);
-            m_is_pointer_rank.load(in);
-            m_is_pointer_rank.set_vector(&m_is_pointer);
+            m_is_pointer_rank.load(in, &m_is_pointer);
             uint64_t m_pointers_size = 0;
             sdsl::read_member(m_pointers_size, in);
             m_pointers.resize(m_pointers_size);
@@ -616,7 +612,7 @@ namespace block_tree_2d {
             return (idx > 0 && m_is_pointer[pos_zero]);
         }
 
-        std::string node_to_json(size_type id, size_type z_order, bool is_leaf, bool is_ptr, size_type level,
+        std::string node_to_json(size_type id, size_type z_order, bool is_leaf, bool is_ptr, bool is_explicit, size_type level,
                                  size_type x, size_type y, size_type x_i, size_type y_i,
                                  size_type ptr = 0, value_type off_x = 0, value_type off_y = 0){
 
@@ -628,6 +624,8 @@ namespace block_tree_2d {
                     json += "id_ptr=" + std::to_string(ptr) + ", ";
                     json += "off_x=" + std::to_string(off_x) + ", ";
                     json += "off_y=" + std::to_string(off_y) + ", ";
+                }else if (is_explicit) {
+                    json += "type='EXPLICIT', ";
                 }else{
                     json += "type='EMPTY', ";
                 }
@@ -669,7 +667,7 @@ namespace block_tree_2d {
                             next_map_z_order.insert({new_elements, z_next});
                             ++new_elements;
                         }
-                        out << node_to_json(i, z_order, false, false, level, x, y, x_i, y_i) << std::endl;
+                        out << node_to_json(i, z_order, false, false, false, level, x, y, x_i, y_i) << std::endl;
                         ++ones;
                     }else{
                         size_type pos_zero;
@@ -683,7 +681,7 @@ namespace block_tree_2d {
                             size_type ptr;
                             value_type off_x, off_y;
                             this->leaf_node_info(pos_zero, level, ptr, off_x, off_y);
-                            out << node_to_json(i, z_order, true, true, level, x, y, x_i, y_i, ptr, off_x, off_y) << std::endl;
+                            out << node_to_json(i, z_order, true, true, false, level, x, y, x_i, y_i, ptr, off_x, off_y) << std::endl;
                         }else{
                             auto z_order = map_z_order.find(i-start)->second;
                             auto pos = codes::zeta_order::decode(z_order);
@@ -691,7 +689,7 @@ namespace block_tree_2d {
                             auto y = pos.second * block_size;
                             auto x_i = x + block_size-1;
                             auto y_i = y + block_size-1;
-                            out << node_to_json(i, z_order, true, false, level, x, y, x_i, y_i) << std::endl;
+                            out << node_to_json(i, z_order, true, false, false, level, x, y, x_i, y_i) << std::endl;
                         };
                     }
                     ++i;

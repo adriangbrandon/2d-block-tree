@@ -78,16 +78,34 @@ int main(int argc, char **argv) {
     for(uint64_t row = 0; row < block_size; ++row){
         if(b1[row].size() != b2[row].size()){
             std::cout << "Are not identical" << std::endl;
-            exit(10);
+            //exit(10);
         }else{
             for(uint64_t i = 0; i < b1[row].size(); ++i){
                 ++elements;
                 if(b1[row][i] != b2[row][i]){
                     std::cout << "Are not identical" << std::endl;
-                    exit(10);
+                   // exit(10);
                 }
             }
         }
+    }
+
+    std::cout << "Bloque 1" << std::endl;
+    for(uint64_t row = 0; row < block_size; ++row){
+        std::cout << "Row " << row << ": { ";
+        for(uint64_t i = 0; i < b1[row].size(); ++i){
+            std::cout << b1[row][i] << ", ";
+        }
+        std::cout << "}" << std::endl;
+    }
+
+    std::cout << "Bloque 2" << std::endl;
+    for(uint64_t row = 0; row < block_size; ++row){
+        std::cout << "Row " << row << ": { ";
+        for(uint64_t i = 0; i < b2[row].size(); ++i){
+            std::cout << b2[row][i] << ", ";
+        }
+        std::cout << "}" << std::endl;
     }
     std::cout << "Are identical" << std::endl;
     std::cout << "Elements: " << elements << std::endl;

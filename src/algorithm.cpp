@@ -40,6 +40,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 int main(int argc, char **argv) {
 
+
+    std::vector<uint64_t > v;
+    v.push_back(3):
+
     std::list<uint64_t > list = {1, 3, 5, 7};
     std::cout << *(list.end()) << std::endl;
     auto it = list.begin();
