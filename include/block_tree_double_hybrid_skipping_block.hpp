@@ -220,10 +220,7 @@ namespace block_tree_2d {
                     this->m_t.resize(topology_index);
                     m_maximum_level = l;
                     size_type height_subtree = h - l +1;
-                    std::cout << "Height: " << h << " current_level: " << l << " height_subtree: " << height_subtree << std::endl;
                     block_tree_2d::algorithm::build_last_k2_tree(adjacency_lists, this->k, height_subtree, block_size, this->m_t, this->m_l);
-                    std::cout << "T size: " << this->m_t.size() << std::endl;
-                    std::cout << "L size: " << this->m_l.size() << std::endl;
                 }else{
                     util::logger::log("Clearing adjacency lists at level=" + std::to_string(l));
                     block_tree_2d::algorithm::clear_adjacency_lists(adjacency_lists);
@@ -287,13 +284,10 @@ namespace block_tree_2d {
             std::cout << "height: " << height << std::endl;
             std::cout << std::endl;
 #endif
-            std::cout << "x: " << x << " y: " << y << std::endl;
-            std::cout << "level: " << level << " block_size: " << block_size << " min_x: " << min_x << " max_x: " << max_x << " min_y: " << min_y << " max_y: " << max_y << std::endl;
             if(level == this->m_height){
                 //if(m_topology[idx]){
                 if(this->m_l[idx - this->m_t.size()]){
                     //Adding result
-                    std::cout << "adding result: " << x << ", " << y << std::endl;
                     add(result, x, y);
                     //result[y].push_back(x);
                 }
@@ -335,29 +329,21 @@ namespace block_tree_2d {
                         disp_x = 1;
                     }
                 }else if (taking_pointer_condition(taking_pointer, level_taking_pointer, level)){
-                    std::cout << "taking_pointer" << std::endl;
                     size_type pos_leaf = idx_leaf(idx);
                     if(idx > 0 && this->m_is_pointer[pos_leaf]){
-                        std::cout << "is_pointer" << std::endl;
                         size_type pos_pointer_or_explicit = idx_pointer_or_explicit(pos_leaf);
                         size_type pos_explicit = idx_explicit(pos_pointer_or_explicit, level);
                         if(m_explicit[pos_pointer_or_explicit]){
                             size_type offset_x, offset_y;
                             explicit_node_info(pos_explicit, level, offset_x, offset_y);
-                            std::cout << "explicit: " << x + offset_x << ", " << y + offset_y << std::endl;
                             if(min_x <= offset_x && offset_x <= max_x && min_y <= offset_y && offset_y <= max_y){
                                 add(result, x + offset_x - min_x, y + offset_y - min_y);
                             }
                         }else{
-                            std::cout << "pointer" << std::endl;
                             size_type pos_pointer = idx_pointer(pos_explicit, pos_pointer_or_explicit, level);
                             value_type offset_x, offset_y;
                             size_type pointer;
                             leaf_node_info(pos_pointer, level, pointer, offset_x, offset_y);
-                            std::cout << "take pointer min_x: " << min_x << " max_x: " << max_x << "min_y: "
-                            << min_y << " max_y: " << max_y << " x: " << x << " y: " << y << " offset_x: "
-                            << offset_x << " offset_y: " << offset_y<< std::endl;
-                            std::cout << "id: " << idx << " id_pointer: " << pointer << std::endl;
                             take_pointer(min_x, max_x, min_y, max_y, x, y, pointer,
                                          offset_x, offset_y, level, block_size, result, add);
                         }
