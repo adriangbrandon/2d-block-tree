@@ -126,6 +126,9 @@ target_link_libraries(display sdsl divsufsort divsufsort64)
 add_executable(times src/times.cpp)
 target_link_libraries(times sdsl divsufsort divsufsort64)
 
+add_executable(times_god_level src/times_god_level.cpp)
+target_link_libraries(times_god_level sdsl divsufsort divsufsort64)
+
 add_executable(check_blocks src/check_blocks.cpp)
 target_link_libraries(check_blocks sdsl divsufsort divsufsort64)
 
@@ -140,3 +143,12 @@ target_link_libraries(proba sdsl divsufsort divsufsort64)
 
 add_executable(segmentation src/segmentation.cpp)
 target_link_libraries(segmentation sdsl divsufsort divsufsort64)
+
+add_executable(test_neighbors src/test_neighbors.cpp)
+target_link_libraries(test_neighbors sdsl divsufsort divsufsort64)
+
+add_executable(times_direct src/times_direct.cpp)
+target_link_libraries(times_direct sdsl divsufsort divsufsort64)
+
+add_executable(times_reverse src/times_direct.cpp)
+target_link_libraries(times_reverse sdsl divsufsort divsufsort64)

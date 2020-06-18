@@ -62,7 +62,7 @@ namespace dataset_reader{
 
         public:
         static void read(const std::string file_name,
-                         std::vector<std::vector<int64_t>> &adjacency_lists, uint64_t limit){
+                         std::vector<std::vector<int64_t>> &adjacency_lists, uint64_t limit = -1){
 
             struct stat s;
             const char* file_name_c = file_name.c_str();

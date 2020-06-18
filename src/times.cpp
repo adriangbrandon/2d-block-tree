@@ -38,6 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sdsl/io.hpp>
 #include <sdsl/k2_tree.hpp>
 #include <chrono>
+#include <block_tree_double_hybrid_skipping_block.hpp>
 
 template<class t_block_tree>
 void run_times(const std::string &dataset, const uint64_t k, const uint64_t limit){
@@ -109,6 +110,8 @@ int main(int argc, char **argv) {
         run_times<block_tree_2d::block_tree_skip_levels<>>(dataset, k, limit);
     }else if (type == "skip_levels_lists"){
         run_times<block_tree_2d::block_tree_intersection_lists<>>(dataset, k, limit);
+    }else if (type == "god_level"){
+        run_times<block_tree_2d::block_tree_double_hybrid_skipping_block<>>(dataset, k, limit);
     }else{
         std::cout << "Type: " << type << " is not supported." << std::endl;
     }

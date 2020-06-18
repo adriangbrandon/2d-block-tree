@@ -39,7 +39,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace util {
 
-    namespace time {
+    class time {
+
+    public:
+
+        const static uint64_t microseconds    = 1;
+        const static uint64_t milliseconds    = 1000;
+        const static uint64_t seconds         = 1000000;
+        const static uint64_t minutes         = 60000000;
+
+        template<uint64_t ratio = 1>
+        static double duration_cast(uint64_t value){
+            return value / (double) ratio;
+        }
 
         class user {
 
@@ -53,7 +65,7 @@ namespace util {
 
                 struct rusage r_usage;
                 getrusage(RUSAGE_SELF, &r_usage);
-                return r_usage.ru_utime.tv_sec * 1000000 + r_usage.ru_utime.tv_usec;
+                return (r_usage.ru_utime.tv_sec * seconds + r_usage.ru_utime.tv_usec);
             }
 
         };
@@ -70,11 +82,13 @@ namespace util {
 
                 struct rusage r_usage;
                 getrusage(RUSAGE_SELF, &r_usage);
-                return r_usage.ru_stime.tv_sec * 1000000 + r_usage.ru_stime.tv_usec;
+                return (r_usage.ru_stime.tv_sec * seconds + r_usage.ru_stime.tv_usec);
             }
 
         };
-    }
+
+
+    };
 }
 
 #endif
