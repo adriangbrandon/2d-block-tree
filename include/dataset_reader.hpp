@@ -56,7 +56,7 @@ namespace dataset_reader{
          * of the second node, and so on.
          *
          * For instance, the first integers of the cnr-2000 graph in binary format will be:
-         * 325557 3216152 0 - 1 2 343 344 345 346 347 348 349 350 351 352 211285 223143 -2 3 4 5 320 -3 211285 223143
+         * 325557 3216152 0 -1 2 343 344 345 346 347 348 349 350 351 352 211285 223143 -2 3 4 5 320 -3 211285 223143
          * -4 -5 318 -6 -7 118 219 297 -8 7 19 219 286 297 -9 7
          */
 
@@ -86,8 +86,9 @@ namespace dataset_reader{
                 number_nodes = limit;
             }
             adjacency_lists.resize(number_nodes, std::vector<int64_t>());
+
             uint64_t id = 0, number_ones = 0;
-            for(uint64_t i = 0; i < len_lists && id < number_nodes; i++){
+            for(uint64_t i = 0; i < len_lists && id <= number_nodes; i++){
                 if(data[i]<0){
                     id++;
                 }else{

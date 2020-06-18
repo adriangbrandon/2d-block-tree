@@ -39,10 +39,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sdsl/suffix_arrays.hpp>
 #include <intersection_lists.hpp>
 #include <trie.hpp>
+#include <dataset_reader.hpp>
 
 int main(int argc, char **argv) {
 
 
+    std::vector<std::vector<int64_t>> adjacency_lists;
+    dataset_reader::web_graph::read(argv[1], adjacency_lists);
 
     /*uint64_t size = 100;
     std::vector<std::vector<uint8_t >> v(size, std::vector<uint8_t>(size));
@@ -120,7 +123,7 @@ int main(int argc, char **argv) {
     }*/
 
 
-    std::vector<std::pair<uint32_t, uint32_t>> sol;
+    /*std::vector<std::pair<uint32_t, uint32_t>> sol;
     std::vector<std::pair<uint32_t, uint32_t>> l0 = {{0,0}, {0, 0}, {4, 0}, {4,0}};
     std::vector<std::pair<uint32_t, uint32_t>> l1 = {{0,0}, {0, 0}, {4, 0}, {6,0}};
     std::vector<std::pair<uint32_t, uint32_t>> l2 = {{0,2}, {2, 2}, {4, 2}, {6,2}};
@@ -148,7 +151,7 @@ int main(int argc, char **argv) {
     auto map = &vec_map[3];
     map->insert({1,1});
     map = &vec_map[4];
-    map->insert({5,5});
+    map->insert({5,5});*/
 
 
 }
