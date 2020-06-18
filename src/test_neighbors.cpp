@@ -45,7 +45,7 @@ void run_test(const std::string &dataset, const std::string &index){
     sdsl::load_from_file(m_block_tree, index);
 
     std::cout << "Size in bytes 2dbt: " << sdsl::size_in_bytes(m_block_tree) << std::endl;
-
+    auto retrieved = 0;
     for(uint64_t id = 0; id < m_block_tree.dimensions; ++id){
         auto r = m_block_tree.neigh(id);
         if(r.size() != adjacency_lists[id].size()){
@@ -64,7 +64,9 @@ void run_test(const std::string &dataset, const std::string &index){
             }
             //std::cout << "Direct neighbors: " << id << ". OK." << std::endl;
         }
+        retrieved = r.size() + retrieved;
     }
+    std::cout << "Retrieved: " << retrieved << std::endl;
 
     std::cout << "Reversing adjacency lists" << std::endl;
     std::vector<std::vector<int64_t>> rev_adjacency_lists(adjacency_lists.size());

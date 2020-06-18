@@ -87,8 +87,8 @@ namespace dataset_reader{
             }
             adjacency_lists.resize(number_nodes, std::vector<int64_t>());
 
-            uint64_t id = 0, number_ones = 0;
-            for(uint64_t i = 0; i < len_lists && id <= number_nodes; i++){
+            int64_t id = -1, number_ones = 0;
+            for(uint64_t i = 0; i < len_lists && id < number_nodes; i++){
                 if(data[i]<0){
                     id++;
                 }else{
