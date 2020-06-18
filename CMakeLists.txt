@@ -150,5 +150,5 @@ target_link_libraries(test_neighbors sdsl divsufsort divsufsort64)
 add_executable(times_direct src/times_direct.cpp)
 target_link_libraries(times_direct sdsl divsufsort divsufsort64)
 
-add_executable(times_reverse src/times_direct.cpp)
+add_executable(times_reverse src/times_reverse.cpp)
 target_link_libraries(times_reverse sdsl divsufsort divsufsort64)

@@ -45,7 +45,7 @@ void run_times(const std::string &name_file, const int number_nodes){
     auto t0 = util::time::user::now();
     int retrieved = 0;
     for(uint64_t id = 0; id < number_nodes; ++id){
-        r = m_block_tree.reverse_neigh(id);
+        auto r = m_block_tree.reverse_neigh(id);
         retrieved += r.size();
     }
     auto t1 = util::time::user::now();
