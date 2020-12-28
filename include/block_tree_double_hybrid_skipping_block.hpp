@@ -36,6 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <block_tree_algorithm_helper_v2.hpp>
 #include "alternative_code.hpp"
+#include "dataset_reader.hpp"
 #include <logger.hpp>
 #include <block_tree.hpp>
 #include <vector>
@@ -123,8 +124,9 @@ namespace block_tree_2d {
         }
 
 
-        void construction(input_type &adjacency_lists, size_type h, size_type block_size, size_type blocks,
-                          size_type last_block_size_k2_tree){
+        void construction(const std::string &file_name, input_type &adjacency_lists, size_type h,
+                          size_type block_size, size_type blocks,
+                          size_type last_block_size_k2_tree, size_type limit){
 
             typedef typename input_type::value_type::iterator iterator_value_type;
 
@@ -148,11 +150,19 @@ namespace block_tree_2d {
 
             //2. Building LOUDS of k2_tree until min_block_size and map between z_order and position in vector nodes
             block_tree_2d::algorithm::hash_type hash;
-            m_zeroes = block_tree_2d::algorithm::build_k2_tree(adjacency_lists, this->k, h, min_block_size, this->m_t, hash);
+            m_zeroes = block_tree_2d::algorithm::build_k2_tree(adjacency_lists, this->k, h,
+                                                               min_block_size, this->m_t, hash, true);
 
             /*for(size_type i = 0; i < this->m_topology.size(); ++i){
                 std::cout << this->m_topology[i] << ", ";
             }*/
+            std::cout << adjacency_lists.size() << std::endl;
+            dataset_reader::web_graph::read(file_name, adjacency_lists, limit);
+            h = (size_type) std::ceil(std::log(this->m_dimensions)/std::log(this->m_k));
+            auto total_size = (size_type) std::pow(this->m_k, h);
+            if(adjacency_lists.size() < total_size){
+                adjacency_lists.resize(total_size);
+            }
             std::cout << std::endl;
             std::vector<node_type> nodes(hash.size());
             size_type topology_index = this->m_t.size(), leaves_index = 0, explicit_index = 0, is_pointer_index = 0;
@@ -243,6 +253,7 @@ namespace block_tree_2d {
                 this->m_l.resize(leaves_index);
                 std::cout << "L size: " << this->m_l.size() << std::endl;
             }
+            adjacency_lists.clear();
             //m_maximum_level = h+1;
             this->m_height = h;
             this->m_is_pointer.resize(is_pointer_index);
@@ -256,6 +267,7 @@ namespace block_tree_2d {
             sdsl::util::init_support(m_rank_explicit, &m_explicit);
             sdsl::util::bit_compress(this->m_level_ones);
             util::logger::log("2D Block Tree DONE!!!");
+
         }
 
 
@@ -433,11 +445,14 @@ namespace block_tree_2d {
         const size_type &maximum_level = m_maximum_level;
         block_tree_double_hybrid_skipping_block() = default;
 
-        block_tree_double_hybrid_skipping_block(input_type &adjacency_lists, const size_type kparam, const size_type level) {
+        block_tree_double_hybrid_skipping_block(const std::string &file_name, const size_type kparam, const size_type level,
+                                                const size_type limit = -1) {
+            input_type adjacency_lists;
+            dataset_reader::web_graph::read(file_name, adjacency_lists, limit);
             size_type h, total_size;
             this->init_construction(h, total_size, adjacency_lists, kparam);
             size_type blocks = this->m_k2, block_size = total_size/this->m_k;
-            construction(adjacency_lists, h, block_size, blocks, level);
+            construction(file_name, adjacency_lists, h, block_size, blocks, level, limit);
         }
 
 

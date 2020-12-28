@@ -65,7 +65,7 @@ int main(int argc, char **argv) {
 
     std::cout << "Building K2-tree..." << std::endl;
 
-    block_tree_2d::k2_tree_compression_leaves<> m_k2_tree(adjacency_lists,2);
+    block_tree_2d::k2_tree_compression_leaves<> m_k2_tree(adjacency_lists,k);
     std::cout << "The K2-tree was built." << std::endl;
     std::string name_file = dataset;
     if(limit != -1){
@@ -74,6 +74,12 @@ int main(int argc, char **argv) {
     name_file = name_file + ".k2t";
     sdsl::store_to_file(m_k2_tree, name_file);
 
+    dataset_reader::web_graph::read(dataset, adjacency_lists, limit);
+    h = (uint64_t) std::ceil(std::log(adjacency_lists.size())/std::log(k));
+    total_size = (uint64_t) std::pow(k, h);
+    if(adjacency_lists.size() < total_size){
+        adjacency_lists.resize(total_size);
+    }
 
     auto k2_tree_bytes = sdsl::size_in_bytes(m_k2_tree);
     std::cout << "Size in bytes: " << k2_tree_bytes << std::endl;
@@ -84,6 +90,7 @@ int main(int argc, char **argv) {
     /*std::cout << "--------------------Result--------------------" << std::endl;
     block_tree_2d::algorithm::print_ajdacent_list(result);
     std::cout << "----------------------------------------------" << std::endl;*/
+
 
     std::cout << "Checking results." << std::endl;
     if (result.size() != adjacency_lists.size()) {

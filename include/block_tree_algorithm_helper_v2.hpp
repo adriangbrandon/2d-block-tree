@@ -940,9 +940,6 @@ namespace block_tree_2d {
                     if(ht.hash_collision(kr_block.hash, it_table, it_hash)){
                         value_type sx_source, sy_source, ex_source, ey_source;
                         iterator_hash_value_type source;
-                        if(sx_target == 7936 && sy_target == 167168){
-                            std::cout << "Aí vamos" << std::endl;
-                        }
                         if(exist_identical(adjacent_lists, sx_target, sy_target, ex_target, ey_target,
                                            kr_block.iterators, it_hash->second, block_size,
                                            sx_source, sy_source, ex_source, ey_source, iterators_source, source)){ //check if they are identical
@@ -2382,9 +2379,9 @@ namespace block_tree_2d {
 
 
         template <class input_type, class hash_type>
-        static size_type build_k2_tree(const input_type &adjacent_lists, const size_type k,
+        static size_type build_k2_tree(input_type &adjacent_lists, const size_type k,
                                   const size_type height, const size_type block_size_stop,
-                                  sdsl::bit_vector &bits_t, hash_type &hash){
+                                  sdsl::bit_vector &bits_t, hash_type &hash, bool clear = false){
 
 
             typedef std::tuple<size_type , size_type, size_type,size_type> t_part_tuple;
@@ -2397,6 +2394,8 @@ namespace block_tree_2d {
                     edges_z_order.push_back(codes::zeta_order::encode(x, y));
                 }
             }
+            size_type l = adjacent_lists.size();
+            if(clear) adjacent_lists.clear();
 
             //2. Sort edges z-order
             std::sort(edges_z_order.begin(), edges_z_order.end());
@@ -2405,7 +2404,7 @@ namespace block_tree_2d {
             bits_t = sdsl::bit_vector(k_2 * (height-1) * edges_z_order.size(), 0);
             bits_t[0] = 1;
 
-            size_type l = adjacent_lists.size();
+
             std::queue<t_part_tuple> q;
             if(l > block_size_stop){
                 q.push(t_part_tuple(0, edges_z_order.size()-1, l/k , 0));

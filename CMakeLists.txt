@@ -9,7 +9,7 @@ set(PROJECT_CONTACT "adrian.gbrandon@udc.es")
 
 
 #Change to "Debug" when you need it
-set(CMAKE_BUILD_TYPE "Release")
+set(CMAKE_BUILD_TYPE "Debug")
 
 # C++11 compiler Check
 if(NOT CMAKE_CXX_COMPILER_VERSION) # work around for cmake versions smaller than 2.8.10
@@ -66,8 +66,8 @@ target_link_libraries(karp_rabin_v2 sdsl divsufsort divsufsort64)
 add_executable(karp_rabin_test test/karp_rabin_test.cpp)
 target_link_libraries(karp_rabin_test sdsl divsufsort divsufsort64)
 
-add_executable(algorithm_test test/algorithm_test.cpp)
-target_link_libraries(algorithm_test sdsl divsufsort divsufsort64)
+#add_executable(algorithm_test test/algorithm_test.cpp)
+#target_link_libraries(algorithm_test sdsl divsufsort divsufsort64)
 
 add_executable(block_tree_test test/block_tree_test.cpp)
 target_link_libraries(block_tree_test sdsl divsufsort divsufsort64)
@@ -78,8 +78,8 @@ target_link_libraries(block_tree_hybrid_test sdsl divsufsort divsufsort64)
 add_executable(block_tree_double_hybrid_test test/block_tree_double_hybrid_test.cpp)
 target_link_libraries(block_tree_double_hybrid_test sdsl divsufsort divsufsort64)
 
-add_executable(block_tree_double_hybrid_skipping_block_test test/block_tree_double_hybrid_skipping_block_test.cpp)
-target_link_libraries(block_tree_double_hybrid_skipping_block_test sdsl divsufsort divsufsort64)
+#add_executable(block_tree_double_hybrid_skipping_block_test test/block_tree_double_hybrid_skipping_block_test.cpp)
+#target_link_libraries(block_tree_double_hybrid_skipping_block_test sdsl divsufsort divsufsort64)
 
 add_executable(block_tree_skip_levels_test test/block_tree_skip_levels_test.cpp)
 target_link_libraries(block_tree_skip_levels_test sdsl divsufsort divsufsort64)

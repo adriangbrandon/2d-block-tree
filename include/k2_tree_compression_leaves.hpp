@@ -121,7 +121,7 @@ namespace block_tree_2d {
         }
 
         template <class input_type>
-        void construction(const input_type &adjacent_lists, const size_type k){
+        void construction(input_type &adjacent_lists, const size_type k){
 
 
             typedef std::tuple<size_type , size_type, size_type,size_type> t_part_tuple;
@@ -134,6 +134,8 @@ namespace block_tree_2d {
                     edges_z_order.push_back(codes::zeta_order::encode(x, y));
                 }
             }
+            size_type bsize = adjacent_lists.size();
+            adjacent_lists.clear();
 
             //2. Sort edges z-order
             std::sort(edges_z_order.begin(), edges_z_order.end());
@@ -142,7 +144,6 @@ namespace block_tree_2d {
             m_t[0] = 1;
             m_ones_prev_leaves = 1;
 
-            size_type bsize = adjacent_lists.size();
             std::queue<t_part_tuple> q;
             q.push(t_part_tuple(0, edges_z_order.size()-1, bsize/k , 0));
 

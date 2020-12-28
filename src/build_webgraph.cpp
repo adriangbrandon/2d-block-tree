@@ -37,13 +37,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sdsl/io.hpp>
 //#include <block_tree_intersection_lists.hpp>
 //#include <block_tree_hybrid.hpp>
-#include <block_tree_double_hybrid.hpp>
+//#include <block_tree_double_hybrid.hpp>
 #include <block_tree_double_hybrid_skipping_block.hpp>
 
-template<class t_block_tree>
+/*template<class t_block_tree>
 void build(t_block_tree &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k, const uint64_t last_block_size_k2_tree){
     b = t_block_tree(adjacency_lists, k);
-}
+}*/
 
 /*
 void build(block_tree_2d::block_tree_hybrid<> &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k, const uint64_t last_block_size_k2_tree){
@@ -51,28 +51,27 @@ void build(block_tree_2d::block_tree_hybrid<> &b, std::vector<std::vector<int64_
     std::cout << "Block tree height=" << b.height << std::endl;
 }*/
 
-void build(block_tree_2d::block_tree_double_hybrid<> &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k, const uint64_t last_block_size_k2_tree){
+/*void build(block_tree_2d::block_tree_double_hybrid<> &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k, const uint64_t last_block_size_k2_tree){
     b = block_tree_2d::block_tree_double_hybrid<>(adjacency_lists, k, last_block_size_k2_tree);
     std::cout << "Block tree height=" << b.height << std::endl;
     std::cout << "There are pointers from level " << b.minimum_level+1 << " up to level " << b.maximum_level-1 << std::endl;
-}
+}*/
 
-void build(block_tree_2d::block_tree_double_hybrid_skipping_block<> &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k, const uint64_t last_block_size_k2_tree){
-    b = block_tree_2d::block_tree_double_hybrid_skipping_block<>(adjacency_lists, k, last_block_size_k2_tree);
+void build(block_tree_2d::block_tree_double_hybrid_skipping_block<> &b, const std::string &file_name,
+           const uint64_t k, const uint64_t last_block_size_k2_tree, const uint64_t limit){
+    b = block_tree_2d::block_tree_double_hybrid_skipping_block<>(file_name, k, last_block_size_k2_tree, limit);
     std::cout << "Block tree height=" << b.height << std::endl;
     std::cout << "There are pointers from level " << b.minimum_level+1 << " up to level " << b.maximum_level-1 << std::endl;
 }
 
 template<class t_block_tree>
-void run_build(const std::string &type, const std::string &dataset, const uint64_t k, const uint64_t limit, const uint64_t last_block_size_k2_tree){
-    std::vector<std::vector<int64_t>> adjacency_lists;
-    dataset_reader::web_graph::read(dataset, adjacency_lists, limit);
-    const auto copy_lists = adjacency_lists;
+void run_build(const std::string &type, const std::string &dataset, const uint64_t k, const uint64_t limit,
+               const uint64_t last_block_size_k2_tree){
 
     std::cout << "Building Block-tree..." << std::endl;
     t_block_tree m_block_tree;
     auto t0 = std::chrono::high_resolution_clock::now();
-    build(m_block_tree, adjacency_lists, k, last_block_size_k2_tree);
+    build(m_block_tree, dataset, k, last_block_size_k2_tree, limit);
     auto t1 = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::seconds>(t1-t0).count();
     std::string name_file = dataset;
@@ -86,6 +85,8 @@ void run_build(const std::string &type, const std::string &dataset, const uint64
     sdsl::store_to_file(m_block_tree, name_file);
     std::cout << "Done. " << std::endl;
     //m_block_tree.print();
+    std::vector<std::vector<int64_t>> copy_lists;
+    dataset_reader::web_graph::read(dataset, copy_lists, limit);
     std::cout << "Retrieving adjacency lists... " << std::flush;
     std::vector<std::vector<int64_t >> result;
     m_block_tree.access_region(0, 0, copy_lists.size() - 1, copy_lists.size() - 1, result);
@@ -182,7 +183,7 @@ int main(int argc, char **argv) {
 
 
     if(type == "naive"){
-        run_build<block_tree_2d::block_tree<>>(type, dataset, k, limit, last_block_size_k2_tree);
+        //run_build<block_tree_2d::block_tree<>>(type, dataset, k, limit, last_block_size_k2_tree);
     }else if (type == "skip_levels"){
         //run_build<block_tree_2d::block_tree_skip_levels<>>(type, dataset, k, limit, last_block_size_k2_tree);
     }else if (type == "skip_levels_lists"){
@@ -190,7 +191,7 @@ int main(int argc, char **argv) {
     }else if (type == "hybrid"){
        // run_build<block_tree_2d::block_tree_hybrid<>>(type, dataset, k, limit, last_block_size_k2_tree);
     }else if (type == "double_hybrid"){
-        run_build<block_tree_2d::block_tree_double_hybrid<>>(type, dataset, k, limit, last_block_size_k2_tree);
+        //run_build<block_tree_2d::block_tree_double_hybrid<>>(type, dataset, k, limit, last_block_size_k2_tree);
     }else if (type == "god_level"){
         run_build<block_tree_2d::block_tree_double_hybrid_skipping_block<>>(type, dataset, k, limit, last_block_size_k2_tree);
     }else{
