@@ -2376,6 +2376,12 @@ namespace block_tree_2d {
             }
         }
 
+        template <class Container>
+        static inline void check_resize(Container&& cont, const size_type pos) {
+            if(pos >= cont.size()){
+                cont.resize(cont.size()*2);
+            }
+        }
 
 
         template <class input_type, class hash_type>
@@ -2401,9 +2407,8 @@ namespace block_tree_2d {
             std::sort(edges_z_order.begin(), edges_z_order.end());
 
             //4. Init bitmap
-            bits_t = sdsl::bit_vector(k_2 * (height-1) * edges_z_order.size(), 0);
+            bits_t = sdsl::bit_vector(512);
             bits_t[0] = 1;
-
 
             std::queue<t_part_tuple> q;
             if(l > block_size_stop){
@@ -2420,13 +2425,20 @@ namespace block_tree_2d {
             size_type t = k_2;
             size_type n_elem = 0, zeroes = k_2 -1;
 
+            auto curr_block_size = l;
+            util::logger::log("Current block size=" + std::to_string(curr_block_size) + " Block size stop=" + std::to_string(block_size_stop));
             //5. Split the front of q into its children
             while (!q.empty()) {
                 std::tie(i, j, l, z_0) = q.front();
                 q.pop();
+                if(l < curr_block_size){
+                    curr_block_size = l;
+                    util::logger::log("Current block size=" + std::to_string(curr_block_size) + " Block size stop=" + std::to_string(block_size_stop));
+                }
                 auto elements = l * l;
                 for(size_type z_child = 0; z_child < k_2; ++z_child){
                     auto le = util::search::lower_or_equal_search(i, j, edges_z_order, z_0+elements-1);
+                    check_resize(bits_t, t);
                     if(le != -1 && edges_z_order[le] >= z_0){
                         bits_t[t] = 1;
                         if(l > block_size_stop){
@@ -2440,6 +2452,7 @@ namespace block_tree_2d {
                         }
                         i = le + 1;
                     }else{
+                        bits_t[t] = 0;
                         ++zeroes;
                     }
                     ++t;
