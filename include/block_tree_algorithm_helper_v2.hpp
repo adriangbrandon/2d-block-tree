@@ -2434,6 +2434,9 @@ namespace block_tree_2d {
                 if(l < curr_block_size){
                     curr_block_size = l;
                     util::logger::log("Current block size=" + std::to_string(curr_block_size) + " Block size stop=" + std::to_string(block_size_stop));
+                    if(curr_block_size == block_size_stop){
+                        util::logger::log("Queue size=" + std::to_string(q.size()) + " k^2=" + std::to_string(k_2));
+                    }
                 }
                 auto elements = l * l;
                 for(size_type z_child = 0; z_child < k_2; ++z_child){
