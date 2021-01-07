@@ -2472,6 +2472,8 @@ namespace block_tree_2d {
             for(const auto &v : next_level){
                 next_level[v]=1;
             }
+            sdsl::rank_support_v<> bit_dict_rank;
+            sdsl::util::init_support(bit_dict_rank, &bit_dict);
             util::logger::log("bit_dict was built");
             return zeroes;
 
