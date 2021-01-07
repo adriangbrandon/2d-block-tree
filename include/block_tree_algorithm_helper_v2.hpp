@@ -2470,7 +2470,7 @@ namespace block_tree_2d {
             util::logger::log("Building bit_dict size=" + std::to_string(next_level.back()+1));
             sdsl::bit_vector bit_dict(next_level.back()+1, 0);
             for(const auto &v : next_level){
-                next_level[v]=1;
+                bit_dict[v]=1;
             }
             sdsl::rank_support_v<> bit_dict_rank;
             sdsl::util::init_support(bit_dict_rank, &bit_dict);
