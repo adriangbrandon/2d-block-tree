@@ -2410,6 +2410,7 @@ namespace block_tree_2d {
             bits_t = sdsl::bit_vector(512);
             bits_t[0] = 1;
 
+            std::vector<size_type> next_level;
             std::queue<t_part_tuple> q;
             if(l > block_size_stop){
                 q.push(t_part_tuple(0, edges_z_order.size()-1, l/k , 0));
@@ -2417,7 +2418,8 @@ namespace block_tree_2d {
                 //Preparing next level
                 size_type n_elem = 0;
                 for(size_type z_order = 0; z_order < k_2; ++z_order){
-                    hash.insert({z_order, n_elem});
+                    //hash.insert({z_order, n_elem});
+                    next_level.push_back(z_order);
                     ++n_elem;
                 }
             }
@@ -2449,7 +2451,8 @@ namespace block_tree_2d {
                         }else{
                             //Preparing next level
                             for(size_type z_order = z_0/elements * k_2; z_order < (z_0/elements+1)*k_2; ++z_order){
-                                hash.insert({z_order, n_elem});
+                                //hash.insert({z_order, n_elem});
+                                next_level.push_back(z_order);
                                 ++n_elem;
                             }
                         }
@@ -2463,6 +2466,13 @@ namespace block_tree_2d {
                 }
             }
             bits_t.resize(t);
+            edges_z_order.clear();
+            util::logger::log("Building bit_dict size=" + std::to_string(next_level.back()+1));
+            sdsl::bit_vector bit_dict(next_level.back()+1, 0);
+            for(const auto &v : next_level){
+                next_level[v]=1;
+            }
+            util::logger::log("bit_dict was built");
             return zeroes;
 
         }
