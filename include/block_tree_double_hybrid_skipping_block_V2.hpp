@@ -149,9 +149,12 @@ namespace block_tree_2d {
             //exit(10);
 
             //2. Building LOUDS of k2_tree until min_block_size and map between z_order and position in vector nodes
-            block_tree_2d::algorithm::hash_type hash;
+            //block_tree_2d::algorithm::hash_type hash;
+            size_type n_elem = 0;
             m_zeroes = block_tree_2d::algorithm::build_k2_tree(adjacency_lists, this->k, h,
-                                                               min_block_size, this->m_t, hash, true);
+                                                               min_block_size, this->m_t, n_elem, true);
+            //TODO: zorder mapping
+            sdsl::util::init_support(this->m_t_rank, &this->m_t);
 
             /*for(size_type i = 0; i < this->m_topology.size(); ++i){
                 std::cout << this->m_topology[i] << ", ";
@@ -164,7 +167,7 @@ namespace block_tree_2d {
                 adjacency_lists.resize(total_size);
             }
             std::cout << std::endl;
-            std::vector<node_type> nodes(hash.size());
+            std::vector<node_type> nodes(n_elem);
             size_type topology_index = this->m_t.size(), leaves_index = 0, explicit_index = 0, is_pointer_index = 0;
             size_type l = m_minimum_level;
             block_size = min_block_size / this->m_k;
@@ -178,14 +181,25 @@ namespace block_tree_2d {
                 //size_type bits_k2_tree = bits_last_k2_tree(adjacency_lists, this->k, block_size);
                 std::vector<iterator_value_type> iterators_to_delete;
                 util::logger::log("Computing fingerprint of blocks at level=" + std::to_string(l));
+                /*block_tree_2d::algorithm::get_fingerprint_blocks_skipping_blocks_stack_lite(adjacency_lists, this->k,
+                        m_htc, this->dimensions, block_size, hash, nodes, iterators_to_delete, true);*/
+
                 block_tree_2d::algorithm::get_fingerprint_blocks_skipping_blocks_stack_lite(adjacency_lists, this->k,
-                        m_htc, this->dimensions, block_size, hash, nodes, iterators_to_delete, true);
+                        m_htc, this->dimensions, block_size, this->m_t, this->m_t_rank, topology_index,
+                        nodes, iterators_to_delete, true);
                 block_tree_2d::algorithm::mark_to_delete(iterators_to_delete);
 
 
                 util::logger::log("Computing fingerprint of shifts at level=" + std::to_string(l));
-                block_tree_2d::algorithm::get_type_of_nodes_skipping_blocks_stack_lite(adjacency_lists, this->k, m_htc,
-                                                                                       this->dimensions, block_size, hash, nodes);
+                /*block_tree_2d::algorithm::get_type_of_nodes_skipping_blocks_stack_lite(adjacency_lists, this->k,
+                                                                                       m_htc, this->dimensions,
+                                                                                       block_size, hash, nodes);*/
+
+                block_tree_2d::algorithm::get_type_of_nodes_skipping_blocks_stack_lite(adjacency_lists, this->k,
+                                                                                       m_htc, this->dimensions,
+                                                                                       block_size, this->m_t,
+                                                                                       this->m_t_rank, topology_index,
+                                                                                       nodes);
 
 
                 size_type bits_k2_tree = 0, leaf_nodes = 0, empty_nodes = 0, internal_nodes = 0, explicit_nodes = 0;
@@ -223,12 +237,13 @@ namespace block_tree_2d {
                         ++internal_nodes;
                     }
                 }
+                //size_type bits_block_tree = leaf_nodes*(bits_per_pointer + 2*bits_per_offset + 2) + empty_nodes*2 + internal_nodes;
                 std::cout << "Size: " << nodes.size() << std::endl;
                 std::cout << "Empty nodes: " << empty_nodes << std::endl;
                 std::cout << "Explicit nodes: " << explicit_nodes << std::endl;
                 std::cout << "Internal nodes: " << internal_nodes << std::endl;
                 std::cout << "Leaf nodes: " << leaf_nodes << std::endl;
-                //size_type bits_block_tree = leaf_nodes*(bits_per_pointer + 2*bits_per_offset + 2) + empty_nodes*2 + internal_nodes;
+
                 last_k2_tree = (bits_k2_tree < (leaf_nodes*(bits_per_pointer + 2*bits_per_offset + 3)
                         + empty_nodes + explicit_nodes*(bits_per_explicit*2+3)));
                 //last_k2_tree = block_size < 4;
@@ -236,24 +251,32 @@ namespace block_tree_2d {
                     this->m_t.resize(topology_index);
                     m_maximum_level = l;
                     size_type height_subtree = h - l +1;
-                    block_tree_2d::algorithm::build_last_k2_tree(adjacency_lists, this->k, height_subtree, block_size, this->m_t, this->m_l);
+                    block_tree_2d::algorithm::build_last_k2_tree(adjacency_lists, this->k, height_subtree,
+                                                                 block_size, this->m_t, this->m_l);
                 }else{
                     util::logger::log("Clearing adjacency lists at level=" + std::to_string(l));
                     block_tree_2d::algorithm::clear_adjacency_lists(adjacency_lists);
                     util::logger::log("Compacting level=" + std::to_string(l));
-                    auto pointers = this->compact_current_level(nodes, l - m_minimum_level, topology_index, is_pointer_index, explicit_index);
+                    auto pointers = this->compact_current_level(nodes, l - m_minimum_level, topology_index,
+                                                                is_pointer_index, explicit_index);
                     util::logger::log("Number of new pointers=" + std::to_string(pointers));
                     util::logger::log("Preparing next level");
-                    block_tree_2d::algorithm::prepare_next_level(adjacency_lists, hash, this->m_k2, nodes);
+                    //block_tree_2d::algorithm::prepare_next_level(adjacency_lists, hash, this->m_k2, nodes);
+                    block_tree_2d::algorithm::prepare_next_level(adjacency_lists, this->m_k2, nodes);
+                    //nodes = std::vector<node_type>(internal_nodes*this->m_k2);
                     block_size = block_size / this->k;
                     std::cout << "T size: " << this->m_t.size() << std::endl;
+                    //TODO: zorder mapping
+                    sdsl::util::init_support(this->m_t_rank, &this->m_t);
                 }
 
             }
             if(!last_k2_tree){
                 ++l;
                 util::logger::log("Processing last level (" + std::to_string(l) + ")");
-                block_tree_2d::algorithm::compute_last_level(adjacency_lists, hash, nodes);
+                //block_tree_2d::algorithm::compute_last_level(adjacency_lists, hash, nodes);
+                block_tree_2d::algorithm::compute_last_level(adjacency_lists, this->m_k, this->m_t,
+                                                             this->m_t_rank,  topology_index, nodes);
                 util::logger::log("Compacting last level (" + std::to_string(l) + ")");
                 this->compact_last_level(nodes, leaves_index);
                 this->m_l.resize(leaves_index);

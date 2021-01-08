@@ -38,7 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //#include <block_tree_intersection_lists.hpp>
 //#include <block_tree_hybrid.hpp>
 //#include <block_tree_double_hybrid.hpp>
-#include <block_tree_double_hybrid_skipping_block.hpp>
+#include <block_tree_double_hybrid_skipping_block_V2.hpp>
 
 /*template<class t_block_tree>
 void build(t_block_tree &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k, const uint64_t last_block_size_k2_tree){

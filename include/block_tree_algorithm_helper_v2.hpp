@@ -664,6 +664,23 @@ namespace block_tree_2d {
 
         }
 
+        template <class input_type>
+        static void prepare_next_level(input_type &adjacency_lists,
+                                       const size_type k_pow_2,
+                                       std::vector<node_type> &nodes){
+
+            size_type number_nodes = 0;
+            for(const auto &node : nodes){
+                if(node.type == NODE_INTERNAL){
+                    number_nodes += k_pow_2;
+                }
+            }
+            nodes.clear();
+            nodes = std::vector<node_type>(number_nodes);
+
+        }
+
+
 
         template <class input_type, class hash_table_type>
         static bool contains_identical_blocks(input_type &adjacent_lists, const size_type k, hash_table_type &ht,
@@ -886,6 +903,153 @@ namespace block_tree_2d {
             //print_ajdacent_list(adjacent_lists);
         }
 
+        template<class BitVector, class Rank>
+        static bool find_zorder(const size_type z_order, const size_type total_size, const size_type b_size,
+                                const size_type k, const BitVector &bv, const Rank &rank, const size_type end_bv,
+                                size_type &result){
+            auto b = total_size/b_size;
+            auto b_2 = b * b;
+            auto z_i = z_order;
+            size_type i = 0, l = 0, r = b_2-1, sm = 0;
+            while(b > 1){
+                if(!bv[i]) return false;
+                b = b / k;
+                b_2 = b * b;
+                sm = z_i / b_2;
+                z_i = z_i % b_2;
+                l = l + sm*b_2;
+                r = l + (sm+1)*b_2-1;
+                i = rank(i+1)*k*k + sm;
+
+            }
+            result = i - end_bv;
+            return true;
+
+        }
+        template <class input_type, class hash_table_type, class iterators_type, class BitVector, class Rank>
+        static void get_fingerprint_blocks_skipping_blocks_stack_lite(input_type &adjacent_lists, const size_type k, hash_table_type &ht,
+                                                                      const size_type dimensions, const size_type block_size,
+                                                                      const BitVector &bv, const Rank &rank, const size_type end_bv,
+                                                                      std::vector<node_type> &nodes, iterators_type &iterators_to_delete,
+                                                                      const bool compute_bits = false){
+
+            typedef karp_rabin::kr_block_adjacent_list_skipping_block<input_type> kr_type;
+            typedef std::vector<typename kr_type::iterator_value_type> iterators_value_type;
+            // typedef uint64_t iterators_type;
+            typedef typename hash_table_type::iterator_table_type iterator_table_type;
+            typedef typename hash_table_type::iterator_hash_type  iterator_hash_type;
+            typedef typename hash_table_type::iterator_value_type iterator_hash_value_type;
+
+            kr_type kr_block(block_size, prime, adjacent_lists);
+            iterator_table_type it_table;
+            iterator_hash_type it_hash;
+            iterators_value_type iterators_source = iterators_value_type(block_size);
+
+            size_type hashes = 0;
+            auto blocks_per_row = adjacent_lists.size() / block_size;
+            //Total number of blocks
+            auto total_blocks = blocks_per_row * blocks_per_row;
+            util::progress_bar m_progress_bar(total_blocks);
+            //IMPORTANT: kr_block, skips every empty block. For this reason, every node of the current level has to be
+            //           initialized as empty node.
+            size_type leaves = 0;
+            while(kr_block.next()){
+#if BT_VERBOSE
+                std::cout << "Target: (" << kr_block.col << ", " << kr_block.row << ")" << std::endl;
+                std::cout << "Hash: " << kr_block.hash << std::endl;
+#endif
+                //check if kr_block.hash exists in map
+                //Target z-order
+                auto processed_blocks = kr_block.row * blocks_per_row + kr_block.col+1;
+                auto z_order_target = codes::zeta_order::encode(kr_block.col, kr_block.row);
+                if(z_order_target == 0){
+                    std::cout << "Z_order = " << 0 << std::endl;
+                }
+                size_type pos_target;
+                find_zorder(z_order_target, adjacent_lists.size(), block_size, k, bv, rank, end_bv, pos_target);
+                value_type sx_target = kr_block.col * block_size;
+                value_type sy_target = kr_block.row * block_size;
+                value_type ex_target = sx_target + block_size-1;
+                value_type ey_target = sy_target + block_size-1;
+                if(kr_block.number_ones == 1){
+                    nodes[pos_target].type = NODE_EXPLICIT;
+                    nodes[pos_target].hash = kr_block.hash;
+                    nodes[pos_target].z_order = z_order_target;
+                    nodes[pos_target].offset_x = kr_block.x_point - sx_target;
+                    nodes[pos_target].offset_y = kr_block.y_point - sy_target;
+                    //delete value
+                    //TODO: mark to delete
+                    iterator_to_delete(kr_block.y_point, kr_block.iterators, block_size, iterators_to_delete);
+                }else{
+                    if(ht.hash_collision(kr_block.hash, it_table, it_hash)){
+                        value_type sx_source, sy_source, ex_source, ey_source;
+                        iterator_hash_value_type source;
+                        if(exist_identical(adjacent_lists, sx_target, sy_target, ex_target, ey_target,
+                                           kr_block.iterators, it_hash->second, block_size,
+                                           sx_source, sy_source, ex_source, ey_source, iterators_source, source)){ //check if they are identical
+#if BT_VERBOSE
+                            std::cout << "Pointer to source in z-order: " << (source->first) << " offset: <0,0>" << std::endl;
+#endif
+
+                            //Add pointer and offset [<p, <x,y>>]
+                            //hash.erase(it);
+                            size_type pos_source;
+                            find_zorder(source->first, adjacent_lists.size(), block_size, k, bv, rank, end_bv, pos_source);
+                            ++leaves;
+                            //std::cout << "Leaf z_order=" << source->first << " pos_source=" << pos_source << std::endl;
+                            nodes[pos_target].type = NODE_LEAF;
+                            nodes[pos_target].ptr = pos_source;
+                            nodes[pos_target].hash = kr_block.hash;
+                            nodes[pos_target].z_order = z_order_target;
+                            if(compute_bits){
+                                //nodes[pos_target].bits = bits_k2tree(adjacent_lists, sx_target, ex_target, sy_target, ey_target,
+                                //                                  kr_block.iterators, block_size, k);
+                                nodes[pos_target].bits = nodes[pos_source].bits;
+                            }
+                            //hash.erase(it_target);
+                            //Delete info of <target> from adjacency list
+                            delete_info_block(adjacent_lists, sx_target, sy_target, ex_target, ey_target, kr_block.iterators,  block_size);
+                        }else{
+                            //add <z_order> to chain in map
+                            size_type z_order = codes::zeta_order::encode(kr_block.col, kr_block.row);
+                            ht.insert_hash_collision(it_hash, z_order);
+                            nodes[pos_target].type = NODE_INTERNAL;
+                            nodes[pos_target].hash = kr_block.hash;
+                            nodes[pos_target].z_order = z_order_target;
+                            if(compute_bits){
+                                nodes[pos_target].bits = bits_k2tree(adjacent_lists, sx_target, ex_target, sy_target, ey_target,
+                                                                     kr_block.iterators, block_size, k);
+                                //nodes[pos_target].bits = nodes[pos_source].bits;
+                            }
+                        }
+                    }else{
+                        //add <z_order> to map [chain should be empty]
+                        size_type z_order = codes::zeta_order::encode(kr_block.col, kr_block.row);
+                        ht.insert_no_hash_collision(it_table, kr_block.hash, z_order);
+                        nodes[pos_target].type = NODE_INTERNAL;
+                        nodes[pos_target].hash = kr_block.hash;
+                        nodes[pos_target].z_order = z_order_target;
+                        if(compute_bits) {
+                            nodes[pos_target].bits = bits_k2tree(adjacent_lists, sx_target, ex_target, sy_target, ey_target,
+                                                                 kr_block.iterators, block_size, k);
+                        }
+                    }
+                }
+
+                m_progress_bar.update(processed_blocks);
+                ++hashes;
+#if BT_VERBOSE
+                std::cout << std::endl;
+#endif
+            }
+            //Delete sources of hash_table
+            ht.remove_marked();
+            m_progress_bar.done();
+            std::cout << "Total hashes: " << hashes << std::endl;
+            std::cout << "Total leaves: " << leaves << std::endl;
+            //print_ajdacent_list(adjacent_lists);
+        }
+
         template <class input_type, class hash_table_type, class iterators_type>
         static void get_fingerprint_blocks_skipping_blocks_stack_lite(input_type &adjacent_lists, const size_type k, hash_table_type &ht,
                                                       const size_type dimensions, const size_type block_size,
@@ -906,6 +1070,7 @@ namespace block_tree_2d {
             iterators_value_type iterators_source = iterators_value_type(block_size);
 
             size_type hashes = 0;
+            size_type leaves = 0;
             auto blocks_per_row = adjacent_lists.size() / block_size;
             //Total number of blocks
             auto total_blocks = blocks_per_row * blocks_per_row;
@@ -949,7 +1114,9 @@ namespace block_tree_2d {
 
                             //Add pointer and offset [<p, <x,y>>]
                             //hash.erase(it);
+                            ++leaves;
                             auto pos_source = hash.find(source->first)->second;
+                           // std::cout << "Leaf z_order=" << source->first << " pos_source=" << pos_source << std::endl;
                             nodes[pos_target].type = NODE_LEAF;
                             nodes[pos_target].ptr = pos_source;
                             nodes[pos_target].hash = kr_block.hash;
@@ -991,14 +1158,12 @@ namespace block_tree_2d {
 
                 m_progress_bar.update(processed_blocks);
                 ++hashes;
-#if BT_VERBOSE
-                std::cout << std::endl;
-#endif
             }
             //Delete sources of hash_table
             ht.remove_marked();
             m_progress_bar.done();
             std::cout << "Total hashes: " << hashes << std::endl;
+            std::cout << "Total leaves: " << leaves << std::endl;
             //print_ajdacent_list(adjacent_lists);
         }
 
@@ -1681,7 +1846,7 @@ namespace block_tree_2d {
             typedef typename hash_table_type::iterator_hash_type  iterator_hash_type;
             typedef typename hash_table_type::iterator_value_type iterator_hash_value_type;
 
-            size_type hashes = 0;
+            size_type hashes = 0, leaves = 0;
             auto rolls_per_row = adjacent_lists.size() - block_size + 1;
             //Total number of blocks
             auto total_rolls = rolls_per_row * rolls_per_row;
@@ -1809,6 +1974,7 @@ namespace block_tree_2d {
                         nodes[pos_target].offset_x = source_off_x;
                         nodes[pos_target].offset_y = source_off_y;
                         nodes[pos_target].z_order = z_order_target;
+                        ++leaves;
                     }
                 }
 #if BT_VERBOSE
@@ -1819,9 +1985,174 @@ namespace block_tree_2d {
             }
             m_progress_bar.done();
             std::cout << "Total hashes: " << hashes << std::endl;
+            std::cout << "Total leaves2: " << leaves << std::endl;
             //print_ajdacent_list(adjacent_lists);
         }
 
+        template <class input_type, class hash_table_type, class BitVector, class Rank>
+        static void get_type_of_nodes_skipping_blocks_stack_lite(input_type &adjacent_lists, const size_type k, hash_table_type &ht,
+                                                                 const size_type dimensions, const size_type block_size,
+                                                                 const BitVector &bv, const Rank &rank, const size_type bv_end,
+                                                                 std::vector<node_type> &nodes){
+
+            typedef karp_rabin::kr_roll_adjacent_list_skipping_block<input_type> kr_type;
+            typedef typename kr_type::hash_type hash_type;
+            typedef std::vector<typename kr_type::iterator_value_type> iterators_value_type;
+            // typedef uint64_t iterators_type;
+            typedef typename hash_table_type::iterator_table_type iterator_table_type;
+            typedef typename hash_table_type::iterator_hash_type  iterator_hash_type;
+            typedef typename hash_table_type::iterator_value_type iterator_hash_value_type;
+
+            size_type hashes = 0, leaves = 0;
+            auto rolls_per_row = adjacent_lists.size() - block_size + 1;
+            //Total number of blocks
+            auto total_rolls = rolls_per_row * rolls_per_row;
+            util::progress_bar m_progress_bar(total_rolls);
+
+            kr_type kr_roll(block_size, prime, adjacent_lists);
+            iterator_table_type it_table;
+            iterator_hash_type it_hash;
+            iterators_value_type iterators_target = iterators_value_type(block_size);
+            while(kr_roll.next()){
+#if BT_VERBOSE
+                std::cout << "Source: (" << kr_roll.col << ", " << kr_roll.row << ")" << std::endl;
+                std::cout << "Hash: " << kr_roll.hash << std::endl;
+#endif
+
+
+                //std::cout << "next: " << kr_roll.row << ", " << kr_roll.col << std::endl;
+                auto processed_rolls = kr_roll.row * rolls_per_row + kr_roll.col+1;
+                //check if kr_block.hash exists in map
+                if(ht.hash_collision(kr_roll.hash, it_table, it_hash)){
+                    value_type sx_target, sy_target, ex_target, ey_target;
+                    value_type ex_source = kr_roll.col + block_size-1;
+                    value_type ey_source = kr_roll.row + block_size-1;
+                    /*if(kr_roll.row == 167165){
+                        std::cout << "sx: " << kr_roll.col << ", sy:" << kr_roll.row << std::endl;
+                        std::cout << "ex: " << ex_source << ", ey:" << ey_source << std::endl;
+                        std::cout <<  *(kr_roll.iterators[(167165+24) % 128]) << std::endl;
+                        std::cout <<  *(kr_roll.iterators[(167165+67) % 128]) << std::endl;
+                        std::cout <<  *(kr_roll.iterators[(167165+110) % 128]) << std::endl;
+                    }*/
+
+                    iterator_hash_value_type target;
+                    if(exist_identical(adjacent_lists, kr_roll.col, kr_roll.row, ex_source, ey_source,
+                                       kr_roll.iterators, it_hash->second, block_size,
+                                       sx_target, sy_target, ex_target, ey_target, iterators_target, target)){ //check if they are identical
+#if BT_VERBOSE
+                        std::cout << "Target: (" << sx_target << ", " << sy_target << ")" << std::endl;
+                        std::cout << "Pointer to source in (x,y): " << kr_roll.col << ", " << kr_roll.row << std::endl;
+#endif
+                        //Compute offsets and top-left block
+                        size_type x_block, y_block;
+                        size_type source_ptr;
+                        value_type source_off_x, source_off_y, off_x, off_y;
+                        compute_topleft_and_offsets(kr_roll.col, kr_roll.row, block_size, x_block, y_block, off_x, off_y);
+                        //Delete <target> from hash_table
+                        ht.remove_value(it_table, it_hash, target);
+                        //Delete sources from hash_table
+                        //bottom-right block
+                        if(off_x && off_y){
+                            auto z_bottom_right = codes::zeta_order::encode(x_block + 1, y_block + 1);
+                            size_type pos_z_bottom_right;
+                            bool fz = find_zorder(z_bottom_right, adjacent_lists.size(), block_size, k, bv,
+                                                  rank, bv_end, pos_z_bottom_right);
+                            if(fz && (nodes[pos_z_bottom_right].type != NODE_LEAF)){
+                                ht.remove_value(nodes[pos_z_bottom_right].hash, z_bottom_right);
+                                source_ptr = pos_z_bottom_right;
+                                source_off_x = kr_roll.col - (x_block + 1)*block_size;
+                                source_off_y = kr_roll.row - (y_block + 1)*block_size;
+                            }
+                        }
+
+                        //bottom-left block
+                        if(off_y){
+                            auto z_bottom_left = codes::zeta_order::encode(x_block, y_block + 1);
+                            size_type pos_z_bottom_left;
+                            bool fz = find_zorder(z_bottom_left, adjacent_lists.size(), block_size, k, bv,
+                                                  rank, bv_end, pos_z_bottom_left);
+                            if(fz && (nodes[pos_z_bottom_left].type != NODE_LEAF)){
+                                ht.remove_value(nodes[pos_z_bottom_left].hash, z_bottom_left);
+                                source_ptr = pos_z_bottom_left;
+                                source_off_x = kr_roll.col - (x_block)*block_size;
+                                source_off_y = kr_roll.row - (y_block + 1)*block_size;
+                            }
+                        }
+
+                        //top-right block
+                        if(off_x){
+                            auto z_top_right = codes::zeta_order::encode(x_block+1, y_block);
+                            size_type pos_z_top_right;
+                            bool fz = find_zorder(z_top_right, adjacent_lists.size(), block_size, k, bv,
+                                                  rank, bv_end, pos_z_top_right);
+                            if(fz && (nodes[pos_z_top_right].type != NODE_LEAF)){
+                                ht.remove_value(nodes[pos_z_top_right].hash, z_top_right);
+                                source_ptr = pos_z_top_right;
+                                source_off_x = kr_roll.col - (x_block + 1)*block_size;
+                                source_off_y = kr_roll.row - (y_block)*block_size;
+                            }
+                        }
+
+                        //top-left block
+                        auto z_top_left = codes::zeta_order::encode(x_block, y_block);
+                        size_type pos_z_top_left;
+                        bool fz = find_zorder(z_top_left, adjacent_lists.size(), block_size, k, bv,
+                                              rank, bv_end, pos_z_top_left);
+                        if(fz && (nodes[pos_z_top_left].type != NODE_LEAF)){
+                            ht.remove_value(nodes[pos_z_top_left].hash, z_top_left);
+                            source_ptr = pos_z_top_left;
+                            source_off_x = off_x;
+                            source_off_y = off_y;
+                        }
+
+                        size_type bits_k2 = 0;
+                        //Delete info of <target> from adjacency list
+                        auto redo_heap_in = delete_info_shift(adjacent_lists, sx_target, sy_target, ex_target, ey_target, iterators_target,
+                                                              kr_roll.row, kr_roll.row + block_size-1, kr_roll.iterators, kr_roll.heap_in, kr_roll.heap_out, block_size);
+
+                        //IMPORTANT: some elements inside the heap (heap_in) were removed
+                        // - Update heap_in
+                        if(redo_heap_in){
+                            kr_roll.redo_heap_in();
+                        }
+
+                        //IMPORTANT: we delete the first block of the same row
+                        // - We have to update the prev_hash to 0
+                        // Notice that kr_roll.row is always kr_roll.row % block_size = 0
+                        if(sx_target == 0 && sy_target == kr_roll.prev_block_row){
+                            kr_roll.update_prev_hash_prev_row();
+                        }
+
+                        //IMPORTANT: we delete the first block of the next row
+                        // - We have to update the prev_hash by removing from it those values of the
+                        //   first block in the next row
+                        if(sx_target == 0 && sy_target == kr_roll.next_block_row){
+                            kr_roll.update_prev_hash_next_row();
+                        }
+
+                        auto z_order_target = codes::zeta_order::encode(sx_target / block_size, sy_target / block_size);
+                        size_type pos_target;
+                        find_zorder(z_order_target, adjacent_lists.size(), block_size, k, bv,
+                                              rank, bv_end, pos_target);
+                        nodes[pos_target].type = NODE_LEAF;
+                        nodes[pos_target].ptr = source_ptr;
+                        nodes[pos_target].offset_x = source_off_x;
+                        nodes[pos_target].offset_y = source_off_y;
+                        nodes[pos_target].z_order = z_order_target;
+                        ++leaves;
+                    }
+                }
+#if BT_VERBOSE
+                std::cout << std::endl;
+#endif
+                m_progress_bar.update(processed_rolls);
+                ++hashes;
+            }
+            m_progress_bar.done();
+            std::cout << "Total hashes: " << hashes << std::endl;
+            std::cout << "Total leaves2: " << leaves << std::endl;
+            //print_ajdacent_list(adjacent_lists);
+        }
         template <class input_type, class hash_table_type>
         static void list_rolls(input_type &adjacent_lists, const size_type k, hash_table_type &ht,
                                                  const size_type dimensions, const size_type block_size,
@@ -2376,6 +2707,25 @@ namespace block_tree_2d {
             }
         }
 
+        template <class input_type, class BitVector, class Rank>
+        static void compute_last_level(input_type &adjacent_lists, const size_type k, const BitVector &bv,
+                                       const Rank &rank, const size_type end_bv, std::vector<node_type> &nodes){
+            auto it = adjacent_lists.begin();
+            auto y = 0;
+            while(it != adjacent_lists.end()){
+                auto it_e = it->begin();
+                while(it_e != it->end()){
+                    size_type pos_target;
+                    auto z_order = codes::zeta_order::encode(*it_e, y);
+                    find_zorder(pos_target, adjacent_lists.size(), 1, k, bv, rank, end_bv, pos_target);
+                    nodes[pos_target].type = NODE_INTERNAL;
+                    ++it_e;
+                }
+                ++it;
+                ++y;
+            }
+        }
+
         template <class Container>
         static inline void check_resize(Container&& cont, const size_type pos) {
             if(pos >= cont.size()){
@@ -2479,6 +2829,92 @@ namespace block_tree_2d {
 
         }
 
+        template <class input_type>
+        static size_type build_k2_tree(input_type &adjacent_lists, const size_type k,
+                                       const size_type height, const size_type block_size_stop,
+                                       sdsl::bit_vector &bits_t, size_type &n_elem, bool clear = false){
+
+
+            typedef std::tuple<size_type , size_type, size_type,size_type> t_part_tuple;
+            auto k_2 = k * k;
+
+            //1. Edges z-order
+            std::vector<size_type> edges_z_order;
+            for(size_type y = 0; y < adjacent_lists.size(); ++y){
+                for(size_type x : adjacent_lists[y]){
+                    edges_z_order.push_back(codes::zeta_order::encode(x, y));
+                }
+            }
+            size_type l = adjacent_lists.size();
+            if(clear) adjacent_lists.clear();
+
+            //2. Sort edges z-order
+            std::sort(edges_z_order.begin(), edges_z_order.end());
+
+            //4. Init bitmap
+            bits_t = sdsl::bit_vector(512);
+            bits_t[0] = 1;
+
+            n_elem = 0;
+            std::vector<size_type> next_level;
+            std::queue<t_part_tuple> q;
+            if(l > block_size_stop){
+                q.push(t_part_tuple(0, edges_z_order.size()-1, l/k , 0));
+            }else{
+                //Preparing next level
+                n_elem += k_2;
+            }
+            size_type i, j, z_0;
+            size_type t = k_2;
+            size_type zeroes = k_2 -1;
+
+            auto curr_block_size = l;
+            util::logger::log("Current block size=" + std::to_string(curr_block_size) + " Block size stop=" + std::to_string(block_size_stop));
+            //5. Split the front of q into its children
+            while (!q.empty()) {
+                std::tie(i, j, l, z_0) = q.front();
+                q.pop();
+                if(l < curr_block_size){
+                    curr_block_size = l;
+                    util::logger::log("Current block size=" + std::to_string(curr_block_size) + " Block size stop=" + std::to_string(block_size_stop));
+                    if(curr_block_size == block_size_stop){
+                        util::logger::log("Queue size=" + std::to_string(q.size()) + " k^2=" + std::to_string(k_2));
+                    }
+                }
+                auto elements = l * l;
+                for(size_type z_child = 0; z_child < k_2; ++z_child){
+                    auto le = util::search::lower_or_equal_search(i, j, edges_z_order, z_0+elements-1);
+                    check_resize(bits_t, t);
+                    if(le != -1 && edges_z_order[le] >= z_0){
+                        bits_t[t] = 1;
+                        if(l > block_size_stop){
+                            q.push(t_part_tuple(i, le, l/k, z_0));
+                        }else{
+                            //Preparing next level
+                            n_elem += k_2;
+                        }
+                        i = le + 1;
+                    }else{
+                        bits_t[t] = 0;
+                        ++zeroes;
+                    }
+                    ++t;
+                    z_0 += elements;
+                }
+            }
+            bits_t.resize(t);
+            edges_z_order.clear();
+            /*util::logger::log("Building bit_dict size=" + std::to_string(next_level.back()+1));
+            sdsl::bit_vector bit_dict(next_level.back()+1, 0);
+            for(const auto &v : next_level){
+                bit_dict[v]=1;
+            }
+            sdsl::rank_support_v<> bit_dict_rank;
+            sdsl::util::init_support(bit_dict_rank, &bit_dict);
+            util::logger::log("bit_dict was built");*/
+            return zeroes;
+
+        }
 
 
         template <class input_type>
