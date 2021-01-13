@@ -83,13 +83,14 @@ namespace block_tree_2d {
         typedef typename replacements_map_type::iterator replacements_map_iterator;
         typedef struct {
             size_type z_order = 0;
-            size_type type = NODE_EMPTY;
+            uint8_t type = NODE_EMPTY;
             value_type offset_x = 0;
             value_type offset_y = 0;
             size_type ptr = 0;
             size_type hash = 0;
             size_type bits = 0;
         } node_type;
+
         class compare_abs_value {
         public:
             bool operator()(const int64_t &x, const int64_t &y){
@@ -974,7 +975,6 @@ namespace block_tree_2d {
                 if(kr_block.number_ones == 1){
                     nodes[pos_target].type = NODE_EXPLICIT;
                     nodes[pos_target].hash = kr_block.hash;
-                    nodes[pos_target].z_order = z_order_target;
                     nodes[pos_target].offset_x = kr_block.x_point - sx_target;
                     nodes[pos_target].offset_y = kr_block.y_point - sy_target;
                     //delete value
@@ -1000,7 +1000,6 @@ namespace block_tree_2d {
                             nodes[pos_target].type = NODE_LEAF;
                             nodes[pos_target].ptr = pos_source;
                             nodes[pos_target].hash = kr_block.hash;
-                            nodes[pos_target].z_order = z_order_target;
                             if(compute_bits){
                                 //nodes[pos_target].bits = bits_k2tree(adjacent_lists, sx_target, ex_target, sy_target, ey_target,
                                 //                                  kr_block.iterators, block_size, k);
@@ -1015,7 +1014,6 @@ namespace block_tree_2d {
                             ht.insert_hash_collision(it_hash, z_order);
                             nodes[pos_target].type = NODE_INTERNAL;
                             nodes[pos_target].hash = kr_block.hash;
-                            nodes[pos_target].z_order = z_order_target;
                             if(compute_bits){
                                 nodes[pos_target].bits = bits_k2tree(adjacent_lists, sx_target, ex_target, sy_target, ey_target,
                                                                      kr_block.iterators, block_size, k);
@@ -1028,7 +1026,6 @@ namespace block_tree_2d {
                         ht.insert_no_hash_collision(it_table, kr_block.hash, z_order);
                         nodes[pos_target].type = NODE_INTERNAL;
                         nodes[pos_target].hash = kr_block.hash;
-                        nodes[pos_target].z_order = z_order_target;
                         if(compute_bits) {
                             nodes[pos_target].bits = bits_k2tree(adjacent_lists, sx_target, ex_target, sy_target, ey_target,
                                                                  kr_block.iterators, block_size, k);
@@ -2138,7 +2135,6 @@ namespace block_tree_2d {
                         nodes[pos_target].ptr = source_ptr;
                         nodes[pos_target].offset_x = source_off_x;
                         nodes[pos_target].offset_y = source_off_y;
-                        nodes[pos_target].z_order = z_order_target;
                         ++leaves;
                     }
                 }

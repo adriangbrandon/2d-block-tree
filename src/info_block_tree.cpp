@@ -28,36 +28,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 //
-// Created by Adrián on 03/06/2020.
+// Created by Adrián on 13/1/21.
 //
-
-#include <block_tree_double_hybrid_skipping_block.hpp>
-#include <time_util.hpp>
-template<class t_block_tree>
-void run_times(const std::string &name_file){
-
-    std::cout << "Loading Block-tree..." << std::endl;
-    t_block_tree m_block_tree;
-    sdsl::load_from_file(m_block_tree, name_file);
-
-    std::cout << "Size in bytes 2dbt: " << sdsl::size_in_bytes(m_block_tree) << std::endl;
-
-    auto t0 = util::time::user::now();
-    for(uint64_t id = 0; id < m_block_tree.dimensions; ++id){
-        auto r = m_block_tree.neigh(id);
-    }
-    auto t1 = util::time::user::now();
-    for(uint64_t id = 0; id < m_block_tree.dimensions; ++id){
-        auto r = m_block_tree.reverse_neigh(id);
-    }
-    auto t2 = util::time::user::now();
-
-    auto t_dn_2dbt = util::time::duration_cast<util::time::milliseconds>(t1-t0);
-    auto t_rn_2dbt = util::time::duration_cast<util::time::milliseconds>(t2-t1);
-
-    std::cout << "Direct neighbors 2dbt: " << t_dn_2dbt << " (ms)" << std::endl;
-    std::cout << "Reverse neighbors 2dbt: " << t_rn_2dbt << " (ms)" << std::endl;
-}
+#include <block_tree_double_hybrid_skipping_block_V2.hpp>
 
 int main(int argc, char **argv) {
 
@@ -66,7 +39,9 @@ int main(int argc, char **argv) {
         return 0;
     }
     std::string name_file = argv[1];
-    run_times<block_tree_2d::block_tree_double_hybrid_skipping_block<>>(name_file);
+    block_tree_2d::block_tree_double_hybrid_skipping_block<> m_block_tree;
+    sdsl::load_from_file(m_block_tree, name_file);
+    m_block_tree.pointers();
 
 
 }

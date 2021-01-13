@@ -72,7 +72,8 @@ namespace block_tree_2d {
             m_explicit_location.push_back(sdsl::int_vector<>(ARRAY_RESIZE, 0));
         }
 
-        size_type compact_current_level(const std::vector<node_type> &nodes, const size_type level,
+        template<class CollectionNodes>
+        size_type compact_current_level(const CollectionNodes &nodes, const size_type level,
                                         size_type &topology_index, size_type &is_pointer_index, size_type &explicit_index) {
             size_type offset_index = 0, pointer_index = 0, explicit_location_index = 0;
             add_new_pointers_offsets_explicit();
@@ -591,6 +592,23 @@ namespace block_tree_2d {
             sdsl::read_member(m_explicit_location_size, in);
             m_explicit_location.resize(m_explicit_location_size);
             sdsl::load_vector(m_explicit_location, in);
+        }
+
+        void pointers(){
+            for(auto level = m_minimum_level; level < m_maximum_level; ++level){
+                auto p_offset = 0;
+                auto p_no_offset = 0;
+                for(size_type i = 0; i < this->m_offsets[level-m_minimum_level].size()/2; ++i){
+                    auto offset_x = codes::alternative_code::decode(this->m_offsets[level-m_minimum_level][2*i]);
+                    auto offset_y = codes::alternative_code::decode(this->m_offsets[level-m_minimum_level][2*i+1]);
+                    if(offset_x == 0 && offset_y == 0){
+                        p_no_offset++;
+                    }else{
+                        p_offset++;
+                    }
+                }
+                std::cout << "Level=" << level << " p_offset=" << p_offset << " p_no_offset=" << p_no_offset << std::endl;
+            }
         }
 
         void display(){

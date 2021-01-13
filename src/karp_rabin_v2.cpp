@@ -31,8 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Created by Adrián on 15/07/2019.
 //
 
-#include <kr_block_adjacent_list_v2.hpp>
-#include <kr_roll_adjacent_list_v2.hpp>
+#include <kr_block_adjacent_list_skipping_block.hpp>
+#include <kr_roll_adjacent_list_skipping_block.hpp>
 #include <block_tree_algorithm_helper.hpp>
 #include <hash_table_chainning.hpp>
 #include <iostream>
@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
     std::vector<int64_t > row2 = {2, 6};
     std::vector<int64_t > row3 = {};
     //std::vector<uint64_t > row4 = {4,5};
-    std::vector<int64_t > row4 = {4,5};
+    std::vector<int64_t > row4 = {0,5};
     std::vector<int64_t > row5 = {};
     std::vector<int64_t > row6 = {};
     std::vector<int64_t > row7 = {1,5};
@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
     matrix8_8.push_back(row7);
 
 
-    karp_rabin::kr_block_adjacent_list_v2<> m_kr(4, 3355443229, matrix8_8);
+    karp_rabin::kr_block_adjacent_list_skipping_block<> m_kr(4, 3355443229, matrix8_8);
     auto i = 0;
     while(m_kr.next()){
         std::cout << "Hash " << i << ": " << m_kr.hash << std::endl;
@@ -70,7 +70,7 @@ int main(int argc, char **argv) {
         ++i;
     }
 
-    karp_rabin::kr_roll_adjacent_list_v2<> m_kr_roll(4, 3355443229, matrix8_8);
+    karp_rabin::kr_roll_adjacent_list_skipping_block<> m_kr_roll(4, 3355443229, matrix8_8);
     i = 0;
     while(m_kr_roll.next()){
         std::cout << "Hash Roll " << i << ": " << m_kr_roll.hash << std::endl;
