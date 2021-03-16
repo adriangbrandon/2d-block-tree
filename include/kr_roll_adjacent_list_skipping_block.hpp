@@ -224,8 +224,6 @@ namespace karp_rabin {
                     auto length = *(m_heap_in.top().first) - *(m_heap_out.top().first);
                     if(length < m_block_size){ //sliding window overlaps both ones
                         auto shift = *(m_heap_in.top().first) - (m_col + m_block_size-1);
-                        std::cout << "top in: " << *(m_heap_in.top().first) << std::endl;
-                        std::cout << "m_col: " << m_col << " m_row: " << m_row << std::endl;
                         m_hash = (m_hash * m_h_length[shift]) % m_prime; //previous hash
                     }else{
                         m_hash = 0; //previous hash
@@ -245,9 +243,7 @@ namespace karp_rabin {
                         }
                     }
                 }
-                std::cout << "Skipping block from <" << m_col << ", " << m_row << ">" << std::endl;
                 m_col = *(m_heap_in.top().first) - m_block_size + 1;
-                std::cout << "To <" << m_col << ", " << m_row << ">" << std::endl;
             }
 
             auto new_hash = m_hash;

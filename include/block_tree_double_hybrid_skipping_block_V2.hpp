@@ -607,7 +607,7 @@ namespace block_tree_2d {
                         p_offset++;
                     }
                 }
-                std::cout << "Level=" << level << " p_offset=" << p_offset << " p_no_offset=" << p_no_offset << std::endl;
+                std::cout << "Level=" << level << " pointers=" << this->m_pointers[level-m_minimum_level].size() << " p_offset=" << p_offset << " p_no_offset=" << p_no_offset << std::endl;
             }
         }
 
