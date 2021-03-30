@@ -45,8 +45,8 @@ void run_load(const std::string file_name){
     sdsl::load_from_file(m_block_tree, file_name);
 
     std::cout  << sdsl::size_in_bytes(m_block_tree) << std::endl;
-    sdsl::write_structure<sdsl::JSON_FORMAT>(m_block_tree, name_file + ".json");
-    sdsl::write_structure<sdsl::HTML_FORMAT>(m_block_tree, name_file + ".html");
+    sdsl::write_structure<sdsl::JSON_FORMAT>(m_block_tree, file_name + ".json");
+    sdsl::write_structure<sdsl::HTML_FORMAT>(m_block_tree, file_name + ".html");
     /*auto block_size = (uint64_t) std::pow(m_block_tree.k, m_block_tree.height);
     std::vector<std::vector<int64_t >> values;
     auto start_y = 167192;
