@@ -51,10 +51,10 @@ void run_load(const std::string &dataset, const uint64_t k, const uint64_t limit
     name_file = name_file + ".2dbt";
     sdsl::load_from_file(m_block_tree, name_file);
 
-    std::cout << "Size in bytes: " << sdsl::size_in_bytes(m_block_tree) << std::endl;
+    std::cout  << sdsl::size_in_bytes(m_block_tree) << std::endl;
     sdsl::write_structure<sdsl::JSON_FORMAT>(m_block_tree, name_file + ".json");
     sdsl::write_structure<sdsl::HTML_FORMAT>(m_block_tree, name_file + ".html");
-    auto block_size = (uint64_t) std::pow(m_block_tree.k, m_block_tree.height);
+    /*auto block_size = (uint64_t) std::pow(m_block_tree.k, m_block_tree.height);
     std::vector<std::vector<int64_t >> values;
     auto start_y = 167192;
     m_block_tree.access_region(0,  167192, 7947, 167192, values);
@@ -73,7 +73,7 @@ void run_load(const std::string &dataset, const uint64_t k, const uint64_t limit
     //std::cout << "Result: " << result.size()<< std::endl;
 
     std::cout << "First level with pointer: " << m_block_tree.first_level_with_pointer() << std::endl;
-    m_block_tree.display();
+    m_block_tree.display();*/
 
 }
 
