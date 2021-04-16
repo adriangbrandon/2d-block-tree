@@ -42,14 +42,14 @@ void run_times(const std::string &name_file, const std::string &queries){
     t_block_tree m_block_tree;
     sdsl::load_from_file(m_block_tree, name_file);
 
-    std::cout << "Size in bytes 2dbt: " << sdsl::size_in_bytes(m_block_tree) << std::endl;
+    auto qs = experiments::reader::access(queries);
 
-    auto qs = experiments::reader::neighbors(queries);
+    std::cout << "Size in bytes 2dbt: " << sdsl::size_in_bytes(m_block_tree) << std::endl;
 
     auto t0 = util::time::user::now();
     int retrieved = 0;
-    for(uint64_t id = 0; id < qs.size(); ++id){
-        auto r = m_block_tree.reverse_neigh(id);
+    for(uint64_t i = 0; i < qs.size(); ++i){
+        auto r = m_block_tree.access(qs[i].id, qs[i].id_direct);
         retrieved += r.size();
     }
     auto t1 = util::time::user::now();
@@ -66,7 +66,7 @@ void run_times(const std::string &name_file, const std::string &queries){
 int main(int argc, char **argv) {
 
     if(argc != 3){
-        std::cout << argv[0] << "<namefile> <number_nodes>" << std::endl;
+        std::cout << argv[0] << "<namefile> <queries>" << std::endl;
         return 0;
     }
     std::string name_file = argv[1];

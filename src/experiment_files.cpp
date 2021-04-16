@@ -28,50 +28,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 //
-// Created by Adrián on 03/06/2020.
+// Created by Adrián on 15/4/21.
 //
-
-#include <block_tree_double_hybrid_skipping_block.hpp>
-#include <time_util.hpp>
 #include <experiment_setup.hpp>
+#include <iostream>
 
-template<class t_block_tree>
-void run_times(const std::string &name_file, const std::string &queries){
-
-    std::cout << "Loading Block-tree..." << std::endl;
-    t_block_tree m_block_tree;
-    sdsl::load_from_file(m_block_tree, name_file);
-
-    std::cout << "Size in bytes 2dbt: " << sdsl::size_in_bytes(m_block_tree) << std::endl;
-
-    auto qs = experiments::reader::neighbors(queries);
-
-    auto t0 = util::time::user::now();
-    int retrieved = 0;
-    for(uint64_t id = 0; id < qs.size(); ++id){
-        auto r = m_block_tree.reverse_neigh(id);
-        retrieved += r.size();
-    }
-    auto t1 = util::time::user::now();
-
-    auto t = util::time::duration_cast<util::time::milliseconds>(t1-t0);
-
-    std::cout << "Recovered Nodes: " << retrieved << std::endl;
-    std::cout << "Queries: " << qs.size() << std::endl;
-    std::cout << "Total time(ms): " << t << std::endl;
-    std::cout << "Time per query: " << t/qs.size() << std::endl;
-    std::cout << "Time per link: " << t/retrieved << std::endl;
-}
 
 int main(int argc, char **argv) {
 
-    if(argc != 3){
-        std::cout << argv[0] << "<namefile> <number_nodes>" << std::endl;
+    if (argc != 4) {
+        std::cout << argv[0] << "<file_name> <size> <max>" << std::endl;
         return 0;
     }
-    std::string name_file = argv[1];
-    std::string queries = argv[2];
-    run_times<block_tree_2d::block_tree_double_hybrid_skipping_block<>>(name_file, queries);
+    std::string file_name = argv[1];
+    int size = atoi(argv[2]);
+    int max = atoi(argv[3]);
 
+    std::string neigh_file = file_name + ".neigh";
+    std::string access_file = file_name + ".access";
+    experiments::writer::neighbors(neigh_file, size, max);
+    experiments::writer::access(access_file, size, max);
 
 }

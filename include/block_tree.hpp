@@ -442,6 +442,13 @@ namespace block_tree_2d {
             }
         }
 
+        inline void access(const size_type id, const size_type direct_id,
+                                  input_type &result){
+            result = input_type(1);
+            auto block_size = (size_type) std::pow(m_k, m_height);
+            this->recursive_access_region(direct_id, direct_id, id, id, 0, 0, 0, 0, block_size, result, add_in_region());
+        }
+
         inline void access_region(const size_type min_x, const size_type min_y,
                            const size_type max_x, const size_type max_y,
                            input_type &result){
