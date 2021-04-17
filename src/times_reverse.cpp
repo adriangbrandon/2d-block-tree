@@ -49,7 +49,7 @@ void run_times(const std::string &name_file, const std::string &queries){
     auto t0 = util::time::user::now();
     int retrieved = 0;
     for(uint64_t id = 0; id < qs.size(); ++id){
-        auto r = m_block_tree.reverse_neigh(id);
+        auto r = m_block_tree.reverse_neigh(qs[id]);
         retrieved += r.size();
     }
     auto t1 = util::time::user::now();
