@@ -250,7 +250,7 @@ namespace block_tree_2d {
 
 
         template <class add_function, class result_type>
-         void recursive_access_region(const size_type min_x, const size_type max_x, const size_type min_y, const size_type max_y,
+        void recursive_access_region(const size_type min_x, const size_type max_x, const size_type min_y, const size_type max_y,
                                      const size_type x, const size_type y, const size_type idx, const size_type level,
                                      const size_type block_size, result_type &result, add_function add,
                                      const bool taking_pointer=false, const size_type level_taking_pointer = 0){
