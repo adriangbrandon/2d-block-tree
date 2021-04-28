@@ -412,7 +412,6 @@ namespace block_tree_2d {
         {
             sdsl::read_member(m_k, in);
             sdsl::read_member(m_height, in);
-            sdsl::read_member(m_height, in);
             sdsl::read_member(m_dimensions, in);
             sdsl::read_member(m_ones_prev_leaves, in);
             m_t.load(in);
