@@ -150,11 +150,20 @@ target_link_libraries(test_neighbors sdsl divsufsort divsufsort64)
 add_executable(times_direct src/times_direct.cpp)
 target_link_libraries(times_direct sdsl divsufsort divsufsort64)
 
+add_executable(times_k2_direct src/times_k2_direct.cpp)
+target_link_libraries(times_k2_direct sdsl divsufsort divsufsort64)
+
 add_executable(times_access src/times_access.cpp)
 target_link_libraries(times_access sdsl divsufsort divsufsort64)
 
+add_executable(times_k2_access src/times_k2_access.cpp)
+target_link_libraries(times_k2_access sdsl divsufsort divsufsort64)
+
 add_executable(times_reverse src/times_reverse.cpp)
 target_link_libraries(times_reverse sdsl divsufsort divsufsort64)
+
+add_executable(times_k2_reverse src/times_k2_reverse.cpp)
+target_link_libraries(times_k2_reverse sdsl divsufsort divsufsort64)
 
 add_executable(info_block_tree src/info_block_tree.cpp)
 target_link_libraries(info_block_tree sdsl divsufsort divsufsort64)

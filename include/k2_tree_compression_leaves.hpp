@@ -376,6 +376,13 @@ namespace block_tree_2d {
             return r;
         }
 
+        inline std::vector<size_type> access(const size_type id, const size_type direct_id){
+            std::vector<size_type> r;
+            auto block_size = (size_type) std::pow(this->m_k, this->m_height);
+            this->recursive_access_region(direct_id, direct_id, id, id, 0, 0, 0, 0, block_size, r, add_in_row());
+            return r;
+        }
+
         inline std::vector<size_type> reverse_neigh(size_type id){
             std::vector<size_type> r;
             auto block_size = (size_type) std::pow(m_k, m_height);
