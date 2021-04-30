@@ -112,10 +112,22 @@ namespace block_tree_2d {
         }
 
 
+        inline uint64_t compute_dimensions(input_type &adjacency_lists){
+            uint64_t d = adjacency_lists.size()-1;
+            for(size_type r = 0; r < adjacency_lists.size(); ++r){
+                for(size_type c = 0; c < adjacency_lists[r].size(); ++c){
+                    if(d < adjacency_lists[r][c]){
+                        d =  adjacency_lists[r][c];
+                    }
+                }
+            }
+            return d+1;
+        }
+
         inline void init_construction(size_type &h, size_type &total_size, input_type &adjacency_lists,
                                       const size_type kparam){
             m_k = kparam;
-            m_dimensions = adjacency_lists.size();
+            m_dimensions = compute_dimensions(adjacency_lists);
             m_k2 = m_k*m_k;
             h = (size_type) std::ceil(std::log(m_dimensions)/std::log(m_k));
             total_size = (size_type) std::pow(m_k, h);

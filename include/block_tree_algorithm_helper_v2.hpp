@@ -963,9 +963,6 @@ namespace block_tree_2d {
                 //Target z-order
                 auto processed_blocks = kr_block.row * blocks_per_row + kr_block.col+1;
                 auto z_order_target = codes::zeta_order::encode(kr_block.col, kr_block.row);
-                if(z_order_target == 0){
-                    std::cout << "Z_order = " << 0 << std::endl;
-                }
                 size_type pos_target;
                 find_zorder(z_order_target, adjacent_lists.size(), block_size, k, bv, rank, end_bv, pos_target);
                 value_type sx_target = kr_block.col * block_size;

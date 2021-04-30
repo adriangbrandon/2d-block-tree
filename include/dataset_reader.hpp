@@ -127,7 +127,7 @@ namespace dataset_reader{
             }
             input.close();
 
-            auto bit_position = [](int col, int value, int n_cols, int min_value) {
+            auto bit_position = [](uint64_t col, uint64_t value, uint64_t n_cols, uint64_t min_value) {
                 return col + (n_cols * (value-min_value));
             };
 
@@ -145,6 +145,12 @@ namespace dataset_reader{
             }
             for(int r = 0; r < n_rows; ++r){
                 std::sort(adjacency_lists[r].begin(), adjacency_lists[r].end());
+            }
+
+            for(int r = 0; r < n_rows; ++r){
+                for(int i = 0; i < adjacency_lists[r].size(); ++i){
+
+                }
             }
             return sigma;
 
