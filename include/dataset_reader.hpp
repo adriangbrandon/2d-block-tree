@@ -38,11 +38,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdint.h>
 #include <vector>
 #include <sys/stat.h>
+#include <fstream>
+#include <sdsl/coder.hpp>
 
 namespace dataset_reader{
 
 
-    class web_graph{
+    class web_graph {
 
         /***
          * File containing the graph in binary format.
@@ -60,16 +62,16 @@ namespace dataset_reader{
          * -4 -5 318 -6 -7 118 219 297 -8 7 19 219 286 297 -9 7
          */
 
-        public:
+    public:
         static void read(const std::string file_name,
-                         std::vector<std::vector<int64_t>> &adjacency_lists, uint64_t limit = -1){
+                         std::vector<std::vector<int64_t>> &adjacency_lists, const uint64_t n_rows=0, const uint64_t n_cols=0) {
 
             struct stat s;
-            const char* file_name_c = file_name.c_str();
-            if(stat(file_name_c, &s) != 0){
+            const char *file_name_c = file_name.c_str();
+            if (stat(file_name_c, &s) != 0) {
                 std::cout << "Error cannot open file: " << file_name << std::endl;
             }
-            FILE* file = fopen(file_name_c, "r");
+            FILE *file = fopen(file_name_c, "r");
             uint32_t number_nodes = 0;
             uint64_t number_edges = 0;
             fread(&number_nodes, sizeof(uint32_t), 1, file);
@@ -80,21 +82,18 @@ namespace dataset_reader{
             uint32_t zero = 0;
             //fread(&zero, sizeof(uint32_t), 1, file);
             uint64_t len_lists = (s.st_size - sizeof(uint32_t) - sizeof(uint64_t)) / sizeof(int32_t);
-            int32_t* data = (int32_t*) std::malloc(sizeof(int32_t) * len_lists);
+            int32_t *data = (int32_t *) std::malloc(sizeof(int32_t) * len_lists);
             fread(data, sizeof(uint32_t), len_lists, file);
-            if(limit != -1){
-                number_nodes = limit;
-            }
             adjacency_lists.resize(number_nodes, std::vector<int64_t>());
 
             int64_t id = -1, number_ones = 0;
-            for(uint64_t i = 0; i < len_lists && id < number_nodes; i++){
-                if(data[i]<0){
+            for (uint64_t i = 0; i < len_lists && id < number_nodes; i++) {
+                if (data[i] < 0) {
                     id++;
-                }else{
-                    if(data[i]-1 < number_nodes){
+                } else {
+                    if (data[i] - 1 < number_nodes) {
                         number_ones++;
-                        adjacency_lists[id].push_back(data[i]-1);
+                        adjacency_lists[id].push_back(data[i] - 1);
                     }
                 }
             }
@@ -106,8 +105,53 @@ namespace dataset_reader{
             std::cout << "number_edges: " << number_edges << std::endl;
 
         }
+    };
+
+    class raster {
+    public:
+        static int read(const std::string file_name,
+                        std::vector<std::vector<int64_t>> &adjacency_lists, const uint64_t n_rows, const uint64_t n_cols){
+
+            std::ifstream input(file_name);
+            uint64_t n = 0;
+            std::vector<int> values(n_rows * n_cols);
+            int max_value = 0;
+            int min_value = INT32_MAX;
+            for (int r = 0; r < n_rows; ++r) {
+                for (int c = 0; c < n_cols; ++c) {
+                    sdsl::read_member(values[n], input);
+                    if(values[n] > max_value) max_value = values[n];
+                    if(values[n] < min_value) min_value = values[n];
+                    n++;
+                }
+            }
+            input.close();
+
+            auto bit_position = [](int col, int value, int n_cols, int min_value) {
+                return col + (n_cols * (value-min_value));
+            };
+
+            //Prepare input for adjacency_lists
+            adjacency_lists.resize(n_rows, std::vector<int64_t>());
+            int sigma = max_value - min_value + 1;
+            n = 0;
+            for(int r = 0; r < n_rows; ++r){
+                for(int c = 0; c < n_cols; ++c ){
+                    for(auto v = min_value; v <= values[n]; ++v){
+                        adjacency_lists[r].push_back(bit_position(c, v, n_cols, min_value));
+                    }
+                    ++n;
+                }
+            }
+            for(int r = 0; r < n_rows; ++r){
+                std::sort(adjacency_lists[r].begin(), adjacency_lists[r].end());
+            }
+            return sigma;
+
+        }
 
     };
+
 }
 
 

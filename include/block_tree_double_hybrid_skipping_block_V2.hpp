@@ -44,7 +44,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace block_tree_2d {
 
-    template <class input_t = std::vector<std::vector<int64_t>>>
+    template <class reader_t = dataset_reader::web_graph,
+              class input_t = std::vector<std::vector<int64_t>>>
     class block_tree_double_hybrid_skipping_block : public block_tree<input_t> {
 
     public:
@@ -56,6 +57,7 @@ namespace block_tree_2d {
         typedef typename block_tree<input_t>::htc_type htc_type;
         typedef typename block_tree<input_t>::htc_multiple_type htc_multiple_type;
         typedef typename block_tree<input_t>::htc_multiple_v2_type htc_multiple_v2_type;
+        typedef reader_t reader_type;
 
     private:
 
@@ -127,7 +129,7 @@ namespace block_tree_2d {
 
         void construction(const std::string &file_name, input_type &adjacency_lists, size_type h,
                           size_type block_size, size_type blocks,
-                          size_type last_block_size_k2_tree, size_type limit){
+                          size_type last_block_size_k2_tree, const size_type n_rows = 0, const size_type n_cols = 0){
 
             typedef typename input_type::value_type::iterator iterator_value_type;
 
@@ -161,7 +163,7 @@ namespace block_tree_2d {
                 std::cout << this->m_topology[i] << ", ";
             }*/
             std::cout << adjacency_lists.size() << std::endl;
-            dataset_reader::web_graph::read(file_name, adjacency_lists, limit);
+            reader_type::read(file_name, adjacency_lists, n_rows, n_cols);
             h = (size_type) std::ceil(std::log(this->m_dimensions)/std::log(this->m_k));
             auto total_size = (size_type) std::pow(this->m_k, h);
             if(adjacency_lists.size() < total_size){
@@ -476,14 +478,16 @@ namespace block_tree_2d {
         block_tree_double_hybrid_skipping_block() = default;
 
         block_tree_double_hybrid_skipping_block(const std::string &file_name, const size_type kparam, const size_type level,
-                                                const size_type limit = -1) {
+                                                const size_type n_rows=0, const size_type n_cols=0) {
             input_type adjacency_lists;
-            dataset_reader::web_graph::read(file_name, adjacency_lists, limit);
+            reader_type::read(file_name, adjacency_lists, n_rows, n_cols);
             size_type h, total_size;
             this->init_construction(h, total_size, adjacency_lists, kparam);
             size_type blocks = this->m_k2, block_size = total_size/this->m_k;
-            construction(file_name, adjacency_lists, h, block_size, blocks, level, limit);
+            construction(file_name, adjacency_lists, h, block_size, blocks, level, n_rows, n_cols);
         }
+
+
 
         inline std::vector<size_type> access(const size_type id, const size_type direct_id){
             std::vector<size_type> r;

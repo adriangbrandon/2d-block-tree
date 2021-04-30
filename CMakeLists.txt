@@ -105,6 +105,9 @@ target_link_libraries(block_tree_skip_levels sdsl divsufsort divsufsort64)
 add_executable(build_webgraph src/build_webgraph.cpp)
 target_link_libraries(build_webgraph sdsl divsufsort divsufsort64)
 
+add_executable(build_raster src/build_raster.cpp)
+target_link_libraries(build_raster sdsl divsufsort divsufsort64)
+
 add_executable(load_webgraph src/load_webgraph.cpp)
 target_link_libraries(load_webgraph sdsl divsufsort divsufsort64)
 
