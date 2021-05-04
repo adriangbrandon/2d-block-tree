@@ -117,15 +117,25 @@ namespace dataset_reader{
             std::vector<int> values(n_rows * n_cols);
             int max_value = 0;
             int min_value = INT32_MAX;
+            int zeroes = 0;
             for (int r = 0; r < n_rows; ++r) {
                 for (int c = 0; c < n_cols; ++c) {
                     sdsl::read_member(values[n], input);
-                    if(values[n] > max_value) max_value = values[n];
-                    if(values[n] < min_value) min_value = values[n];
-                    n++;
+                    if(values[n]>0){
+                        if(values[n] > max_value) max_value = values[n];
+                        if(values[n] < min_value) min_value = values[n];
+                    }else{
+                        ++zeroes;
+                    }
+                    ++n;
                 }
             }
             input.close();
+
+            std::cout << "Min value: " << min_value << std::endl;
+            std::cout << "Max value: " << max_value << std::endl;
+            std::cout << "Zeroes: " << zeroes << " (" << (zeroes / (double) n)*100 << "% ) " << std::endl;
+            //exit(0);
 
             auto bit_position = [](uint64_t col, uint64_t value, uint64_t n_cols, uint64_t min_value) {
                 return col + (n_cols * (value-min_value));
@@ -147,11 +157,7 @@ namespace dataset_reader{
                 std::sort(adjacency_lists[r].begin(), adjacency_lists[r].end());
             }
 
-            for(int r = 0; r < n_rows; ++r){
-                for(int i = 0; i < adjacency_lists[r].size(); ++i){
 
-                }
-            }
             return sigma;
 
         }
