@@ -158,7 +158,7 @@ namespace dataset_reader{
             }
 
 
-            return {n_rows, sigma};
+            return {n_rows, sigma * n_cols};
 
         }
 

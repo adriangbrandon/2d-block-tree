@@ -10,7 +10,6 @@
 #include <fstream>
 #include <cctype>
 #include <sys/stat.h>
-#include <config_util.hpp>
 #include <dirent.h>
 #include <stdint.h>
 
