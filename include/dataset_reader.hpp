@@ -109,7 +109,7 @@ namespace dataset_reader{
 
     class raster {
     public:
-        static int read(const std::string file_name,
+        static std::pair<int, int> read(const std::string file_name,
                         std::vector<std::vector<int64_t>> &adjacency_lists, const uint64_t n_rows, const uint64_t n_cols){
 
             std::ifstream input(file_name);
@@ -158,7 +158,7 @@ namespace dataset_reader{
             }
 
 
-            return sigma;
+            return {n_rows, sigma};
 
         }
 

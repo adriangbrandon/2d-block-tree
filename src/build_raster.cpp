@@ -39,6 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //#include <block_tree_hybrid.hpp>
 //#include <block_tree_double_hybrid.hpp>
 #include <block_tree_double_hybrid_skipping_block_V2.hpp>
+#include <file_util.hpp>
 
 /*template<class t_block_tree>
 void build(t_block_tree &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k, const uint64_t last_block_size_k2_tree){
@@ -70,23 +71,30 @@ void run_build(const std::string &dataset, const uint64_t k,
 
     std::cout << "Building Block-tree..." << std::endl;
     t_block_tree m_block_tree;
-    auto t0 = std::chrono::high_resolution_clock::now();
-    build(m_block_tree, dataset, k, last_block_size_k2_tree, n_rows, n_cols);
-    auto t1 = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::seconds>(t1-t0).count();
-    std::string name_file = dataset;
     uint64_t first_block_size = last_block_size_k2_tree / k;
-
+    std::string name_file = dataset;
     name_file = name_file +"_" + std::to_string(first_block_size) + ".2dbt";
+    uint64_t duration = 0;
+    if(util::file::file_exists(name_file)){
+        sdsl::load_from_file(m_block_tree, name_file);
+    }else{
+        auto t0 = std::chrono::high_resolution_clock::now();
+        build(m_block_tree, dataset, k, last_block_size_k2_tree, n_rows, n_cols);
+        auto t1 = std::chrono::high_resolution_clock::now();
+        duration = std::chrono::duration_cast<std::chrono::seconds>(t1-t0).count();
+    }
+
+
+
     std::cout << "Storing the block tree... " << std::flush;
     sdsl::store_to_file(m_block_tree, name_file);
     std::cout << "Done. " << std::endl;
     //m_block_tree.print();
     std::vector<std::vector<int64_t>> copy_lists;
-    dataset_reader::raster::read(dataset, copy_lists, n_rows, n_cols);
+    auto rows_cols = dataset_reader::raster::read(dataset, copy_lists, n_rows, n_cols);
     std::cout << "Retrieving adjacency lists... " << std::flush;
     std::vector<std::vector<int64_t >> result;
-    m_block_tree.access_region(0, 0, copy_lists.size() - 1, copy_lists.size() - 1, result);
+    m_block_tree.access_region(0, 0, rows_cols.second - 1, rows_cols.first - 1, result);
     std::cout << "Done." << std::endl;
     auto size_bt = sdsl::size_in_bytes(m_block_tree);
     /*std::cout << "--------------------Result--------------------" << std::endl;
