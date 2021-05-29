@@ -197,8 +197,8 @@ namespace dataset_reader{
 
             //Prepare input for adjacency_lists
             adjacency_lists.resize(n_rows, std::vector<int64_t>());
-            n = 0;
             for(int b = 0; b <= msb; ++b){
+                n = 0;
                 for(int r = 0; r < n_rows; ++r){
                     for(int c = 0; c < n_cols; ++c ){
                         bool set_bit =  values[n] & (0x0001 << b);
