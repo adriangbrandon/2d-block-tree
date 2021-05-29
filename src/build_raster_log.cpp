@@ -58,9 +58,9 @@ void build(block_tree_2d::block_tree_hybrid<> &b, std::vector<std::vector<int64_
     std::cout << "There are pointers from level " << b.minimum_level+1 << " up to level " << b.maximum_level-1 << std::endl;
 }*/
 
-void build(block_tree_2d::block_tree_double_hybrid_skipping_block<dataset_reader::raster> &b, const std::string &file_name,
+void build(block_tree_2d::block_tree_double_hybrid_skipping_block<dataset_reader::raster_log> &b, const std::string &file_name,
            const uint64_t k, const uint64_t last_block_size_k2_tree, const uint64_t n_rows, const uint64_t n_cols){
-    b = block_tree_2d::block_tree_double_hybrid_skipping_block<dataset_reader::raster>(file_name, k, last_block_size_k2_tree, n_rows, n_cols);
+    b = block_tree_2d::block_tree_double_hybrid_skipping_block<dataset_reader::raster_log>(file_name, k, last_block_size_k2_tree, n_rows, n_cols);
     std::cout << "Block tree height=" << b.height << std::endl;
     std::cout << "There are pointers from level " << b.minimum_level+1 << " up to level " << b.maximum_level-1 << std::endl;
 }
