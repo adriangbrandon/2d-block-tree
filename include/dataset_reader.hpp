@@ -147,8 +147,10 @@ namespace dataset_reader{
             n = 0;
             for(int r = 0; r < n_rows; ++r){
                 for(int c = 0; c < n_cols; ++c ){
-                    for(auto v = values[n]; v <= max_value; ++v){
-                        adjacency_lists[r].push_back(bit_position(c, v, n_cols, min_value));
+                    if(values[n]>0){
+                        for(auto v = values[n]; v <= max_value; ++v){
+                            adjacency_lists[r].push_back(bit_position(c, v, n_cols, min_value));
+                        }
                     }
                     ++n;
                 }
@@ -159,6 +161,61 @@ namespace dataset_reader{
 
 
             return {n_rows, sigma * n_cols};
+
+        }
+
+    };
+
+    class raster_log {
+    public:
+        static std::pair<int, int> read(const std::string file_name,
+                                        std::vector<std::vector<int64_t>> &adjacency_lists, const uint64_t n_rows, const uint64_t n_cols){
+
+            std::ifstream input(file_name);
+            uint64_t n = 0;
+            std::vector<int> values(n_rows * n_cols);
+            int msb = 0;
+            int zeroes = 0;
+            for (int r = 0; r < n_rows; ++r) {
+                for (int c = 0; c < n_cols; ++c) {
+                    sdsl::read_member(values[n], input);
+                    int hi = sdsl::bits::hi(values[n]);
+                    if(msb < hi) msb = hi;
+                    if (values[n] == 0) ++zeroes;
+                    ++n;
+                }
+            }
+            input.close();
+
+            std::cout << "MSB: " << msb << std::endl;
+            std::cout << "Zeroes: " << zeroes << " (" << (zeroes / (double) n)*100 << "% ) " << std::endl;
+            //exit(0);
+
+            auto bit_position = [](uint64_t col, uint64_t n_cols, uint64_t ith_bit) {
+                return col + (n_cols * ith_bit);
+            };
+
+            //Prepare input for adjacency_lists
+            adjacency_lists.resize(n_rows, std::vector<int64_t>());
+            n = 0;
+            for(int b = 0; b <= msb; ++b){
+                for(int r = 0; r < n_rows; ++r){
+                    for(int c = 0; c < n_cols; ++c ){
+                        bool set_bit =  values[n] & (0x0001 << b);
+                        if(set_bit){
+                            adjacency_lists[r].push_back(bit_position(c, n_cols, b));
+                        }
+                        ++n;
+                    }
+                }
+            }
+
+            for(int r = 0; r < n_rows; ++r){
+                std::sort(adjacency_lists[r].begin(), adjacency_lists[r].end());
+            }
+
+
+            return {n_rows, (msb+1) * n_cols};
 
         }
 
