@@ -91,7 +91,7 @@ void run_build(const std::string &dataset, const uint64_t k,
     std::cout << "Done. " << std::endl;
     //m_block_tree.print();
     std::vector<std::vector<int64_t>> copy_lists;
-    auto rows_cols = dataset_reader::raster::read(dataset, copy_lists, n_rows, n_cols);
+    auto rows_cols = dataset_reader::raster_log::read(dataset, copy_lists, n_rows, n_cols);
     std::cout << "Retrieving adjacency lists... " << std::flush;
     std::vector<std::vector<int64_t >> result;
     m_block_tree.access_region(0, 0, rows_cols.second - 1, rows_cols.first - 1, result);
