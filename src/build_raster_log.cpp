@@ -167,6 +167,6 @@ int main(int argc, char **argv) {
     auto n_rows = static_cast<uint64_t >(atoi(argv[4]));
     auto n_cols = static_cast<uint64_t >(atoi(argv[5]));
 
-    run_build<block_tree_2d::block_tree_double_hybrid_skipping_block<dataset_reader::raster>>(dataset, k, last_block_size_k2_tree, n_rows, n_cols);
+    run_build<block_tree_2d::block_tree_double_hybrid_skipping_block<dataset_reader::raster_log>>(dataset, k, last_block_size_k2_tree, n_rows, n_cols);
 
 }
