@@ -147,7 +147,7 @@ namespace dataset_reader{
             n = 0;
             for(int r = 0; r < n_rows; ++r){
                 for(int c = 0; c < n_cols; ++c ){
-                    for(auto v = min_value; v <= values[n]; ++v){
+                    for(auto v = values[n]; v <= max_value; ++v){
                         adjacency_lists[r].push_back(bit_position(c, v, n_cols, min_value));
                     }
                     ++n;
