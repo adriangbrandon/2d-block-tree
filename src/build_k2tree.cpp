@@ -34,7 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <adjacency_list_helper.hpp>
 #include <sdsl/io.hpp>
 #include <sdsl/k2_tree.hpp>
-#include <block_tree_algorithm_helper_v2.hpp>
+#include <block_tree_algorithm_helper.hpp>
 
 template <class Range>
 uint64_t code_block(Range &block){

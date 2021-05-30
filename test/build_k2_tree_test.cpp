@@ -33,7 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <stdint.h>
 #include <vector>
-#include <block_tree_algorithm_helper_v2.hpp>
+#include <block_tree_algorithm_helper.hpp>
 
 int main(int argc, char **argv) {
 

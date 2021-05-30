@@ -57,14 +57,10 @@ include_directories("${PROJECT_SOURCE_DIR}/external/googletest/include"
         )
 
 
-add_executable(karp_rabin src/karp_rabin.cpp)
-target_link_libraries(karp_rabin sdsl divsufsort divsufsort64)
 
 add_executable(karp_rabin_v2 src/karp_rabin_v2.cpp)
 target_link_libraries(karp_rabin_v2 sdsl divsufsort divsufsort64)
 
-add_executable(karp_rabin_test test/karp_rabin_test.cpp)
-target_link_libraries(karp_rabin_test sdsl divsufsort divsufsort64)
 
 #add_executable(algorithm_test test/algorithm_test.cpp)
 #target_link_libraries(algorithm_test sdsl divsufsort divsufsort64)
@@ -72,20 +68,11 @@ target_link_libraries(karp_rabin_test sdsl divsufsort divsufsort64)
 add_executable(block_tree_test test/block_tree_test.cpp)
 target_link_libraries(block_tree_test sdsl divsufsort divsufsort64)
 
-add_executable(block_tree_hybrid_test test/block_tree_hybrid_test.cpp)
-target_link_libraries(block_tree_hybrid_test sdsl divsufsort divsufsort64)
-
-add_executable(block_tree_double_hybrid_test test/block_tree_double_hybrid_test.cpp)
-target_link_libraries(block_tree_double_hybrid_test sdsl divsufsort divsufsort64)
 
 #add_executable(block_tree_double_hybrid_skipping_block_test test/block_tree_double_hybrid_skipping_block_test.cpp)
 #target_link_libraries(block_tree_double_hybrid_skipping_block_test sdsl divsufsort divsufsort64)
 
-add_executable(block_tree_skip_levels_test test/block_tree_skip_levels_test.cpp)
-target_link_libraries(block_tree_skip_levels_test sdsl divsufsort divsufsort64)
 
-add_executable(adjacency_lists_test test/adjacency_lists_test.cpp)
-target_link_libraries(adjacency_lists_test sdsl divsufsort divsufsort64)
 
 add_executable(hash_table src/hash_table.cpp)
 target_link_libraries(hash_table sdsl divsufsort divsufsort64)
@@ -96,11 +83,7 @@ target_link_libraries(hash_table sdsl divsufsort divsufsort64)
 #add_executable(algorithm_v2 src/algorithm_v2.cpp)
 #target_link_libraries(algorithm_v2 sdsl divsufsort divsufsort64)
 
-add_executable(block_tree src/block_tree.cpp)
-target_link_libraries(block_tree sdsl divsufsort divsufsort64)
 
-add_executable(block_tree_skip_levels src/block_tree_skip_levels.cpp)
-target_link_libraries(block_tree_skip_levels sdsl divsufsort divsufsort64)
 
 add_executable(build_webgraph src/build_webgraph.cpp)
 target_link_libraries(build_webgraph sdsl divsufsort divsufsort64)
@@ -111,9 +94,6 @@ target_link_libraries(build_raster sdsl divsufsort divsufsort64)
 add_executable(build_raster_log src/build_raster_log.cpp)
 target_link_libraries(build_raster_log sdsl divsufsort divsufsort64)
 
-add_executable(load_webgraph src/load_webgraph.cpp)
-target_link_libraries(load_webgraph sdsl divsufsort divsufsort64)
-
 add_executable(build_k2tree src/build_k2tree.cpp)
 target_link_libraries(build_k2tree sdsl divsufsort divsufsort64)
 
@@ -123,11 +103,6 @@ target_link_libraries(build_k2tree_v1 sdsl divsufsort divsufsort64)
 add_executable(build_k2_tree_test test/build_k2_tree_test.cpp)
 target_link_libraries(build_k2_tree_test sdsl divsufsort divsufsort64)
 
-add_executable(fixing_error src/fixing_error.cpp)
-target_link_libraries(fixing_error sdsl divsufsort divsufsort64)
-
-add_executable(display src/display.cpp)
-target_link_libraries(display sdsl divsufsort divsufsort64)
 
 add_executable(times src/times.cpp)
 target_link_libraries(times sdsl divsufsort divsufsort64)
@@ -137,12 +112,6 @@ target_link_libraries(times_god_level sdsl divsufsort divsufsort64)
 
 add_executable(check_blocks src/check_blocks.cpp)
 target_link_libraries(check_blocks sdsl divsufsort divsufsort64)
-
-add_executable(roll_replacement src/roll_replacement.cpp)
-target_link_libraries(roll_replacement sdsl divsufsort divsufsort64)
-
-add_executable(sparse_dense_matrix src/sparse_dense_matrix.cpp)
-target_link_libraries(sparse_dense_matrix sdsl divsufsort divsufsort64)
 
 add_executable(proba test/proba.cpp)
 target_link_libraries(proba sdsl divsufsort divsufsort64)

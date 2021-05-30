@@ -38,10 +38,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define ARRAY_RESIZE 64
 #define BT_VERBOSE 0
 
-#include <block_tree_algorithm_helper_v2.hpp>
+#include <block_tree_algorithm_helper.hpp>
 #include "alternative_code.hpp"
-#include "hash_table_chainning_multiple.hpp"
-#include "hash_table_chainning_multiple_v2.hpp"
 #include <logger.hpp>
 #include <algorithm>
 #include <result_util.hpp>
@@ -58,8 +56,6 @@ namespace block_tree_2d {
         typedef input_t input_type;
         typedef typename block_tree_2d::algorithm::node_type node_type;
         typedef hash_table::hash_table_chainning<uint64_t , uint64_t> htc_type;
-        typedef hash_table::hash_table_chainning_multiple<uint64_t , uint64_t> htc_multiple_type;
-        typedef hash_table::hash_table_chainning_multiple_v2<uint64_t , uint64_t> htc_multiple_v2_type;
 
     protected:
         size_type m_k;
@@ -136,7 +132,7 @@ namespace block_tree_2d {
             }
         }
 
-        virtual void construction(input_type &adjacency_lists, size_type h, size_type block_size, size_type blocks){
+        /*virtual void construction(input_type &adjacency_lists, size_type h, size_type block_size, size_type blocks){
             std::vector<node_type> nodes(blocks);
             //Init map between z_order and position in vector nodes
             block_tree_2d::algorithm::hash_type hash;
@@ -172,12 +168,10 @@ namespace block_tree_2d {
             m_level_ones.resize(2*m_height);
             sdsl::util::init_support(m_t_rank, &m_t);
             sdsl::util::init_support(m_t_select, &m_t);
-           /* sdsl::util::init_support(m_topology_rank, &m_topology);
-            sdsl::util::init_support(m_topology_select, &m_topology);*/
             sdsl::util::init_support(m_is_pointer_rank, &m_is_pointer);
             sdsl::util::bit_compress(m_level_ones);
             util::logger::log("2D Block Tree DONE!!!");
-        }
+        }*/
 
         template <class Container>
         inline void check_resize(Container&& cont, const size_type pos) {
@@ -390,7 +384,7 @@ namespace block_tree_2d {
         }
 
         //returns number of pointers
-        size_type processing_level(const size_type level, input_type &adjacency_lists, size_type block_size,
+     /*   size_type processing_level(const size_type level, input_type &adjacency_lists, size_type block_size,
                             size_type &topology_index, size_type &is_pointer_index,
                             typename block_tree_2d::algorithm::hash_type &hash, std::vector<node_type> &nodes){
 
@@ -409,7 +403,7 @@ namespace block_tree_2d {
             block_tree_2d::algorithm::prepare_next_level(adjacency_lists, hash, m_k2, nodes);
             return pointers;
             //std::cout << "Level: " << level << std::endl;
-        }
+        }*/
 
     public:
 
@@ -421,7 +415,6 @@ namespace block_tree_2d {
             size_type h, total_size;
             init_construction(h, total_size, adjacency_lists, kparam);
             size_type blocks = m_k2, block_size = total_size/m_k;
-            construction(adjacency_lists, h, block_size, blocks);
 
         }
 

@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // Created by Adrián on 13/1/21.
 //
-#include <block_tree_double_hybrid_skipping_block_V2.hpp>
+#include <block_tree_double_hybrid_skipping_block.hpp>
 
 int main(int argc, char **argv) {
 

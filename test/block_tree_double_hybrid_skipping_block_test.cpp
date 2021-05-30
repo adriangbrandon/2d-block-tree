@@ -35,7 +35,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <block_tree.hpp>
 #include <adjacency_list_helper.hpp>
-#include <block_tree_double_hybrid.hpp>
 #include <block_tree_double_hybrid_skipping_block.hpp>
 
 uint64_t number_of_ones(const std::vector<std::vector<int64_t>> &adjacency_lists) {

@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Created by Adrián on 26/07/2019.
 //
 
-#include <block_tree_algorithm_helper_v2.hpp>
+#include <block_tree_algorithm_helper.hpp>
 #include <hash_table_chainning.hpp>
 #include <iostream>
 #include <vector>

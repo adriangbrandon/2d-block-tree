@@ -31,14 +31,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Created by Adrián on 06/08/2019.
 //
 #include <dataset_reader.hpp>
-#include <block_tree.hpp>
-#include <block_tree_skip_levels.hpp>
 #include <adjacency_list_helper.hpp>
 #include <sdsl/io.hpp>
-//#include <block_tree_intersection_lists.hpp>
-//#include <block_tree_hybrid.hpp>
-//#include <block_tree_double_hybrid.hpp>
-#include <block_tree_double_hybrid_skipping_block_V2.hpp>
+#include <block_tree_double_hybrid_skipping_block.hpp>
 #include <file_util.hpp>
 
 /*template<class t_block_tree>

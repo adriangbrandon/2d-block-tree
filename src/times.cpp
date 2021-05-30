@@ -32,8 +32,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
 #include <block_tree.hpp>
-#include <block_tree_skip_levels.hpp>
-#include <block_tree_intersection_lists.hpp>
 #include <adjacency_list_helper.hpp>
 #include <sdsl/io.hpp>
 #include <sdsl/k2_tree.hpp>
@@ -104,13 +102,7 @@ int main(int argc, char **argv) {
         limit = static_cast<uint64_t >(atoi(argv[4]));
     }
 
-    if(type == "naive"){
-        run_times<block_tree_2d::block_tree<>>(dataset, k, limit);
-    }else if (type == "skip_levels"){
-        run_times<block_tree_2d::block_tree_skip_levels<>>(dataset, k, limit);
-    }else if (type == "skip_levels_lists"){
-        run_times<block_tree_2d::block_tree_intersection_lists<>>(dataset, k, limit);
-    }else if (type == "god_level"){
+    if (type == "god_level"){
         run_times<block_tree_2d::block_tree_double_hybrid_skipping_block<>>(dataset, k, limit);
     }else{
         std::cout << "Type: " << type << " is not supported." << std::endl;

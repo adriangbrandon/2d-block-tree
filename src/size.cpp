@@ -31,11 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Created by Adrián on 08/08/2019.
 //
 
-#include <block_tree.hpp>
-#include <block_tree_skip_levels.hpp>
-#include <block_tree_intersection_lists.hpp>
-#include <adjacency_list_helper.hpp>
-#include <sdsl/io.hpp>
 #include <block_tree_double_hybrid_skipping_block.hpp>
 
 

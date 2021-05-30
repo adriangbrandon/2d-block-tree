@@ -33,10 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <kr_block_adjacent_list_skipping_block.hpp>
 #include <kr_roll_adjacent_list_skipping_block.hpp>
-#include <block_tree_algorithm_helper.hpp>
-#include <hash_table_chainning.hpp>
 #include <iostream>
-#include <heap.hpp>
 
 
 int main(int argc, char **argv) {
