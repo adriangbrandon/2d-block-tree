@@ -266,7 +266,6 @@ namespace block_tree_2d {
             std::cout << "x=" << x << " y=" << y << std::endl;
             std::cout << "block_size: " << block_size << std::endl;
             std::cout << "current_level: " << level << std::endl;
-            std::cout << "height: " << height << std::endl;
             std::cout << std::endl;
 #endif
             if(level == m_height){

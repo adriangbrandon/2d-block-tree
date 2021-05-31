@@ -823,6 +823,122 @@ namespace block_tree_2d {
             //print_ajdacent_list(adjacent_lists);
         }
 
+        template <class input_type, class hash_table_type, class iterators_type, class BitVector, class Rank>
+        static void get_fingerprint_blocks_comp_ones(input_type &adjacent_lists, const size_type k, hash_table_type &ht,
+                                                                      const size_type dimensions, const size_type block_size,
+                                                                      const BitVector &bv, const Rank &rank, const size_type end_bv,
+                                                                      std::vector<node_type> &nodes, iterators_type &iterators_to_delete,
+                                                                      const bool compute_bits = false){
+
+            typedef karp_rabin::kr_block_adjacent_list_skipping_block<input_type> kr_type;
+            typedef std::vector<typename kr_type::iterator_value_type> iterators_value_type;
+            // typedef uint64_t iterators_type;
+            typedef typename hash_table_type::iterator_table_type iterator_table_type;
+            typedef typename hash_table_type::iterator_hash_type  iterator_hash_type;
+            typedef typename hash_table_type::iterator_value_type iterator_hash_value_type;
+
+            kr_type kr_block(block_size, prime, adjacent_lists);
+            iterator_table_type it_table;
+            iterator_hash_type it_hash;
+            iterators_value_type iterators_source = iterators_value_type(block_size);
+
+            size_type hashes = 0;
+            auto blocks_per_row = adjacent_lists.size() / block_size;
+            //Total number of blocks
+            auto total_blocks = blocks_per_row * blocks_per_row;
+            util::progress_bar m_progress_bar(total_blocks);
+            //IMPORTANT: kr_block, skips every empty block. For this reason, every node of the current level has to be
+            //           initialized as empty node.
+            size_type leaves = 0;
+            size_type block_size_2 = block_size*block_size;
+            while(kr_block.next()){
+#if BT_VERBOSE
+                std::cout << "Target: (" << kr_block.col << ", " << kr_block.row << ")" << std::endl;
+                std::cout << "Hash: " << kr_block.hash << std::endl;
+#endif
+                //check if kr_block.hash exists in map
+                //Target z-order
+                auto processed_blocks = kr_block.row * blocks_per_row + kr_block.col+1;
+                auto z_order_target = codes::zeta_order::encode(kr_block.col, kr_block.row);
+                size_type pos_target;
+                find_zorder(z_order_target, adjacent_lists.size(), block_size, k, bv, rank, end_bv, pos_target);
+                value_type sx_target = kr_block.col * block_size;
+                value_type sy_target = kr_block.row * block_size;
+                value_type ex_target = sx_target + block_size-1;
+                value_type ey_target = sy_target + block_size-1;
+                if(kr_block.number_ones == block_size_2){
+                    nodes[pos_target].type = NODE_EXPLICIT;
+                    nodes[pos_target].hash = kr_block.hash;
+                    //delete value
+                    //TODO: mark to delete
+                    delete_info_block(adjacent_lists, sx_target, sy_target, ex_target, ey_target, kr_block.iterators,  block_size);
+                }else{
+                    if(ht.hash_collision(kr_block.hash, it_table, it_hash)){
+                        value_type sx_source, sy_source, ex_source, ey_source;
+                        iterator_hash_value_type source;
+                        if(exist_identical(adjacent_lists, sx_target, sy_target, ex_target, ey_target,
+                                           kr_block.iterators, it_hash->second, block_size,
+                                           sx_source, sy_source, ex_source, ey_source, iterators_source, source)){ //check if they are identical
+#if BT_VERBOSE
+                            std::cout << "Pointer to source in z-order: " << (source->first) << " offset: <0,0>" << std::endl;
+#endif
+
+                            //Add pointer and offset [<p, <x,y>>]
+                            //hash.erase(it);
+                            size_type pos_source;
+                            find_zorder(source->first, adjacent_lists.size(), block_size, k, bv, rank, end_bv, pos_source);
+                            ++leaves;
+                            //std::cout << "Leaf z_order=" << source->first << " pos_source=" << pos_source << std::endl;
+                            nodes[pos_target].type = NODE_LEAF;
+                            nodes[pos_target].ptr = pos_source;
+                            nodes[pos_target].hash = kr_block.hash;
+                            if(compute_bits){
+                                //nodes[pos_target].bits = bits_k2tree(adjacent_lists, sx_target, ex_target, sy_target, ey_target,
+                                //                                  kr_block.iterators, block_size, k);
+                                nodes[pos_target].bits = nodes[pos_source].bits;
+                            }
+                            //hash.erase(it_target);
+                            //Delete info of <target> from adjacency list
+                            delete_info_block(adjacent_lists, sx_target, sy_target, ex_target, ey_target, kr_block.iterators,  block_size);
+                        }else{
+                            //add <z_order> to chain in map
+                            size_type z_order = codes::zeta_order::encode(kr_block.col, kr_block.row);
+                            ht.insert_hash_collision(it_hash, z_order);
+                            nodes[pos_target].type = NODE_INTERNAL;
+                            nodes[pos_target].hash = kr_block.hash;
+                            if(compute_bits){
+                                nodes[pos_target].bits = bits_k2tree(adjacent_lists, sx_target, ex_target, sy_target, ey_target,
+                                                                     kr_block.iterators, block_size, k);
+                                //nodes[pos_target].bits = nodes[pos_source].bits;
+                            }
+                        }
+                    }else{
+                        //add <z_order> to map [chain should be empty]
+                        size_type z_order = codes::zeta_order::encode(kr_block.col, kr_block.row);
+                        ht.insert_no_hash_collision(it_table, kr_block.hash, z_order);
+                        nodes[pos_target].type = NODE_INTERNAL;
+                        nodes[pos_target].hash = kr_block.hash;
+                        if(compute_bits) {
+                            nodes[pos_target].bits = bits_k2tree(adjacent_lists, sx_target, ex_target, sy_target, ey_target,
+                                                                 kr_block.iterators, block_size, k);
+                        }
+                    }
+                }
+
+                m_progress_bar.update(processed_blocks);
+                ++hashes;
+#if BT_VERBOSE
+                std::cout << std::endl;
+#endif
+            }
+            //Delete sources of hash_table
+            ht.remove_marked();
+            m_progress_bar.done();
+            std::cout << "Total hashes: " << hashes << std::endl;
+            std::cout << "Total leaves: " << leaves << std::endl;
+            //print_ajdacent_list(adjacent_lists);
+        }
+
         template <class input_type, class hash_table_type, class iterators_type>
         static void get_fingerprint_blocks_skipping_blocks_stack_lite(input_type &adjacent_lists, const size_type k, hash_table_type &ht,
                                                       const size_type dimensions, const size_type block_size,
