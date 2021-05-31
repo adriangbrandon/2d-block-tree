@@ -197,6 +197,8 @@ namespace block_tree_2d {
 
                 size_type bits_k2_tree = 0, leaf_nodes = 0, empty_nodes = 0, internal_nodes = 0, explicit_nodes = 0;
                 size_type bits_per_offset = 0, bits_per_pointer = 0, bits_per_explicit = 0;
+                auto height = log2(block_size);
+                auto explicit_bits = std::pow(this->m_k, height+1)-1;
                 for(const auto &node: nodes){
                     if(node.type == NODE_LEAF) {
                         bits_k2_tree += node.bits;
@@ -214,7 +216,8 @@ namespace block_tree_2d {
                         }
                         ++leaf_nodes;
                     }else if(node.type == NODE_EXPLICIT){
-                        bits_k2_tree += block_size*this->m_k;
+                        //TODO: comp_ones in k2-tree?
+                        bits_k2_tree += explicit_bits;
                         ++explicit_nodes;
                     }else if(node.type == NODE_EMPTY){
                         ++empty_nodes;
@@ -360,14 +363,11 @@ namespace block_tree_2d {
 
                         if(m_explicit[pos_pointer_or_explicit]){
                             //TODO: adding all the elements on the block
-                            if(level_taking_pointer < level) {
-                                for (size_type offset_y = min_y; offset_y <= max_y; ++offset_y) {
-                                    for (size_type offset_x = min_x; offset_x <= max_x; ++offset_x) {
-                                        add(result, x + offset_x - min_x, y + offset_y - min_y);
-                                    }
+                            for (size_type offset_y = min_y; offset_y <= max_y; ++offset_y) {
+                                for (size_type offset_x = min_x; offset_x <= max_x; ++offset_x) {
+                                    add(result, x + offset_x - min_x, y + offset_y - min_y);
                                 }
                             }
-
                         }else{
                             size_type pos_pointer = idx_pointer(pos_explicit, pos_pointer_or_explicit, level);
                             value_type offset_x, offset_y;
