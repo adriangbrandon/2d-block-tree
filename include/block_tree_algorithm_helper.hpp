@@ -2633,7 +2633,95 @@ namespace block_tree_2d {
 
         }
 
-        static size_type max_bits_k2_tree(const size_type height, const size_type k_2){
+        template <class input_type>
+        static void build_last_k2_tree(const input_type &adjacent_lists, const size_type k,
+                                       const size_type height, const size_type block_size_start,
+                                       sdsl::bit_vector &t_bits, sdsl::bit_vector &l_bits, sdsl::bit_vector &p_bits) {
+
+
+            typedef std::tuple<size_type, size_type, size_type, size_type> t_part_tuple;
+            auto k_2 = k * k;
+
+            //1. Edges z-order
+            std::vector<size_type> edges_z_order;
+            for (size_type y = 0; y < adjacent_lists.size(); ++y) {
+                for (value_type x : adjacent_lists[y]) {
+                    //taking into account that some values are marked to delete
+                    if (x < 0) {
+                        x = (-x) - 1;
+                    }
+                    edges_z_order.push_back(codes::zeta_order::encode(static_cast<size_type>(x), y));
+                }
+            }
+
+            //2. Sort edges z-order
+            std::sort(edges_z_order.begin(), edges_z_order.end());
+
+            //4. Resize topology bitmap
+            size_type t = t_bits.size(), p = p_bits.size(), l = 0;
+            std::cout << "T size=" << t << " P size=" << p << std::endl;
+            t_bits.resize(t + k_2 * (height - 1) * edges_z_order.size());
+            p_bits.resize(p + k_2 * (height-1) * edges_z_order.size());
+            l_bits.resize(k_2 * edges_z_order.size());
+
+            //5. Split the front of q into its children
+            size_type i, j, z_0;
+            size_type block_size = adjacent_lists.size();
+            std::queue<t_part_tuple> q;
+            q.push(t_part_tuple(0, edges_z_order.size() - 1, block_size / k, 0));
+            while (!q.empty()) {
+                std::tie(i, j, block_size, z_0) = q.front();
+                q.pop();
+                auto elements = block_size * block_size;
+                for (size_type z_child = 0; z_child < k_2; ++z_child) {
+                    auto le = util::search::lower_or_equal_search(i, j, edges_z_order, z_0 + elements - 1);
+                    if (le != -1 && edges_z_order[le] >= z_0) {
+                        if (block_size <= block_size_start) {
+                            if (block_size > 1) {
+                                if(elements == le-i+1){
+                                    t_bits[t] = 0;
+                                    p_bits[p] = 1;
+                                   // std::cout << "T=" << t << " P=" << p << std::endl;
+                                    ++t;
+                                    ++p;
+                                }else{
+                                    t_bits[t] = 1;
+                                    ++t;
+                                    q.push(t_part_tuple(i, le, block_size / k, z_0));
+                                }
+                            } else {
+                                l_bits[l] = 1;
+                                ++l;
+                            }
+                        }else{
+                            q.push(t_part_tuple(i, le, block_size / k, z_0));
+                        }
+                        i = le + 1;
+                    } else {
+                        if (block_size <= block_size_start) {
+                            if (block_size > 1) {
+                                t_bits[t] = 0;
+                                p_bits[p] = 0;
+                                ++t;
+                                ++p;
+                            } else {
+                                l_bits[l] = 0;
+                                ++l;
+                            }
+                        }
+                    }
+
+                    z_0 += elements;
+                }
+            }
+            t_bits.resize(t);
+            l_bits.resize(l);
+            p_bits.resize(p);
+            std::cout << "T final size=" << t << " P final size=" << p << std::endl;
+
+        }
+
+            static size_type max_bits_k2_tree(const size_type height, const size_type k_2){
             return static_cast<size_type >(std::pow(k_2, height) - 1) / (k_2 - 1);
         }
 

@@ -33,7 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <dataset_reader.hpp>
 #include <adjacency_list_helper.hpp>
 #include <sdsl/io.hpp>
-#include <block_tree_comp_ones.hpp>
+#include <block_tree_comp_ones_v2.hpp>
 #include <file_util.hpp>
 
 /*template<class t_block_tree>
@@ -53,9 +53,9 @@ void build(block_tree_2d::block_tree_hybrid<> &b, std::vector<std::vector<int64_
     std::cout << "There are pointers from level " << b.minimum_level+1 << " up to level " << b.maximum_level-1 << std::endl;
 }*/
 
-void build(block_tree_2d::block_tree_comp_ones<dataset_reader::raster_log> &b, const std::string &file_name,
+void build(block_tree_2d::block_tree_comp_ones_v2<dataset_reader::raster_log> &b, const std::string &file_name,
            const uint64_t k, const uint64_t last_block_size_k2_tree, const uint64_t n_rows, const uint64_t n_cols){
-    b = block_tree_2d::block_tree_comp_ones<dataset_reader::raster_log>(file_name, k, last_block_size_k2_tree, n_rows, n_cols);
+    b = block_tree_2d::block_tree_comp_ones_v2<dataset_reader::raster_log>(file_name, k, last_block_size_k2_tree, n_rows, n_cols);
     std::cout << "Block tree height=" << b.height << std::endl;
     std::cout << "There are pointers from level " << b.minimum_level+1 << " up to level " << b.maximum_level-1 << std::endl;
 }
@@ -87,12 +87,13 @@ void run_build(const std::string &dataset, const uint64_t k,
     //m_block_tree.print();
     std::vector<std::vector<int64_t>> copy_lists;
     auto rows_cols = dataset_reader::raster_log::read(dataset, copy_lists, n_rows, n_cols);
+    auto size_bt = sdsl::size_in_bytes(m_block_tree);
+    std::cout << "Size: " << size_bt << std::endl;
     std::cout << "Retrieving adjacency lists... " << std::flush;
     std::vector<std::vector<int64_t >> result;
     m_block_tree.access_region(0, 0, rows_cols.second - 1, rows_cols.first - 1, result);
     std::cout << "Done." << std::endl;
-    auto size_bt = sdsl::size_in_bytes(m_block_tree);
-    std::cout << "Size: " << size_bt << std::endl;
+
     /*std::cout << "--------------------Result--------------------" << std::endl;
     block_tree_2d::algorithm::print_ajdacent_list(result);
     std::cout << "----------------------------------------------" << std::endl;*/
@@ -170,6 +171,6 @@ int main(int argc, char **argv) {
     auto n_rows = static_cast<uint64_t >(atoi(argv[4]));
     auto n_cols = static_cast<uint64_t >(atoi(argv[5]));
 
-    run_build<block_tree_2d::block_tree_comp_ones<dataset_reader::raster_log>>(dataset, k, last_block_size_k2_tree, n_rows, n_cols);
+    run_build<block_tree_2d::block_tree_comp_ones_v2<dataset_reader::raster_log>>(dataset, k, last_block_size_k2_tree, n_rows, n_cols);
 
 }
