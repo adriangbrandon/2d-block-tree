@@ -94,6 +94,9 @@ target_link_libraries(build_raster sdsl divsufsort divsufsort64)
 add_executable(build_raster_log src/build_raster_log.cpp)
 target_link_libraries(build_raster_log sdsl divsufsort divsufsort64)
 
+add_executable(test_raster_log src/test_raster_log.cpp)
+target_link_libraries(test_raster_log sdsl divsufsort divsufsort64)
+
 add_executable(build_k2tree src/build_k2tree.cpp)
 target_link_libraries(build_k2tree sdsl divsufsort divsufsort64)
 

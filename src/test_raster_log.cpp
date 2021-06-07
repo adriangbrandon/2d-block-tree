@@ -33,7 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <dataset_reader.hpp>
 #include <adjacency_list_helper.hpp>
 #include <sdsl/io.hpp>
-#include <block_tree_comp_ones_v2.hpp>
+#include <block_tree_comp_ones_access.hpp>
 #include <file_util.hpp>
 
 /*template<class t_block_tree>
@@ -53,9 +53,9 @@ void build(block_tree_2d::block_tree_hybrid<> &b, std::vector<std::vector<int64_
     std::cout << "There are pointers from level " << b.minimum_level+1 << " up to level " << b.maximum_level-1 << std::endl;
 }*/
 
-void build(block_tree_2d::block_tree_comp_ones_v2<dataset_reader::raster_log> &b, const std::string &file_name,
+void build(block_tree_2d::block_tree_comp_ones_access<dataset_reader::raster_log> &b, const std::string &file_name,
            const uint64_t k, const uint64_t last_block_size_k2_tree, const uint64_t n_rows, const uint64_t n_cols){
-    b = block_tree_2d::block_tree_comp_ones_v2<dataset_reader::raster_log>(file_name, k, last_block_size_k2_tree, n_rows, n_cols);
+    b = block_tree_2d::block_tree_comp_ones_access<dataset_reader::raster_log>(file_name, k, last_block_size_k2_tree, n_rows, n_cols);
     std::cout << "Block tree height=" << b.height << std::endl;
     std::cout << "There are pointers from level " << b.minimum_level+1 << " up to level " << b.maximum_level-1 << std::endl;
 }
@@ -86,75 +86,89 @@ void run_build(const std::string &dataset, const uint64_t k,
     std::cout << "Done. " << std::endl;
     //m_block_tree.print();
     std::vector<std::vector<int64_t>> copy_lists;
-    auto rows_cols = dataset_reader::raster_log::read(dataset, copy_lists, n_rows, n_cols);
-    std::cout << "Retrieving adjacency lists... " << std::flush;
-    std::vector<std::vector<int64_t >> result;
-    m_block_tree.access_region(0, 0, rows_cols.second - 1, rows_cols.first - 1, result);
-    std::cout << "Done." << std::endl;
     auto size_bt = sdsl::size_in_bytes(m_block_tree);
     std::cout << "Size: " << size_bt << std::endl;
-    /*std::cout << "--------------------Result--------------------" << std::endl;
-    block_tree_2d::algorithm::print_ajdacent_list(result);
-    std::cout << "----------------------------------------------" << std::endl;*/
 
-    std::cout << "Checking results." << std::endl;
-    if (result.size() != copy_lists.size()) {
-        std::cout << "Error: the number of lists is incorrect." << std::endl;
-        std::cout << "Expected: " << copy_lists.size() << std::endl;
-        std::cout << "Obtained: " << result.size() << std::endl;
-        exit(10);
-    }
-    bool error = false;
-    for (auto i = 0; i < result.size(); ++i) {
-        if (!error && result[i].size() != copy_lists[i].size()) {
-            std::cout << "Error: the size of list " << i << " is incorrect." << std::endl;
-            std::cout << "Expected: " << copy_lists[i].size() << std::endl;
-            std::cout << "Obtained: " << result[i].size() << std::endl;
-            for(uint64_t o = 0; o < result[i].size(); ++o){
-                if(result[i][o] != copy_lists[i][o]){
-                    std::cout << "Expected val: " << copy_lists[i][o] << std::endl;
-                    std::cout << "Obtained val: " << result[i][o] << std::endl;
-                    exit(10);
-                }
-            }
-            /*for(uint64_t o = 0; o < copy_lists[i].size(); ++o){
-                std::cout << copy_lists[i][o] << ",";
-            }
-            std::cout << std::endl;
-            for(uint64_t o = 0; o < result[i].size(); ++o){
-                std::cout << result[i][o] << ",";
-            }
-            std::cout << std::endl;*/
-            //m_block_tree.access_region(10, 2, 11, 3, result);
-            error = true;
+
+    std::ifstream input(dataset);
+    uint64_t n = 0;
+    std::vector<int> values(n_rows * n_cols);
+    int msb = 0;
+    int zeroes = 0;
+    for (int r = 0; r < n_rows; ++r) {
+        for (int c = 0; c < n_cols; ++c) {
+            sdsl::read_member(values[n], input);
+            int hi = sdsl::bits::hi(values[n]);
+            if(msb < hi) msb = hi;
+            if (values[n] == 0) ++zeroes;
+            ++n;
         }
     }
-    if (error){
-        util::adjacency_list::write(copy_lists, "adjacency_lists.txt");
-        exit(10);
-    }else{
-        for (auto i = 0; i < result.size(); ++i) {
-            for (auto j = 0; j < result[i].size(); ++j) {
-                if (result[i][j] != copy_lists[i][j]) {
-                    //  std::cout << "Error: the " << j << "-th value of list " << i << " is incorrect." << std::endl;
-                    //  std::cout << "Expected: " << copy_lists[i][j] << std::endl;
-                    //  std::cout << "Obtained: " << result[i][j] << std::endl;
-                    error = true;
-                }
-            }
+    input.close();
+
+    std::vector<int> result;
+    std::cout << "Retrieving adjacency lists... " << std::flush;
+    m_block_tree.values_region(0, 0, n_cols - 1, n_rows - 1, n_cols, n_rows, result);
+    std::cout << "Done." << std::endl;
+    /*for(int r = 0; r < n_rows; ++r) {
+        for (int i = 0; i < result[r].size(); ++i) {
+            auto x_bit = result[r][i];
+            auto b = x_bit / n_cols;
+            auto c = x_bit % n_cols;
+            n = n_cols * r + c;
+            values2[n] = values2[n] | (0x0001 << b);
         }
-        if (!error) {
-            std::cout << "Everything is OK!" << std::endl;
-        }else{
-            util::adjacency_list::write(copy_lists, "adjacency_lists.txt");
+    }*/
+
+
+    for(n = 0; n < n_rows*n_cols; ++n){
+        if(result[n] != values[n]){
+            std::cout << "Error en n=" << n << std::endl;
+            std::cout << "Obtained=" << result[n] << std::endl;
+            std::cout << "Expected=" << values[n] << std::endl;
             exit(10);
         }
     }
-    std::cout << std::endl;
-    std::cout << "The Block-tree was built in " << duration << " seconds and uses " << size_bt << " bytes." << std::endl;
-    std::cout << duration << " " << size_bt << std::endl;
-    sdsl::write_structure<sdsl::JSON_FORMAT>(m_block_tree, name_file + ".json");
-    sdsl::write_structure<sdsl::HTML_FORMAT>(m_block_tree, name_file + ".html");
+
+    int reg_size = 4;
+    //std::vector<int> res;
+    /*m_block_tree.values_region(3183, 762, 3183+reg_size-1, 762+reg_size-1, n_cols, n_rows, res);
+    n = 0;
+    for(int r = 762; r < 762+reg_size; ++r) {
+        for (int c = 3183; c < 3183 + reg_size; ++c) {
+            std::cout << "x=" << c << " y=" << r << " value=" << res[n] << " expected " << values[r*n_cols + c] << std::endl;
+            ++n;
+        }
+    }
+    exit(20);*/
+    for(int i = 0; i < n_rows - reg_size; ++i){
+        std::cout << "Row i:" << i << " of " << n_rows << std::endl;
+        for(int j = 0; j < n_cols - reg_size; ++j){
+            std::vector<int> res;
+            m_block_tree.values_region(j, i, j+reg_size-1, i+reg_size-1, n_cols, n_rows, res);
+            for(int r = i; r < i+reg_size; ++r){
+                for(int c = j; c < j + reg_size; ++c){
+                    auto p1 = r * n_cols + c;
+                    auto p2 = (r - i) * reg_size + (c - j);
+                    //std::cout << "v: " << values[p1] << std::endl;
+                    if(values[p1] != res[p2]){
+                        std::cout << "Query: i=" << i << " j=" << j << std::endl;
+                        std::cout << "Error en (" << c << ", " << r << ")" << std::endl;
+                        std::cout << "Obtained=" << res[p2] << std::endl;
+                        std::cout << "Expected=" << values[p1] << std::endl;
+                       // m_block_tree.values_region(i, j, i+reg_size-1, j+reg_size-1, n_cols, n_rows, res);
+                        exit(10);
+                    }
+                }
+            }
+
+        }
+    }
+    std::cout << "Everything OK!" << std::endl;
+
+
+
+
 }
 
 int main(int argc, char **argv) {
@@ -170,6 +184,6 @@ int main(int argc, char **argv) {
     auto n_rows = static_cast<uint64_t >(atoi(argv[4]));
     auto n_cols = static_cast<uint64_t >(atoi(argv[5]));
 
-    run_build<block_tree_2d::block_tree_comp_ones_v2<dataset_reader::raster_log>>(dataset, k, last_block_size_k2_tree, n_rows, n_cols);
+    run_build<block_tree_2d::block_tree_comp_ones_access<dataset_reader::raster_log>>(dataset, k, last_block_size_k2_tree, n_rows, n_cols);
 
 }
