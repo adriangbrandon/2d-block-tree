@@ -870,7 +870,7 @@ namespace block_tree_2d {
         }
 
 
-        size_type traverse_leaf(const size_type idx, const size_type block_size,
+        void traverse_leaf(const size_type idx, const size_type block_size,
                                 const size_type x, const size_type y,
                                 const sdsl::bit_vector &aux_l,
                                 size_type &cw, size_type &to_delete){
@@ -924,7 +924,7 @@ namespace block_tree_2d {
 
 
 
-        double traverse(const size_type idx, const size_type block_size, std::unordered_map<size_type, size_type> &freq,
+        void traverse(const size_type idx, const size_type block_size, std::unordered_map<size_type, size_type> &freq,
                         std::vector<size_type> &code_leaves, const sdsl::bit_vector &aux_l,
                         size_type &last_t, size_type &prev_ones){
             ++prev_ones;
