@@ -1158,6 +1158,7 @@ namespace block_tree_2d {
             m_rank_explicit.load(in, &m_explicit);
             sdsl::read_member(m_msb, in);
 
+            std::cout << "1" << std::endl;
             m_ones_prev_leaves = 0;
             std::unordered_map<size_type, size_type> hash;
             size_type n_leaves = 0, last_t = 0;
@@ -1165,6 +1166,7 @@ namespace block_tree_2d {
             auto block_size = (size_type) std::pow(this->m_k, this->m_height);
             traverse(0, block_size, hash, code_leaves, l_aux, last_t, m_ones_prev_leaves);
 
+            std::cout << "2" << std::endl;
             //Cutting bitmaps
             auto last_pointer = idx_leaf(last_t);
             m_is_pointer.resize(last_pointer+1);
@@ -1174,7 +1176,7 @@ namespace block_tree_2d {
             sdsl::util::init_support(m_t_rank, &m_t);
             sdsl::util::init_support(m_t_select, &m_t);
 
-
+            std::cout << "3" << std::endl;
             //Building the vocab
             m_voc.resize(hash.size());
             std::vector<std::pair<size_type, size_type>> vocab_vector (hash.begin(),hash.end());
