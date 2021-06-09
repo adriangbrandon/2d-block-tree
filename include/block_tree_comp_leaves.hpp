@@ -933,11 +933,7 @@ namespace block_tree_2d {
                     }
                 }else{
                     if(this->m_t[i]){
-                        if(i == 5072276){
-                            std::cout << "Debug" << std::endl;
-                        }
                         auto pair = compute_cw(i, new_block_size, aux_l);
-                        assert(pair.first < 65536);
                         auto it = freq.find(pair.first);
                         if(it != freq.end()){
                             it->second++;
@@ -945,14 +941,9 @@ namespace block_tree_2d {
                             freq.insert({pair.first, 1});
                         }
                         code_leaves.push_back(pair.first);
-                        //if(pair.first == 13260){
-                        if(i == 5072276){
-                            std::cout << "AAAAAA" << std::endl;
-                            std::cout << "position: " << i << std::endl;
-                            std::cout << "code: " << pair.first << std::endl;
-                        }
                     }
-                    last_t = std::max(i, last_t);
+                    //last_t = std::max(i, last_t);
+                    if(last_t < i) last_t = i;
                 }
 
             }
