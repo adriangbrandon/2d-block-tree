@@ -870,20 +870,11 @@ namespace block_tree_2d {
         }
 
 
-
-
-        std::pair<size_type, size_type> compute_cw(const size_type idx, const size_type block_size,
-                                                   const sdsl::bit_vector &aux_l){
-            size_type to_delete = 0;
-            size_type cw = 0;
-            traverse_leaf(idx, block_size, 0, 0, aux_l, cw, to_delete);
-            return {cw, to_delete};
-        }
-
         size_type traverse_leaf(const size_type idx, const size_type block_size,
                                 const size_type x, const size_type y,
                                 const sdsl::bit_vector &aux_l,
                                 size_type &cw, size_type &to_delete){
+            std::cout << "traverse_leaf " << std::endl;
             auto new_block_size = block_size / this->m_k;
             auto start_children = this->m_t_rank(idx+1) * this->m_k2;
             for(auto i = 0; i < this->m_k2; ++i) {
@@ -892,7 +883,7 @@ namespace block_tree_2d {
                         traverse_leaf(start_children + i, new_block_size,
                                       (i % this->m_k) * new_block_size + x,
                                       (i / this->m_k) * new_block_size + y,
-                                        aux_l,cw,to_delete);
+                                      aux_l,cw,to_delete);
                     }else {
                         auto zth = idx_leaf(start_children+i);
                         if(m_is_pointer[zth]){
@@ -916,9 +907,22 @@ namespace block_tree_2d {
                 }
 
             }
+            std::cout << "traverse leaf done" << std::endl;
 
 
         }
+
+        std::pair<size_type, size_type> compute_cw(const size_type idx, const size_type block_size,
+                                                   const sdsl::bit_vector &aux_l){
+            std::cout << "compuute cw " << std::endl;
+            size_type to_delete = 0;
+            size_type cw = 0;
+            traverse_leaf(idx, block_size, 0, 0, aux_l, cw, to_delete);
+            std::cout << "compute cw done " << std::endl;
+            return {cw, to_delete};
+        }
+
+
 
         double traverse(const size_type idx, const size_type block_size, std::unordered_map<size_type, size_type> &freq,
                         std::vector<size_type> &code_leaves, const sdsl::bit_vector &aux_l,
