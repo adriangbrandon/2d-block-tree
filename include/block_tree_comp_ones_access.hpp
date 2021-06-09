@@ -754,6 +754,7 @@ namespace block_tree_2d {
 
         }
 
+
         inline std::vector<size_type> neigh(size_type id){
             std::vector<size_type> r;
             auto block_size = (size_type) std::pow(this->m_k, this->m_height);
@@ -767,6 +768,87 @@ namespace block_tree_2d {
             this->recursive_access_region(id, id, 0, this->m_dimensions-1, 0, 0, 0, 0, block_size, r, add_in_column());
             return r;
         }
+
+
+
+
+        std::pair<size_type, size_type> compute_cw(const size_type idx, const size_type block_size){
+            size_type to_delete = 0;
+            size_type cw = 0;
+            auto start_children = this->m_t_rank(idx+1) * this->m_k2;
+            for(auto i = start_children; i < start_children + this->m_k2; ++i){
+                auto new_block_size = block_size/this->m_k;
+                traverse_leaf(i, new_block_size,
+                              (i - start_children) * new_block_size * new_block_size, cw, to_delete);
+            }
+            return {cw, to_delete};
+        }
+
+        size_type traverse_leaf(const size_type idx, const size_type block_size, const size_type offset,
+                                size_type &cw, size_type &to_delete){
+            auto start_children = this->m_t_rank(idx+1) * this->m_k2;
+            for(auto i = start_children; i < start_children + this->m_k2; ++i){
+                if(block_size > 1){
+                    if(this->m_t[i]){
+                        auto new_block_size = block_size/this->m_k;
+                        traverse_leaf(i, new_block_size,
+                                      (i - start_children) * new_block_size * new_block_size + offset, cw);
+                    }
+                }else{
+                    if(this->m_l[i - this->m_t.size()]){
+                        cw = cw | (0x1 << ((i-start_children) + offset));
+                    }
+
+                }
+                ++to_delete;
+
+            }
+
+        }
+
+        double traverse(const size_type idx, const size_type block_size, std::unordered_map<size_type, size_type> &freq,
+                        size_type &bits_delete, size_type &n_leaves){
+            auto start_children = this->m_t_rank(idx+1) * this->m_k2;
+            for(auto i = start_children; i < start_children + this->m_k2; ++i){
+                if(block_size > 4){
+                    if(this->m_t[i]){
+                        traverse(i, block_size/this->m_k, freq, bits_delete);
+                    }
+                }else{
+                    if(this->m_t[i]){
+                        auto pair = compute_cw(i, block_size);
+                        bits_delete += pair.second;
+                        auto it = freq.find(pair.first);
+                        if(it != freq.end()){
+                            it->second++;
+                        }else{
+                            freq.insert({pair.first, 1});
+                        }
+                        ++n_leaves;
+                    }
+                }
+
+            }
+
+        }
+
+        std::pair<size_type, size_type> shannon_entropy_bits_delete(){
+            std::unordered_map<size_type, size_type> freq;
+            size_type bits_delete = 0;
+            size_type n_leaves = 0;
+            auto block_size = (size_type) std::pow(this->m_k, this->m_height);
+            traverse(0, block_size, freq, bits_delete, n_leaves);
+
+            double entropy = 0;
+            for(const auto &v: freq){
+                entropy += (v.second/ (double) n_leaves) * std::log2(n_leaves / (double) v.second);
+                //std::cout << std::log2(n / (double) v.second) << std::endl;
+            }
+            auto nh0 = static_cast<size_type >(n_leaves*std::ceil(entropy));
+            return {nh0, bits_delete};
+
+        }
+
 
 
         //! Copy constructor

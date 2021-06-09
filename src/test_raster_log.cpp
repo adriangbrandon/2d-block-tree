@@ -166,6 +166,10 @@ void run_build(const std::string &dataset, const uint64_t k,
     }
     std::cout << "Everything OK!" << std::endl;
 
+   auto pair = m_block_tree.shannon_entropy_bits_delete();
+   std::cout << "Bits entropy: " << pair.first << std::endl;
+   std::cout << "Bits to delete: " << pair.second << std::endl;
+
 
 
 
