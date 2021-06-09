@@ -151,3 +151,9 @@ target_link_libraries(size sdsl divsufsort divsufsort64)
 
 add_executable(experiment_files src/experiment_files.cpp )
 target_link_libraries(experiment_files sdsl divsufsort divsufsort64)
+
+add_executable(entropy src/entropy.cpp )
+target_link_libraries(entropy sdsl divsufsort divsufsort64)
+
+add_executable(build_raster_comp_leaves src/build_raster_comp_leaves.cpp )
+target_link_libraries(build_raster_comp_leaves sdsl divsufsort divsufsort64)

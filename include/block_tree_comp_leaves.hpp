@@ -31,12 +31,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Created by Adrián on 09/08/2019.
 //
 
-#ifndef INC_2D_BLOCK_TREE_BLOCK_TREE_COMP_ONES_ACCESS_HPP
-#define INC_2D_BLOCK_TREE_BLOCK_TREE_COMP_ONES_ACCESS_HPP
+#ifndef INC_2D_BLOCK_TREE_BLOCK_TREE_COMP_LEAVES_HPP
+#define INC_2D_BLOCK_TREE_BLOCK_TREE_COMP_LEAVES_HPP
 
 #include <block_tree_algorithm_helper.hpp>
 #include "alternative_code.hpp"
 #include "dataset_reader.hpp"
+#include "dac_vector.hpp"
 #include <logger.hpp>
 #include <block_tree.hpp>
 #include <vector>
@@ -45,8 +46,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace block_tree_2d {
 
     template <class reader_t = dataset_reader::web_graph,
-              class input_t = std::vector<std::vector<int64_t>>>
-    class block_tree_comp_ones_access : public block_tree<input_t> {
+              class input_t = std::vector<std::vector<int64_t>>,
+              uint8_t leaf_size = 4, uint8_t voc_word = 16>
+    class block_tree_comp_leaves {
 
     public:
 
@@ -62,12 +64,28 @@ namespace block_tree_2d {
 
     private:
 
+        size_type m_k;
+        size_type m_k2;
+        size_type m_dimensions;
+        size_type m_height;
+        sdsl::bit_vector m_t;
+        sdsl::rank_support_v5<> m_t_rank;
+        sdsl::bit_vector::select_1_type m_t_select;
+        sdsl::bit_vector m_is_pointer;
+        sdsl::bit_vector::rank_1_type m_is_pointer_rank;
+        std::vector<sdsl::int_vector<>> m_pointers;
+        std::vector<sdsl::int_vector<>> m_offsets;
+        sdsl::int_vector<> m_level_ones;
         value_type m_msb;
         size_type m_minimum_level; //starts block_tree
         size_type m_maximum_level; //ends block_tree
         size_type m_zeroes;
         sdsl::bit_vector m_explicit;
         sdsl::rank_support_v5<> m_rank_explicit;
+        sdsl::int_vector<voc_word> m_voc;
+        sdsl::dac_vector_dp_opt<> m_l;
+        size_type m_ones_prev_leaves;
+
         typedef struct {
             size_type x;
             size_type y;
@@ -126,8 +144,48 @@ namespace block_tree_2d {
             return pointers;
         }
 
+        inline uint64_t compute_dimensions(input_type &adjacency_lists){
+            uint64_t d = adjacency_lists.size()-1;
+            for(size_type r = 0; r < adjacency_lists.size(); ++r){
+                for(size_type c = 0; c < adjacency_lists[r].size(); ++c){
+                    if(d < adjacency_lists[r][c]){
+                        d =  adjacency_lists[r][c];
+                    }
+                }
+            }
+            return d+1;
+        }
 
-        void construction(const std::string &file_name, input_type &adjacency_lists, size_type h,
+        inline void init_structure(){
+            std::cout << "bitmap resize: " << BITMAP_RESIZE << std::endl;
+            std::cout << "array resize: " << ARRAY_RESIZE << std::endl;
+            m_is_pointer = sdsl::bit_vector(BITMAP_RESIZE);
+            std::cout << "is_pointer" << std::endl;
+            //m_topology = sdsl::bit_vector(BITMAP_RESIZE, 0);
+            m_t = sdsl::bit_vector(BITMAP_RESIZE, 0);
+            m_l = sdsl::bit_vector(BITMAP_RESIZE, 0);
+            std::cout << "topology" << std::endl;
+            m_level_ones = sdsl::int_vector<>(ARRAY_RESIZE, 0);
+            std::cout << "level_ones" << std::endl;
+            m_pointers = std::vector<sdsl::int_vector<>>(1, sdsl::int_vector<>(0, 0));
+            std::cout << "pointers" << std::endl;
+            m_offsets = std::vector<sdsl::int_vector<>>(1, sdsl::int_vector<>(0, 0));
+            std::cout << "init structure done" << std::endl;
+        }
+
+        inline void init_construction(size_type &h, size_type &total_size, input_type &adjacency_lists,
+                                      const size_type kparam){
+            m_k = kparam;
+            m_dimensions = compute_dimensions(adjacency_lists);
+            m_k2 = m_k*m_k;
+            h = (size_type) std::ceil(std::log(m_dimensions)/std::log(m_k));
+            total_size = (size_type) std::pow(m_k, h);
+            if(adjacency_lists.size() < total_size){
+                adjacency_lists.resize(total_size);
+            }
+        }
+
+       /* void construction(const std::string &file_name, input_type &adjacency_lists, size_type h,
                           size_type block_size, size_type blocks,
                           size_type last_block_size_k2_tree, const size_type n_rows = 0, const size_type n_cols = 0){
 
@@ -153,14 +211,12 @@ namespace block_tree_2d {
             //2. Building LOUDS of k2_tree until min_block_size and map between z_order and position in vector nodes
             //block_tree_2d::algorithm::hash_type hash;
             size_type n_elem = 0;
-            m_zeroes = block_tree_2d::algorithm::build_k2_tree(adjacency_lists, this->k, h,
+            m_zeroes = block_tree_2d::algorithm::build_k2_tree(adjacency_lists, this->m_k, h,
                                                                min_block_size, this->m_t, n_elem, true);
             //TODO: zorder mapping
             sdsl::util::init_support(this->m_t_rank, &this->m_t);
 
-            /*for(size_type i = 0; i < this->m_topology.size(); ++i){
-                std::cout << this->m_topology[i] << ", ";
-            }*/
+
             std::cout << adjacency_lists.size() << std::endl;
             auto rows_cols = reader_type::read(file_name, adjacency_lists, n_rows, n_cols);
             m_msb = rows_cols.second / n_cols -1;
@@ -184,8 +240,6 @@ namespace block_tree_2d {
                 //size_type bits_k2_tree = bits_last_k2_tree(adjacency_lists, this->k, block_size);
                 std::vector<iterator_value_type> iterators_to_delete;
                 util::logger::log("Computing fingerprint of blocks at level=" + std::to_string(l));
-                /*block_tree_2d::algorithm::get_fingerprint_blocks_skipping_blocks_stack_lite(adjacency_lists, this->k,
-                        m_htc, this->dimensions, block_size, hash, nodes, iterators_to_delete, true);*/
 
                 block_tree_2d::algorithm::get_fingerprint_blocks_comp_ones(adjacency_lists, this->k,
                         m_htc, this->dimensions, block_size, this->m_t, this->m_t_rank, topology_index,
@@ -194,9 +248,6 @@ namespace block_tree_2d {
 
 
                 util::logger::log("Computing fingerprint of shifts at level=" + std::to_string(l));
-                /*block_tree_2d::algorithm::get_type_of_nodes_skipping_blocks_stack_lite(adjacency_lists, this->k,
-                                                                                       m_htc, this->dimensions,
-                                                                                       block_size, hash, nodes);*/
 
                 block_tree_2d::algorithm::get_type_of_nodes_skipping_blocks_stack_lite(adjacency_lists, this->k,
                                                                                        m_htc, this->dimensions,
@@ -279,7 +330,6 @@ namespace block_tree_2d {
                                                              this->m_t_rank,  topology_index, nodes);
                 util::logger::log("Compacting last level (" + std::to_string(l) + ")");
                 this->compact_last_level(nodes, leaves_index);
-                this->m_l.resize(leaves_index);
                 this->m_is_pointer.resize(is_pointer_index);
                 std::cout << "L size: " << this->m_l.size() << std::endl;
             }
@@ -298,11 +348,25 @@ namespace block_tree_2d {
             sdsl::util::bit_compress(this->m_level_ones);
             util::logger::log("2D Block Tree DONE!!!");
 
-        }
+        }*/
 
 
-        void copy(const block_tree_comp_ones_access &p){
-            block_tree<input_type >::copy(p);
+        void copy(const block_tree_comp_leaves &p){
+            m_k = p.m_k;
+            m_k2 = m_k*m_k;
+            m_height = p.m_height;
+            m_dimensions = p.m_dimensions;
+            m_t = p.m_t;
+            m_t_rank = p.m_t_rank;
+            m_t_rank.set_vector(&m_t);
+            m_t_select = p.m_t_select;
+            m_t_select.set_vector(&m_t);
+            m_is_pointer = p.m_is_pointer;
+            m_is_pointer_rank = p.m_is_pointer_rank;
+            m_is_pointer_rank.set_vector(&m_is_pointer);
+            m_level_ones = p.m_level_ones;
+            m_pointers = p.m_pointers;
+            m_offsets = p.m_offsets;
             m_zeroes = p.m_zeroes;
             m_minimum_level = p.m_minimum_level;
             m_maximum_level = p.m_maximum_level;
@@ -310,6 +374,9 @@ namespace block_tree_2d {
             m_rank_explicit = p.m_rank_explicit;
             m_rank_explicit.set_vector(&m_explicit);
             m_msb = p.m_msb;
+            m_voc = p.m_voc;
+            m_l = p.m_l;
+            m_ones_prev_leaves = p.m_ones_prev_leaves;
         }
 
         template <class add_function, class result_type>
@@ -438,12 +505,41 @@ namespace block_tree_2d {
             }
             std::cout << std::endl;
 #endif
-            if(level == this->m_height){
+            /*if(level == this->m_height){
                 //if(m_topology[idx]){
                 if(this->m_l[idx - this->m_t.size()]){
                     //Adding result
                     add_value(query, x, y, n_cols, result);
                     //result[y].push_back(x);
+                }*/
+            if(block_size == leaf_size){
+                if(m_t[idx]) {
+                    size_type c_i = m_t_rank(idx+1) - m_ones_prev_leaves -1;
+                    size_type code = m_voc[m_l[c_i]];
+                    while(code){
+                        size_type set_bit = sdsl::bits::lo(code);
+                        size_type o_x = set_bit % leaf_size;
+                        size_type o_y = set_bit / leaf_size;
+                        for(auto const &region : regions) {
+                            if(region.min_x <= o_x && o_x <= region.max_x
+                                && region.min_y <= o_y && o_y <= region.max_y){
+                                add_value(query,x + o_x, y + o_y, n_cols, result);
+                            }
+                        }
+                        code = code & sdsl::bits::lo_unset[set_bit+1];
+                    }
+                }else if(level >= m_maximum_level){
+                    size_type pos_leaf = idx_leaf(idx);
+                    if(this->m_is_pointer[pos_leaf]){
+                        for(auto const &region : regions) {
+                            size_type min_x, max_x, min_y, max_y;
+                            for (size_type offset_y = region.min_y; offset_y <= region.max_y; ++offset_y) {
+                                for (size_type offset_x = region.min_x; offset_x <= region.max_x; ++offset_x) {
+                                    add_value(query,x + offset_x, y + offset_y, n_cols, result);
+                                }
+                            }
+                        }
+                    }
                 }
             }else{
                 //if(m_topology[idx]){
@@ -706,9 +802,13 @@ namespace block_tree_2d {
 
         const size_type &minimum_level = m_minimum_level;
         const size_type &maximum_level = m_maximum_level;
-        block_tree_comp_ones_access() = default;
+        const size_type &k = m_k;
+        const size_type &height = m_height;
+        const size_type &dimensions = m_dimensions;
 
-        block_tree_comp_ones_access(const std::string &file_name, const size_type kparam, const size_type level,
+        block_tree_comp_leaves() = default;
+
+        /*block_tree_comp_leaves(const std::string &file_name, const size_type kparam, const size_type level,
                                                 const size_type n_rows=0, const size_type n_cols=0) {
             input_type adjacency_lists;
             reader_type::read(file_name, adjacency_lists, n_rows, n_cols);
@@ -716,7 +816,7 @@ namespace block_tree_2d {
             this->init_construction(h, total_size, adjacency_lists, kparam);
             size_type blocks = this->m_k2, block_size = total_size/this->m_k;
             construction(file_name, adjacency_lists, h, block_size, blocks, level, n_rows, n_cols);
-        }
+        }*/
 
 
 
@@ -772,57 +872,87 @@ namespace block_tree_2d {
 
 
 
-        std::pair<size_type, size_type> compute_cw(const size_type idx, const size_type block_size){
+        std::pair<size_type, size_type> compute_cw(const size_type idx, const size_type block_size,
+                                                   const sdsl::bit_vector &aux_l){
             size_type to_delete = 0;
             size_type cw = 0;
-            traverse_leaf(idx, block_size, 0, cw, to_delete);
+            traverse_leaf(idx, block_size, 0, 0, aux_l, cw, to_delete);
             return {cw, to_delete};
         }
 
-        size_type traverse_leaf(const size_type idx, const size_type block_size, const size_type offset,
+        size_type traverse_leaf(const size_type idx, const size_type block_size,
+                                const size_type x, const size_type y,
+                                const sdsl::bit_vector &aux_l,
                                 size_type &cw, size_type &to_delete){
             auto new_block_size = block_size / this->m_k;
             auto start_children = this->m_t_rank(idx+1) * this->m_k2;
-            for(auto i = start_children; i < start_children + this->m_k2; ++i) {
+            for(auto i = 0; i < this->m_k2; ++i) {
                 if(new_block_size > 1){
-                    if (this->m_t[i]) {
-                        traverse_leaf(i, new_block_size,
-                                      (i - start_children) * new_block_size * new_block_size + offset, cw,
-                                      to_delete);
+                    if (this->m_t[start_children + i]) {
+                        traverse_leaf(start_children + i, new_block_size,
+                                      (i % this->m_k) * new_block_size + x,
+                                      (i / this->m_k) * new_block_size + y,
+                                        aux_l,cw,to_delete);
+                    }else {
+                        auto zth = idx_leaf(start_children+i);
+                        if(m_is_pointer[zth]){
+                            auto s_x = (i % this->m_k) * new_block_size + x;
+                            auto s_y = (i / this->m_k) * new_block_size + y;
+                            for(auto dx = 0; dx <  new_block_size; ++dx){
+                                for(auto dy = 0; dy < new_block_size; ++dy){
+                                    cw = cw | (1ULL << ((s_y + dy) * leaf_size + (s_x+dx)));
+                                }
+                            }
+                        }
                     }
                     ++to_delete;
                 }else{
-                    if(this->m_l[i - this->m_t.size()]){
-                        cw = cw | (0x1 << ((i % this->m_k2) + offset));
+                    if(aux_l[start_children + i - this->m_t.size()]){
+                        auto s_x = (i % this->m_k) + x;
+                        auto s_y = (i / this->m_k) + y;
+                        cw = cw | (1ULL << (s_y * leaf_size + s_x));
                     }
                     ++to_delete;
                 }
 
             }
 
+
         }
 
         double traverse(const size_type idx, const size_type block_size, std::unordered_map<size_type, size_type> &freq,
-                        size_type &bits_delete, size_type &n_leaves){
+                        std::vector<size_type> &code_leaves, const sdsl::bit_vector &aux_l,
+                        size_type &last_t, size_type &prev_ones){
+            ++prev_ones;
             auto start_children = this->m_t_rank(idx+1) * this->m_k2;
             auto new_block_size = block_size / this->m_k;
             for(auto i = start_children; i < start_children + this->m_k2; ++i){
-                if(new_block_size > 8){
+                if(new_block_size > leaf_size){
                     if(this->m_t[i]){
-                        traverse(i, new_block_size, freq, bits_delete, n_leaves);
+                        traverse(i, new_block_size, freq, code_leaves, aux_l, last_t, prev_ones);
                     }
                 }else{
                     if(this->m_t[i]){
-                        auto pair = compute_cw(i, new_block_size);
-                        bits_delete += pair.second;
+                        if(i == 5072276){
+                            std::cout << "Debug" << std::endl;
+                        }
+                        auto pair = compute_cw(i, new_block_size, aux_l);
+                        assert(pair.first < 65536);
                         auto it = freq.find(pair.first);
                         if(it != freq.end()){
                             it->second++;
                         }else{
                             freq.insert({pair.first, 1});
                         }
-                        ++n_leaves;
+                        code_leaves.push_back(pair.first);
+                        //if(pair.first == 13260){
+                        if(i == 5072276){
+                            std::cout << "AAAAAA" << std::endl;
+                            std::cout << "position: " << i << std::endl;
+                            std::cout << "code: " << pair.first << std::endl;
+                        }
                     }
+                    last_t = std::max(i, last_t);
                 }
 
             }
@@ -853,19 +983,33 @@ namespace block_tree_2d {
 
 
         //! Copy constructor
-        block_tree_comp_ones_access(const block_tree_comp_ones_access &p) {
+        block_tree_comp_leaves(const block_tree_comp_leaves &p) {
             copy(p);
         }
 
         //! Move constructor
-        block_tree_comp_ones_access(block_tree_comp_ones_access &&p) {
+        block_tree_comp_leaves(block_tree_comp_leaves &&p) {
             *this = std::move(p);
         }
 
         //! Assignment move operation
-        block_tree_comp_ones_access &operator=(block_tree_comp_ones_access &&p) {
+        block_tree_comp_leaves &operator=(block_tree_comp_leaves &&p) {
             if (this != &p) {
-                block_tree<input_type>::operator=(p);
+                m_k = std::move(p.m_k);
+                m_k2 = m_k * m_k;
+                m_height = std::move(p.m_height);
+                m_dimensions = std::move(p.m_dimensions);
+                m_t = std::move(p.m_t);
+                m_t_rank = std::move(p.m_t_rank);
+                m_t_rank.set_vector(&m_t);
+                m_t_select = std::move(p.m_t_select);
+                m_t_select.set_vector(&m_t);
+                m_is_pointer = std::move(p.m_is_pointer);
+                m_is_pointer_rank = std::move(p.m_is_pointer_rank);
+                m_is_pointer_rank.set_vector(&m_is_pointer);
+                m_level_ones = std::move(p.m_level_ones);
+                m_pointers = std::move(p.m_pointers);
+                m_offsets = std::move(p.m_offsets);
                 m_minimum_level = std::move(p.m_minimum_level);
                 m_maximum_level = std::move(p.m_maximum_level);
                 m_zeroes = std::move(p.m_zeroes);
@@ -873,12 +1017,15 @@ namespace block_tree_2d {
                 m_rank_explicit = std::move(p.m_rank_explicit);
                 m_rank_explicit.set_vector(&m_explicit);
                 m_msb = std::move(p.m_msb);
+                m_l = std::move(p.m_l);
+                m_voc = std::move(p.m_voc);
+                m_ones_prev_leaves = std::move(p.m_ones_prev_leaves);
             }
             return *this;
         }
 
         //! Assignment operator
-        block_tree_comp_ones_access &operator=(const block_tree_comp_ones_access &p) {
+        block_tree_comp_leaves &operator=(const block_tree_comp_leaves &p) {
             if (this != &p) {
                 copy(p);
             }
@@ -890,14 +1037,28 @@ namespace block_tree_2d {
         *  You have to use set_vector to adjust the supported bit_vector.
         *  \param bp_support Object which is swapped.
         */
-        void swap(block_tree_comp_ones_access &p) {
-            block_tree<input_type>::swap(p);
+        void swap(block_tree_comp_leaves &p) {
+            std::swap(m_k, p.m_k);
+            std::swap(m_k2, p.m_k2);
+            std::swap(m_dimensions, p.m_dimensions);
+            std::swap(m_level_ones, p.m_level_ones);
+            std::swap(m_height, p.m_height);
+            std::swap(m_t, p.m_t);
+            sdsl::util::swap_support(m_t_rank, p.m_t_rank, &m_t, &(p.m_t));
+            sdsl::util::swap_support(m_t_select, p.m_t_select, &m_t, &(p.m_t));
+            std::swap(m_is_pointer, p.m_is_pointer);
+            sdsl::util::swap_support(m_is_pointer_rank, p.m_is_pointer_rank, &m_is_pointer, &(p.m_is_pointer));
+            std::swap(m_pointers, p.m_pointers);
+            std::swap(m_offsets, p.m_offsets);
             std::swap(m_minimum_level, p.m_minimum_level);
             std::swap(m_maximum_level, p.m_maximum_level);
             std::swap(m_zeroes, p.m_zeroes);
             std::swap(m_explicit, p.m_explicit);
             sdsl::util::swap_support(m_rank_explicit, p.m_rank_explicit, &m_explicit, &(p.m_explicit));
             std::swap(m_msb, p.m_msb);
+            std::swap(m_l, p.m_l);
+            std::swap(m_voc, p.m_voc);
+            std::swap(m_ones_prev_leaves, p.m_ones_prev_leaves);
         }
 
 
@@ -908,27 +1069,137 @@ namespace block_tree_2d {
             sdsl::structure_tree_node* child = sdsl::structure_tree::add_child(
                     v, name, sdsl::util::class_name(*this));
             size_type written_bytes = 0;
-            written_bytes += block_tree<input_type>::serialize(out, v, name);
+            written_bytes += sdsl::write_member(m_k, out, child, "k");
+            written_bytes += sdsl::write_member(m_height, out, child, "height");
+            written_bytes += sdsl::write_member(m_dimensions, out, child, "dimensions");
+            written_bytes += m_t.serialize(out, child, "t");
+            written_bytes += m_t_rank.serialize(out, child, "t_rank");
+            written_bytes += m_t_select.serialize(out, child, "t_select");
+            written_bytes += m_level_ones.serialize(out, child, "level_ones");
+            written_bytes += m_is_pointer.serialize(out, child, "is_pointer");
+            written_bytes += m_is_pointer_rank.serialize(out, child, "is_pointer_rank");
+            uint64_t m_pointers_size = m_pointers.size();
+            sdsl::write_member(m_pointers_size, out, child, "pointers_size");
+            written_bytes += sdsl::serialize_vector(m_pointers, out, child, "pointers");
+            uint64_t m_offsets_size = m_offsets.size();
+            sdsl::write_member(m_offsets_size, out, child, "offsets_size");
+            written_bytes += sdsl::serialize_vector(m_offsets, out, child, "offsets");
             written_bytes += sdsl::write_member(m_minimum_level, out, child, "minimum_level");
             written_bytes += sdsl::write_member(m_maximum_level, out, child, "maximum_level");
             written_bytes += sdsl::write_member(m_zeroes, out, child, "zeroes");
             written_bytes += m_explicit.serialize(out, child, "explicit");
             written_bytes += m_rank_explicit.serialize(out, child, "rank_explicit");
             written_bytes += sdsl::write_member(m_msb, out, child, "msb");
+            written_bytes += m_l.serialize(out, child, "l");
+            written_bytes += m_voc.serialize(out, child, "voc");
+            written_bytes += sdsl::write_member(m_ones_prev_leaves, out, child, "ones_prev_leaves");
             return written_bytes;
         }
 
         //! Loads the data structure from the given istream.
         void load(std::istream& in)
         {
-            block_tree<input_type>::load(in);
+            sdsl::read_member(m_k, in);
+            sdsl::read_member(m_height, in);
+            sdsl::read_member(m_dimensions, in);
+            m_t.load(in);
+            m_t_rank.load(in, &m_t);
+            m_t_select.load(in, &m_t);
+            m_level_ones.load(in);
+            m_is_pointer.load(in);
+            m_is_pointer_rank.load(in, &m_is_pointer);
+            uint64_t m_pointers_size = 0;
+            sdsl::read_member(m_pointers_size, in);
+            m_pointers.resize(m_pointers_size);
+            sdsl::load_vector(m_pointers, in);
+            uint64_t m_offsets_size = 0;
+            sdsl::read_member(m_offsets_size, in);
+            m_offsets.resize(m_offsets_size);
+            sdsl::load_vector(m_offsets, in);
+            m_k2 = m_k * m_k;
             sdsl::read_member(m_minimum_level, in);
             sdsl::read_member(m_maximum_level, in);
             sdsl::read_member(m_zeroes, in);
             m_explicit.load(in);
             m_rank_explicit.load(in, &m_explicit);
             sdsl::read_member(m_msb, in);
+            m_l.load(in);
+            m_voc.load(in);
+            sdsl::read_member(m_ones_prev_leaves, in);
         }
+
+        //! Loads the data structure from the given istream.
+        void from(std::istream& in)
+        {
+            sdsl::read_member(m_k, in);
+            sdsl::read_member(m_height, in);
+            sdsl::read_member(m_dimensions, in);
+            m_t.load(in);
+            m_t_rank.load(in, &m_t);
+            m_t_select.load(in, &m_t);
+            sdsl::bit_vector l_aux;
+            l_aux.load(in);
+            m_level_ones.load(in);
+            m_is_pointer.load(in);
+            m_is_pointer_rank.load(in, &m_is_pointer);
+            uint64_t m_pointers_size = 0;
+            sdsl::read_member(m_pointers_size, in);
+            m_pointers.resize(m_pointers_size);
+            sdsl::load_vector(m_pointers, in);
+            uint64_t m_offsets_size = 0;
+            sdsl::read_member(m_offsets_size, in);
+            m_offsets.resize(m_offsets_size);
+            sdsl::load_vector(m_offsets, in);
+            m_k2 = m_k * m_k;
+            sdsl::read_member(m_minimum_level, in);
+            sdsl::read_member(m_maximum_level, in);
+            sdsl::read_member(m_zeroes, in);
+            m_explicit.load(in);
+            m_rank_explicit.load(in, &m_explicit);
+            sdsl::read_member(m_msb, in);
+
+            m_ones_prev_leaves = 0;
+            std::unordered_map<size_type, size_type> hash;
+            size_type n_leaves = 0, last_t = 0;
+            std::vector<size_type> code_leaves;
+            auto block_size = (size_type) std::pow(this->m_k, this->m_height);
+            traverse(0, block_size, hash, code_leaves, l_aux, last_t, m_ones_prev_leaves);
+
+            //Cutting bitmaps
+            auto last_pointer = idx_leaf(last_t);
+            m_is_pointer.resize(last_pointer+1);
+            sdsl::util::init_support(m_is_pointer_rank, &m_is_pointer);
+
+            m_t.resize(last_t+1);
+            sdsl::util::init_support(m_t_rank, &m_t);
+            sdsl::util::init_support(m_t_select, &m_t);
+
+
+            //Building the vocab
+            m_voc.resize(hash.size());
+            std::vector<std::pair<size_type, size_type>> vocab_vector (hash.begin(),hash.end());
+            hash.clear();
+            auto sortby = [](std::pair<size_type, size_type> a, std::pair<size_type, size_type> b) {
+                return a.second > b.second;
+            };
+            std::sort(vocab_vector.begin(), vocab_vector.end(), sortby);
+            size_type cw = 0;
+            for(const auto &c: vocab_vector){
+                hash.insert({c.first, cw});
+                m_voc[cw]=c.first;
+                ++cw;
+            }
+
+            //Encoding the leaves
+            for(int j = 0; j < code_leaves.size(); ++j){
+                auto it = hash.find(code_leaves[j]);
+                code_leaves[j] = it->second;
+            }
+            hash.clear();
+            m_l = sdsl::dac_vector_dp_opt<>(code_leaves);
+
+        }
+
 
         void pointers(){
             for(auto level = m_minimum_level; level < m_maximum_level; ++level){
