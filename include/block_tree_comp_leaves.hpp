@@ -874,7 +874,7 @@ namespace block_tree_2d {
                                 const size_type x, const size_type y,
                                 const sdsl::bit_vector &aux_l,
                                 size_type &cw, size_type &to_delete){
-            std::cout << "traverse_leaf " << std::endl;
+            
             auto new_block_size = block_size / this->m_k;
             auto start_children = this->m_t_rank(idx+1) * this->m_k2;
             for(auto i = 0; i < this->m_k2; ++i) {
@@ -907,18 +907,15 @@ namespace block_tree_2d {
                 }
 
             }
-            std::cout << "traverse leaf done" << std::endl;
 
 
         }
 
         std::pair<size_type, size_type> compute_cw(const size_type idx, const size_type block_size,
                                                    const sdsl::bit_vector &aux_l){
-            std::cout << "compuute cw " << std::endl;
             size_type to_delete = 0;
             size_type cw = 0;
             traverse_leaf(idx, block_size, 0, 0, aux_l, cw, to_delete);
-            std::cout << "compute cw done " << std::endl;
             return {cw, to_delete};
         }
 
