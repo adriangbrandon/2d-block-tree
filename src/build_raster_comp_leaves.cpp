@@ -63,7 +63,7 @@ void load_from(const std::string &file_name, const std::string &dataset,
     }
     input.close();
 
-    std::cout << values[0 * n_cols + 5759] << ", " << values[0 * n_cols + 5760] << ", " << values[0 * n_cols + 0] << ", " << values[0 * n_cols + 1] << std::endl;
+    /*std::cout << values[0 * n_cols + 5759] << ", " << values[0 * n_cols + 5760] << ", " << values[0 * n_cols + 0] << ", " << values[0 * n_cols + 1] << std::endl;
     std::cout << values[1 * n_cols + 5759] << ", " << values[1 * n_cols + 5760] << ", " << values[1 * n_cols + 0] << ", " << values[1 * n_cols + 1] << std::endl;
     std::cout << values[2 * n_cols + 5759] << ", " << values[2 * n_cols + 5760] << ", " << values[2 * n_cols + 0] << ", " << values[2 * n_cols + 1] << std::endl;
     std::cout << values[3 * n_cols + 5759] << ", " << values[3 * n_cols + 5760] << ", " << values[3 * n_cols + 0] << ", " << values[3 * n_cols + 1] << std::endl;
@@ -72,7 +72,7 @@ void load_from(const std::string &file_name, const std::string &dataset,
     std::cout << (values[1 * n_cols + 5759] & 0x0002) << ", " << (values[1 * n_cols + 5760] & 0x0002) << ", " << (values[1 * n_cols + 0] & 0x0004) << ", " << (values[1 * n_cols + 1] & 0x0004)<< std::endl;
     std::cout << (values[2 * n_cols + 5759] & 0x0002) << ", " << (values[2 * n_cols + 5760] & 0x0002) << ", " << (values[2 * n_cols + 0] & 0x0004) << ", " << (values[2 * n_cols + 1] & 0x0004)<< std::endl;
     std::cout << (values[3 * n_cols + 5759] & 0x0002) << ", " << (values[3 * n_cols + 5760] & 0x0002) << ", " << (values[3 * n_cols + 0] & 0x0004) << ", " << (values[3 * n_cols + 1] & 0x0004) << std::endl;
-
+*/
     std::vector<int> result;
     std::cout << "Retrieving adjacency lists... " << std::flush;
     m_block_tree.values_region(0, 0, n_cols-1, n_rows-1, n_cols, n_rows, result);
