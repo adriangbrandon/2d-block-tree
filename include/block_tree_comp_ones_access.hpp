@@ -792,7 +792,7 @@ namespace block_tree_2d {
                     if(this->m_t[i]){
                         auto new_block_size = block_size/this->m_k;
                         traverse_leaf(i, new_block_size,
-                                      (i - start_children) * new_block_size * new_block_size + offset, cw);
+                                      (i - start_children) * new_block_size * new_block_size + offset, cw, to_delete);
                     }
                 }else{
                     if(this->m_l[i - this->m_t.size()]){
@@ -812,7 +812,7 @@ namespace block_tree_2d {
             for(auto i = start_children; i < start_children + this->m_k2; ++i){
                 if(block_size > 4){
                     if(this->m_t[i]){
-                        traverse(i, block_size/this->m_k, freq, bits_delete);
+                        traverse(i, block_size/this->m_k, freq, bits_delete, n_leaves);
                     }
                 }else{
                     if(this->m_t[i]){
