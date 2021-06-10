@@ -45,6 +45,11 @@ namespace experiments {
         int id_direct;
     } pair_list_type;
 
+    typedef struct {
+        int x;
+        int y;
+    } cell_type;
+
     class reader {
 
     public:
@@ -73,6 +78,20 @@ namespace experiments {
             }
             input.close();
             return neighs;
+        }
+
+        static std::vector<cell_type> cells(const std::string file_queries){
+            std::ifstream input(file_queries);
+            std::vector<cell_type> cells;
+            int x, y;
+            while(1){
+                input >> x >> y;
+                if(!input.good()) break;
+                cell_type p{x, y};
+                cells.push_back(p);
+            }
+            input.close();
+            return cells;
         }
 
     };

@@ -874,7 +874,7 @@ namespace block_tree_2d {
                                 const size_type x, const size_type y,
                                 const sdsl::bit_vector &aux_l,
                                 size_type &cw, size_type &to_delete){
-            
+
             auto new_block_size = block_size / this->m_k;
             auto start_children = this->m_t_rank(idx+1) * this->m_k2;
             for(auto i = 0; i < this->m_k2; ++i) {
