@@ -46,6 +46,7 @@ void run_times(const std::string &name_file, const std::string &queries, const s
 
     auto qs = experiments::reader::cells(queries);
 
+    std::cout << "Running queries" << std::endl;
     auto t0 = util::time::user::now();
     int sum = 0;
     for(uint64_t id = 0; id < qs.size(); ++id){
