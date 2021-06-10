@@ -49,18 +49,18 @@ void run_times(const std::string &name_file, const std::string &queries, const s
     std::cout << "Running queries" << std::endl;
     auto t0 = util::time::user::now();
     int sum = 0;
+    std::vector<int> r;
     for(uint64_t id = 0; id < qs.size(); ++id){
-        std::vector<int> r;
         m_block_tree.values_region(qs[id].x, qs[id].y, qs[id].x, qs[id].y, n_cols, n_rows, r);
         sum += r[0];
     }
     auto t1 = util::time::user::now();
 
-    auto t = util::time::duration_cast<util::time::milliseconds>(t1-t0);
+    auto t = util::time::duration_cast<util::time::microseconds>(t1-t0);
 
     std::cout << "Total: " << sum << std::endl;
     std::cout << "Queries: " << qs.size() << std::endl;
-    std::cout << "Total time(ms): " << t << std::endl;
+    std::cout << "Total time(micros): " << t << std::endl;
     std::cout << "Time per query: " << t/qs.size() << std::endl;
 }
 

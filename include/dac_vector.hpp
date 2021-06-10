@@ -343,8 +343,7 @@ namespace sdsl
         //! Load from a stream.
         void load(std::istream& in) {
             m_overflow.load(in);
-            m_overflow_rank.load(in);
-            m_overflow_rank.set_vector(&m_overflow);
+            m_overflow_rank.load(in, &m_overflow);
             sdsl::load(m_data, in);
             sdsl::load(m_offsets, in);
             sdsl::load(m_table_base, in);

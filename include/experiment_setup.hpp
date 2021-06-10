@@ -84,6 +84,7 @@ namespace experiments {
             std::ifstream input(file_queries);
             std::vector<cell_type> cells;
             int x, y;
+            input >> x;
             while(1){
                 input >> x >> y;
                 if(!input.good()) break;
