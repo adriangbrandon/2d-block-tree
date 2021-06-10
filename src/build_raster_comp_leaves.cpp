@@ -97,6 +97,10 @@ void load_from(const std::string &file_name, const std::string &dataset,
         }
     }
 
+    std::cout << "Storing the block tree... " << std::flush;
+    sdsl::store_to_file(m_block_tree, file_name + ".cl");
+    std::cout << "Done. " << std::endl;
+
 }
 
 
