@@ -86,7 +86,7 @@ namespace experiments {
             int x, y;
             input >> x;
             while(1){
-                input >> x >> y;
+                input >> y >> x;
                 if(!input.good()) break;
                 cell_type p{x, y};
                 cells.push_back(p);

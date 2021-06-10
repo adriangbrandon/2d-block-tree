@@ -48,7 +48,7 @@ void run_times(const std::string &name_file, const std::string &queries, const s
 
     std::cout << "Running queries" << std::endl;
     auto t0 = util::time::user::now();
-    int sum = 0;
+    uint64_t sum = 0;
     std::vector<int> r;
     for(uint64_t id = 0; id < qs.size(); ++id){
         m_block_tree.values_region(qs[id].x, qs[id].y, qs[id].x, qs[id].y, n_cols, n_rows, r);

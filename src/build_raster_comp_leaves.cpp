@@ -97,6 +97,20 @@ void load_from(const std::string &file_name, const std::string &dataset,
         }
     }
 
+    n = 0;
+    for (int r = 0; r < n_rows; ++r) {
+        for (int c = 0; c < n_cols; ++c) {
+            m_block_tree.values_region(c, r, c, r, n_cols, n_rows, result);
+            if(result[0] != values[n]){
+                std::cout << "Error en n=" << n << std::endl;
+                std::cout << "Obtained=" << result[n] << std::endl;
+                std::cout << "Expected=" << values[n] << std::endl;
+                exit(10);
+            }
+            ++n;
+        }
+    }
+
     std::cout << "Storing the block tree... " << std::flush;
     sdsl::store_to_file(m_block_tree, file_name + ".cl");
     std::cout << "Done. " << std::endl;
