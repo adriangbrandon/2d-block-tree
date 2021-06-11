@@ -160,3 +160,6 @@ target_link_libraries(build_raster_comp_leaves sdsl divsufsort divsufsort64)
 
 add_executable(times_cell src/times_cell.cpp )
 target_link_libraries(times_cell sdsl divsufsort divsufsort64)
+
+add_executable(build_raster_dag src/build_raster_dag.cpp )
+target_link_libraries(build_raster_dag sdsl divsufsort divsufsort64)
