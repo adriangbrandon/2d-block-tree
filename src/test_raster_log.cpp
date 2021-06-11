@@ -129,6 +129,7 @@ void run_build(const std::string &dataset, const uint64_t k,
             exit(10);
         }
     }
+    std::cout << "All values ok!" << std::endl;
 
     n = 0;
     for (int r = 0; r < n_rows; ++r) {
@@ -143,7 +144,8 @@ void run_build(const std::string &dataset, const uint64_t k,
             ++n;
         }
     }
-    
+    std::cout << "Individual cells ok!" << std::endl;
+
 
     int reg_size = 4;
     //std::vector<int> res;
