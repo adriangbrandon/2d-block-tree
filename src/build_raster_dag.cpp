@@ -52,7 +52,7 @@ void run_build(const std::string &dataset, const uint64_t k,
     t_block_tree m_block_tree;
     uint64_t first_block_size = last_block_size_k2_tree / k;
     std::string name_file = dataset;
-    name_file = name_file +"_" + std::to_string(first_block_size) + ".2dbt";
+    name_file = name_file +"_" + std::to_string(first_block_size) + ".2dbt.dag";
     uint64_t duration = 0;
     if(util::file::file_exists(name_file)){
         sdsl::load_from_file(m_block_tree, name_file);
