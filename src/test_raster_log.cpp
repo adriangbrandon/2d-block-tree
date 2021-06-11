@@ -143,16 +143,7 @@ void run_build(const std::string &dataset, const uint64_t k,
             ++n;
         }
     }
-
-    for(n = 0; n < n_rows*n_cols; ++n){
-        m_block_tree.values_region(0, 0, n_cols - 1, n_rows - 1, n_cols, n_rows, result);
-        if(result[n] != values[n]){
-            std::cout << "Error en n=" << n << std::endl;
-            std::cout << "Obtained=" << result[n] << std::endl;
-            std::cout << "Expected=" << values[n] << std::endl;
-            exit(10);
-        }
-    }
+    
 
     int reg_size = 4;
     //std::vector<int> res;
