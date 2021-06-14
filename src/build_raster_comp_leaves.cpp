@@ -97,7 +97,7 @@ void load_from(const std::string &file_name, const std::string &dataset,
         }
     }
 
-    n = 0;
+   /* n = 0;
     for (int r = 0; r < n_rows; ++r) {
         for (int c = 0; c < n_cols; ++c) {
             m_block_tree.values_region(c, r, c, r, n_cols, n_rows, result);
@@ -109,7 +109,7 @@ void load_from(const std::string &file_name, const std::string &dataset,
             }
             ++n;
         }
-    }
+    }*/
 
     std::cout << "Storing the block tree... " << std::flush;
     sdsl::store_to_file(m_block_tree, file_name + ".cl");

@@ -31,8 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Created by Adrián on 09/08/2019.
 //
 
-#ifndef INC_2D_BLOCK_TREE_BLOCK_TREE_DHSB_ONES_HPP
-#define INC_2D_BLOCK_TREE_BLOCK_TREE_DHSB_ONES_HPP
+#ifndef INC_2D_BLOCK_TREE_BLOCK_TREE_DD_ONES_HPP
+#define INC_2D_BLOCK_TREE_BLOCK_TREE_DD_ONES_HPP
 
 #include <block_tree_algorithm_helper.hpp>
 #include "alternative_code.hpp"
@@ -46,7 +46,7 @@ namespace block_tree_2d {
 
     template <class reader_t = dataset_reader::web_graph,
               class input_t = std::vector<std::vector<int64_t>>>
-    class block_tree_double_hybrid_skipping_block : public block_tree<input_t> {
+    class block_tree_double_dag : public block_tree<input_t> {
 
     public:
 
@@ -67,7 +67,6 @@ namespace block_tree_2d {
         std::vector<sdsl::int_vector<>> m_explicit_location;
 
         void add_new_pointers_offsets_explicit(){
-            this->m_offsets.push_back(sdsl::int_vector<>(ARRAY_RESIZE, 0));
             this->m_pointers.push_back(sdsl::int_vector<>(ARRAY_RESIZE, 0));
             m_explicit_location.push_back(sdsl::int_vector<>(ARRAY_RESIZE, 0));
         }
@@ -98,10 +97,7 @@ namespace block_tree_2d {
                     this->m_is_pointer[is_pointer_index++] = 1;
                     ++(this->m_level_ones[3*level+1]);
                     this->m_explicit[explicit_index++] = 0;
-                    this->check_resize(this->m_offsets[level], offset_index+1);
                     this->check_resize(this->m_pointers[level], pointer_index);
-                    this->m_offsets[level][offset_index++] = codes::alternative_code::encode(node.offset_x);
-                    this->m_offsets[level][offset_index++] = codes::alternative_code::encode(node.offset_y);
                     this->m_pointers[level][pointer_index++] = node.ptr;
                     ++pointers;
                 }else{
@@ -115,10 +111,8 @@ namespace block_tree_2d {
                     m_explicit_location[level][explicit_location_index++] = node.offset_y;
                 }
             }
-            this->m_offsets[level].resize(offset_index);
             this->m_pointers[level].resize(pointer_index);
             m_explicit_location[level].resize(explicit_location_index);
-            sdsl::util::bit_compress(this->m_offsets[level]);
             sdsl::util::bit_compress(this->m_pointers[level]);
             sdsl::util::bit_compress(m_explicit_location[level]);
             return pointers;
@@ -136,7 +130,6 @@ namespace block_tree_2d {
             this->init_structure();
             m_explicit = sdsl::bit_vector(BITMAP_RESIZE);
             m_explicit_location = std::vector<sdsl::int_vector<>>(1, sdsl::int_vector<>(0, 0));
-            this->m_offsets[0].resize(0);
             this->m_pointers[0].resize(0);
 
             //1. Obtaining minimum block size where there are identical blocks
@@ -191,16 +184,16 @@ namespace block_tree_2d {
                 block_tree_2d::algorithm::mark_to_delete(iterators_to_delete);
 
 
-                util::logger::log("Computing fingerprint of shifts at level=" + std::to_string(l));
-                /*block_tree_2d::algorithm::get_type_of_nodes_skipping_blocks_stack_lite(adjacency_lists, this->k,
+                /*util::logger::log("Computing fingerprint of shifts at level=" + std::to_string(l));
+                block_tree_2d::algorithm::get_type_of_nodes_skipping_blocks_stack_lite(adjacency_lists, this->k,
                                                                                        m_htc, this->dimensions,
-                                                                                       block_size, hash, nodes);*/
+                                                                                       block_size, hash, nodes);
 
                 block_tree_2d::algorithm::get_type_of_nodes_skipping_blocks_stack_lite(adjacency_lists, this->k,
                                                                                        m_htc, this->dimensions,
                                                                                        block_size, this->m_t,
                                                                                        this->m_t_rank, topology_index,
-                                                                                       nodes);
+                                                                                       nodes);*/
 
 
                 size_type bits_k2_tree = 0, leaf_nodes = 0, empty_nodes = 0, internal_nodes = 0, explicit_nodes = 0;
@@ -208,14 +201,6 @@ namespace block_tree_2d {
                 for(const auto &node: nodes){
                     if(node.type == NODE_LEAF) {
                         bits_k2_tree += node.bits;
-                        auto b_offx = sdsl::bits::hi(codes::alternative_code::encode(node.offset_x)) + 1;
-                        if (bits_per_offset < b_offx) {
-                            bits_per_offset = b_offx;
-                        }
-                        auto b_offy = sdsl::bits::hi(codes::alternative_code::encode(node.offset_y)) + 1;
-                        if (bits_per_offset < b_offy) {
-                            bits_per_offset = b_offy;
-                        }
                         auto b_ptr = sdsl::bits::hi(node.ptr) + 1;
                         if (bits_per_pointer < b_ptr) {
                             bits_per_pointer = b_ptr;
@@ -296,12 +281,13 @@ namespace block_tree_2d {
             sdsl::util::init_support(this->m_is_pointer_rank, &this->m_is_pointer);
             sdsl::util::init_support(m_rank_explicit, &m_explicit);
             sdsl::util::bit_compress(this->m_level_ones);
+            this->m_offsets.clear();
             util::logger::log("2D Block Tree DONE!!!");
 
         }
 
 
-        void copy(const block_tree_double_hybrid_skipping_block &p){
+        void copy(const block_tree_double_dag &p){
             block_tree<input_type >::copy(p);
             m_zeroes = p.m_zeroes;
             m_minimum_level = p.m_minimum_level;
@@ -452,8 +438,8 @@ namespace block_tree_2d {
                             size_type &pointer, value_type &offset_x, value_type &offset_y){
 
             pointer = this->m_level_ones[3*(level-m_minimum_level)]+ this->m_pointers[level-m_minimum_level][idx_pointer];
-            offset_x = codes::alternative_code::decode(this->m_offsets[level-m_minimum_level][2*idx_pointer]);
-            offset_y = codes::alternative_code::decode(this->m_offsets[level-m_minimum_level][2*idx_pointer+1]);
+            offset_x = 0;
+            offset_y = 0;
         }
 
         void explicit_node_info(const size_type pos_explicit, const size_type level, size_type &offset_x, size_type &offset_y){
@@ -474,9 +460,9 @@ namespace block_tree_2d {
 
         const size_type &minimum_level = m_minimum_level;
         const size_type &maximum_level = m_maximum_level;
-        block_tree_double_hybrid_skipping_block() = default;
+        block_tree_double_dag() = default;
 
-        block_tree_double_hybrid_skipping_block(const std::string &file_name, const size_type kparam, const size_type level,
+        block_tree_double_dag(const std::string &file_name, const size_type kparam, const size_type level,
                                                 const size_type n_rows=0, const size_type n_cols=0) {
             input_type adjacency_lists;
             reader_type::read(file_name, adjacency_lists, n_rows, n_cols);
@@ -521,17 +507,17 @@ namespace block_tree_2d {
 
 
         //! Copy constructor
-        block_tree_double_hybrid_skipping_block(const block_tree_double_hybrid_skipping_block &p) {
+        block_tree_double_dag(const block_tree_double_dag &p) {
             copy(p);
         }
 
         //! Move constructor
-        block_tree_double_hybrid_skipping_block(block_tree_double_hybrid_skipping_block &&p) {
+        block_tree_double_dag(block_tree_double_dag &&p) {
             *this = std::move(p);
         }
 
         //! Assignment move operation
-        block_tree_double_hybrid_skipping_block &operator=(block_tree_double_hybrid_skipping_block &&p) {
+        block_tree_double_dag &operator=(block_tree_double_dag &&p) {
             if (this != &p) {
                 block_tree<input_type>::operator=(p);
                 m_minimum_level = std::move(p.m_minimum_level);
@@ -546,7 +532,7 @@ namespace block_tree_2d {
         }
 
         //! Assignment operator
-        block_tree_double_hybrid_skipping_block &operator=(const block_tree_double_hybrid_skipping_block &p) {
+        block_tree_double_dag &operator=(const block_tree_double_dag &p) {
             if (this != &p) {
                 copy(p);
             }
@@ -558,7 +544,7 @@ namespace block_tree_2d {
         *  You have to use set_vector to adjust the supported bit_vector.
         *  \param bp_support Object which is swapped.
         */
-        void swap(block_tree_double_hybrid_skipping_block &p) {
+        void swap(block_tree_double_dag &p) {
             block_tree<input_type>::swap(p);
             std::swap(m_minimum_level, p.m_minimum_level);
             std::swap(m_maximum_level, p.m_maximum_level);
@@ -603,22 +589,7 @@ namespace block_tree_2d {
             sdsl::load_vector(m_explicit_location, in);
         }
 
-        void pointers(){
-            for(auto level = m_minimum_level; level < m_maximum_level; ++level){
-                auto p_offset = 0;
-                auto p_no_offset = 0;
-                for(size_type i = 0; i < this->m_offsets[level-m_minimum_level].size()/2; ++i){
-                    auto offset_x = codes::alternative_code::decode(this->m_offsets[level-m_minimum_level][2*i]);
-                    auto offset_y = codes::alternative_code::decode(this->m_offsets[level-m_minimum_level][2*i+1]);
-                    if(offset_x == 0 && offset_y == 0){
-                        p_no_offset++;
-                    }else{
-                        p_offset++;
-                    }
-                }
-                std::cout << "Level=" << level << " pointers=" << this->m_pointers[level-m_minimum_level].size() << " p_offset=" << p_offset << " p_no_offset=" << p_no_offset << std::endl;
-            }
-        }
+
 
         void display(){
 

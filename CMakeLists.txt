@@ -88,6 +88,9 @@ target_link_libraries(hash_table sdsl divsufsort divsufsort64)
 add_executable(build_webgraph src/build_webgraph.cpp)
 target_link_libraries(build_webgraph sdsl divsufsort divsufsort64)
 
+add_executable(build_webgraph_dag src/build_webgraph_dag.cpp)
+target_link_libraries(build_webgraph_dag sdsl divsufsort divsufsort64)
+
 add_executable(build_raster src/build_raster.cpp)
 target_link_libraries(build_raster sdsl divsufsort divsufsort64)
 

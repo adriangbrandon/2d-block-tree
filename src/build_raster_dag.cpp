@@ -67,6 +67,8 @@ void run_build(const std::string &dataset, const uint64_t k,
 
     std::cout << "Storing the block tree... " << std::flush;
     sdsl::store_to_file(m_block_tree, name_file);
+    sdsl::write_structure<sdsl::JSON_FORMAT>(m_block_tree, name_file + ".json");
+    sdsl::write_structure<sdsl::HTML_FORMAT>(m_block_tree, name_file + ".html");
     std::cout << "Done. " << std::endl;
     //m_block_tree.print();
     std::vector<std::vector<int64_t>> copy_lists;
@@ -137,8 +139,6 @@ void run_build(const std::string &dataset, const uint64_t k,
     std::cout << std::endl;
     std::cout << "The Block-tree was built in " << duration << " seconds and uses " << size_bt << " bytes." << std::endl;
     std::cout << duration << " " << size_bt << std::endl;
-    sdsl::write_structure<sdsl::JSON_FORMAT>(m_block_tree, name_file + ".json");
-    sdsl::write_structure<sdsl::HTML_FORMAT>(m_block_tree, name_file + ".html");
 }
 
 

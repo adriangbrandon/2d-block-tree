@@ -1111,8 +1111,6 @@ namespace block_tree_2d {
             m_t.load(in);
             m_t_rank.load(in, &m_t);
             m_t_select.load(in, &m_t);
-            sdsl::bit_vector l_aux;
-            l_aux.load(in);
             m_level_ones.load(in);
             m_is_pointer.load(in);
             m_is_pointer_rank.load(in, &m_is_pointer);
@@ -1127,6 +1125,8 @@ namespace block_tree_2d {
             m_explicit.load(in);
             m_rank_explicit.load(in, &m_explicit);
             sdsl::read_member(m_msb, in);
+            sdsl::bit_vector l_aux;
+            l_aux.load(in);
 
             std::cout << "1" << std::endl;
             m_ones_prev_leaves = 0;
