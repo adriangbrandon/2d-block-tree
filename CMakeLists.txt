@@ -9,7 +9,7 @@ set(PROJECT_CONTACT "adrian.gbrandon@udc.es")
 
 
 #Change to "Debug" when you need it
-set(CMAKE_BUILD_TYPE "Release")
+set(CMAKE_BUILD_TYPE "Debug")
 
 # C++11 compiler Check
 if(NOT CMAKE_CXX_COMPILER_VERSION) # work around for cmake versions smaller than 2.8.10
@@ -164,8 +164,14 @@ target_link_libraries(build_raster_comp_leaves sdsl divsufsort divsufsort64)
 add_executable(times_cell src/times_cell.cpp )
 target_link_libraries(times_cell sdsl divsufsort divsufsort64)
 
+add_executable(times_cell_dag src/times_cell_dag.cpp )
+target_link_libraries(times_cell_dag sdsl divsufsort divsufsort64)
+
 add_executable(build_raster_dag src/build_raster_dag.cpp )
 target_link_libraries(build_raster_dag sdsl divsufsort divsufsort64)
 
 add_executable(build_raster_dag_comp_leaves src/build_raster_dag_comp_leaves.cpp )
 target_link_libraries(build_raster_dag_comp_leaves sdsl divsufsort divsufsort64)
+
+add_executable(build_k2tree_raster src/build_k2tree_raster.cpp )
+target_link_libraries(build_k2tree_raster sdsl divsufsort divsufsort64)
