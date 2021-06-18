@@ -125,6 +125,6 @@ int main(int argc, char **argv) {
     int n_rows = atoi(argv[3]);
     int n_cols = atoi(argv[4]);
 
-    load_from<block_tree_2d::block_tree_comp_leaves<dataset_reader::raster_log>>(file_name, dataset, n_rows, n_cols);
+    load_from<block_tree_2d::block_tree_comp_leaves<dataset_reader::raster>>(file_name, dataset, n_rows, n_cols);
 
 }

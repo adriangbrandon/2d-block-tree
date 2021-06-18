@@ -392,12 +392,28 @@ namespace block_tree_2d {
             std::cout << "current_level: " << level << std::endl;
             std::cout << std::endl;
 #endif
-            if(level == this->m_height){
-                //if(m_topology[idx]){
-                if(this->m_l[idx - this->m_t.size()]){
-                    //Adding result
-                    add(result, x, y);
-                    //result[y].push_back(x);
+            if(block_size == leaf_size){
+                if(m_t[idx]) {
+                    size_type c_i = m_t_rank(idx+1) - m_ones_prev_leaves -1;
+                    size_type code = m_voc[m_l[c_i]];
+                    while(code){
+                        size_type set_bit = sdsl::bits::lo(code);
+                        size_type o_x = set_bit % leaf_size;
+                        size_type o_y = set_bit / leaf_size;
+                        if(min_x <= o_x && o_x <= max_x && min_y <= o_y && o_y <= max_y){
+                            add(result, x + o_x - min_x, y + o_y - min_y);
+                        }
+                        code = code & sdsl::bits::lo_unset[set_bit+1];
+                    }
+                }else if(level >= m_maximum_level){
+                    size_type pos_leaf = idx_leaf(idx);
+                    if(this->m_is_pointer[pos_leaf]){
+                        for (size_type offset_y = min_y; offset_y <= max_y; ++offset_y) {
+                            for (size_type offset_x = min_x; offset_x <= max_x; ++offset_x) {
+                                add(result, x + offset_x - min_x, y + offset_y - min_y);
+                            }
+                        }
+                    }
                 }
             }else{
                 //if(m_topology[idx]){
