@@ -44,14 +44,19 @@ void run_times(const std::string &name_file, const std::string &queries, const s
 
     std::cout << "Size in bytes 2dbt: " << sdsl::size_in_bytes(m_block_tree) << std::endl;
 
-    auto qs = experiments::reader::range(queries);
+    std::vector<experiments::range_type> qs = experiments::reader::range(queries);
 
+
+//    m_block_tree.region_range(3504, 2036, 3590, 2503, 116, 267, n_cols);
+ //   exit(0);
     std::cout << "Running queries" << std::endl;
     auto t0 = util::time::user::now();
     uint64_t sum = 0;
-    for(auto & q : qs){
-        auto values = m_block_tree.region_range(q.min_x, q.min_y,
-                                         q.max_x, q.max_y, q.lb, q.ub, n_cols);
+    for(int i = 0; i < qs.size(); ++i){
+        std::cout << qs[i].min_x << ", " << qs[i].min_y << ", " << qs[i].max_x << ", " <<
+        qs[i].max_y << ", " << qs[i].lb << ", " << qs[i].ub << std::endl;
+        auto values = m_block_tree.region_range(qs[i].min_x, qs[i].min_y,
+                                                qs[i].max_x, qs[i].max_y, qs[i].lb, qs[i].ub, n_cols);
         sum += values.size();
     }
     auto t1 = util::time::user::now();
