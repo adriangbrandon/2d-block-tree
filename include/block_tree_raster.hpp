@@ -302,6 +302,8 @@ namespace block_tree_2d {
             m_explicit = p.m_explicit;
             m_rank_explicit = p.m_rank_explicit;
             m_rank_explicit.set_vector(&m_explicit);
+            m_min = p.m_min;
+            m_max = p.m_max;
         }
 
         template <class add_function, class result_type>
@@ -426,7 +428,7 @@ namespace block_tree_2d {
                     size_type j = yq/new_block_size;
                     size_type new_xq =  xq % new_block_size;
                     size_type new_yq = yq % new_block_size;
-                    rec_check_edge(new_xq, new_yq,
+                    return rec_check_edge(new_xq, new_yq,
                                             start_children + codes::zeta_order::encode(i, j),
                                             level + 1,
                                             new_block_size, taking_pointer, level_taking_pointer);
@@ -444,18 +446,17 @@ namespace block_tree_2d {
                                 value_type offset_x, offset_y;
                                 size_type pointer;
                                 leaf_node_info(pos_pointer, level, pointer, offset_x, offset_y);
-                                take_pointer(xq, yq, pointer,
+                                return take_pointer(xq, yq, pointer,
                                              offset_x, offset_y, level, block_size);
                             }
                         }
                     }else if(level >= m_maximum_level){
                         size_type pos_leaf = idx_leaf(idx);
-                        if(this->m_is_pointer[pos_leaf]){
-                            return true;
-                        }
+                        return this->m_is_pointer[pos_leaf];
                     }
-
+                    return false;
                 }
+
             }
         }
 
@@ -489,7 +490,7 @@ namespace block_tree_2d {
                                     static_cast<size_type >(new_min_y + length_y), x, y, ptr, l, block_size, result, add, true, level);
         }
 
-        void take_pointer(const size_type xq, const size_type yq,
+        size_type take_pointer(const size_type xq, const size_type yq,
                           size_type ptr,
                           const value_type offset_x, const value_type offset_y,
                           const size_type level, size_type block_size){
@@ -507,7 +508,7 @@ namespace block_tree_2d {
                 l--;
                 ptr = this->m_t_select(ptr / this->m_k2);
             }
-            rec_check_edge(static_cast<size_type >(new_xq), static_cast<size_type >(new_yq),
+            return rec_check_edge(static_cast<size_type >(new_xq), static_cast<size_type >(new_yq),
                            ptr, l, block_size, true, level);
         }
 
@@ -615,11 +616,14 @@ namespace block_tree_2d {
         }
 
         inline size_type get_cell(const size_type x, const size_type y, const size_type n_cols){
+
+
             size_type lb = m_min, ub = m_max;
             bool check = false;
             size_type mid;
             auto block_size = (size_type) std::pow(this->m_k, this->m_height);
             while(lb <= ub){
+                //std::cout << "[" << lb << ", " << ub << "]" << std::endl;
                 mid = (lb + ub) / 2;
                 check = this->rec_check_edge(x + n_cols * (mid - m_min), y, 0, 0, block_size);
                 if(check){
@@ -628,8 +632,10 @@ namespace block_tree_2d {
                     lb = mid + 1;
                 }
             }
+            //std::cout << "check: " << check << std::endl;
+            //std::cout << "mid: " << mid << std::endl;
             if(!check) ++mid;
-            return mid;
+            return (mid > m_max) ? 0 : mid;
         }
 
 
@@ -654,6 +660,8 @@ namespace block_tree_2d {
                 m_explicit = std::move(p.m_explicit);
                 m_rank_explicit = std::move(p.m_rank_explicit);
                 m_rank_explicit.set_vector(&m_explicit);
+                m_min = std::move(p.m_min);
+                m_max = std::move(p.m_max);
             }
             return *this;
         }
@@ -678,6 +686,8 @@ namespace block_tree_2d {
             std::swap(m_zeroes, p.m_zeroes);
             std::swap(m_explicit, p.m_explicit);
             sdsl::util::swap_support(m_rank_explicit, p.m_rank_explicit, &m_explicit, &(p.m_explicit));
+            std::swap(m_min, p.m_min);
+            std::swap(m_max, p.m_max);
         }
 
 
