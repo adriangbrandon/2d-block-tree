@@ -53,8 +53,8 @@ void run_times(const std::string &name_file, const std::string &queries, const s
     auto t0 = util::time::user::now();
     uint64_t sum = 0;
     for(int i = 0; i < qs.size(); ++i){
-        std::cout << qs[i].min_x << ", " << qs[i].min_y << ", " << qs[i].max_x << ", " <<
-        qs[i].max_y << ", " << qs[i].lb << ", " << qs[i].ub << std::endl;
+        //std::cout << qs[i].min_x << ", " << qs[i].min_y << ", " << qs[i].max_x << ", " <<
+        //qs[i].max_y << ", " << qs[i].lb << ", " << qs[i].ub << std::endl;
         auto values = m_block_tree.region_range(qs[i].min_x, qs[i].min_y,
                                                 qs[i].max_x, qs[i].max_y, qs[i].lb, qs[i].ub, n_cols);
         sum += values.size();
