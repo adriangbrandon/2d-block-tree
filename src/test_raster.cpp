@@ -102,6 +102,7 @@ void run_build(const std::string &dataset, const uint64_t k,
     input.close();
 
     //exit(0);
+    /*
     n = 0;
     for(int r = 0; r <n_rows; ++r){
         for (int c = 0; c < n_cols; ++c){
@@ -115,6 +116,33 @@ void run_build(const std::string &dataset, const uint64_t k,
                 std::cout << "Expected=" << values[n] << std::endl;
                 std::cout << m_block_tree.get_cell(c, r, n_cols) << std::endl;
                 exit(10);
+            }
+            ++n;
+        }
+    }*/
+
+    auto lb = 1;
+    auto ub = 20;
+    auto size = 20;
+
+    auto vals = m_block_tree.region_range(3330, 756,3330 + size-1, 756+size-1, lb, ub, n_cols);
+    n = 0;
+    for(int r = 0; r + size-1 < n_rows; ++r){
+        for(int c = 0; c + size-1 < n_cols; ++c){
+            auto vals = m_block_tree.region_range(c, r,c + size-1, r+size-1, lb, ub, n_cols);
+            if(n % 10000 == 0) std::cout << n << std::endl;
+            for(int oy = 0; oy < size; ++oy){
+                for(int ox = 0; ox < size; ++ox){
+                    auto n_i = (r+oy) * n_cols +  (c+ox);
+                    if(((lb <= values[n_i] && values[n_i] <= ub) && !vals[ox + oy * size]) ||
+                        ((lb > values[n_i] || values[n_i] > ub) && vals[ox + oy * size])){
+                        std::cout << "Error: r=" << r << " c=" << c << std::endl;
+                        std::cout << "ox=" << ox << " oy=" << oy << std::endl;
+                        std::cout << "Value: " << values[n_i] << std::endl;
+                        std::cout << "Set: " <<  (uint64_t) vals[ox + oy * size] << std::endl;
+                        exit(0);
+                    }
+                }
             }
             ++n;
         }

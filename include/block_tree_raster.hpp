@@ -593,23 +593,23 @@ namespace block_tree_2d {
                                   const size_type max_x, const size_type max_y,
                                   size_type lb, size_type ub,
                                   const size_type n_cols){
-            size_type size_vector = (max_y - min_y+1) * (max_x - max_x + 1);
+            size_type size_vector = (max_y - min_y+1) * (max_x - min_x + 1);
             std::vector<uint8_t> result =  std::vector<uint8_t>(size_vector, 0);
 
             if(lb > m_max || ub < m_min) return result;
 
             auto block_size = (size_type) std::pow(this->m_k, this->m_height);
 
-            if(ub < m_max) ub = m_max; //The highest value is m_max
+            if(ub > m_max) ub = m_max; //The highest value is m_max
             //1. Upper bound region
             auto shift_x = n_cols * (ub - m_min);
-            this->recursive_access_region(min_x + shift_x, max_x + shift_x, min_y, max_y, 0, 0, 0, 0, block_size, result, add_raster{n_cols});
+            this->recursive_access_region(min_x + shift_x, max_x + shift_x, min_y, max_y, 0, 0, 0, 0, block_size, result, add_raster{max_y - min_y+1});
 
 
             if(lb <= m_min) return result; //No subtraction
             //2. Lower bound region
             shift_x = n_cols * (lb-1 - m_min);
-            this->recursive_access_region(min_x + shift_x, max_x + shift_x, min_y, max_y, 0, 0, 0, 0, block_size, result, subtract_raster{n_cols});
+            this->recursive_access_region(min_x + shift_x, max_x + shift_x, min_y, max_y, 0, 0, 0, 0, block_size, result, subtract_raster{max_y - min_y+1});
 
             return result;
 
