@@ -40,6 +40,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <logger.hpp>
 #include <block_tree.hpp>
 #include <vector>
+#include <result_util.hpp>
 #include <adjacency_list_helper.hpp>
 
 namespace block_tree_2d {
@@ -487,7 +488,7 @@ namespace block_tree_2d {
                                     static_cast<size_type >(new_min_y),
                                     static_cast<size_type >(new_min_y + length_y), x, y, ptr, l, block_size, result, add, true, level);
         }
-        
+
         void take_pointer(const size_type xq, const size_type yq,
                           size_type ptr,
                           const value_type offset_x, const value_type offset_y,
@@ -589,7 +590,7 @@ namespace block_tree_2d {
 
         inline std::vector<uint8_t> region_range(const size_type min_x, const size_type min_y,
                                   const size_type max_x, const size_type max_y,
-                                  const size_type lb, const size_type ub,
+                                  size_type lb, size_type ub,
                                   const size_type n_cols){
             size_type size_vector = (max_y - min_y+1) * (max_x - max_x + 1);
             std::vector<uint8_t> result =  std::vector<uint8_t>(size_vector, 0);
@@ -601,13 +602,13 @@ namespace block_tree_2d {
             if(ub < m_max) ub = m_max; //The highest value is m_max
             //1. Upper bound region
             auto shift_x = n_cols * (ub - m_min);
-            this->recursive_access_region(min_x + shift_x, max_x + shift_x, min_y, max_y, 0, 0, 0, 0, block_size, result, add_raster());
+            this->recursive_access_region(min_x + shift_x, max_x + shift_x, min_y, max_y, 0, 0, 0, 0, block_size, result, add_raster{n_cols});
 
 
             if(lb <= m_min) return result; //No subtraction
             //2. Lower bound region
             shift_x = n_cols * (lb-1 - m_min);
-            this->recursive_access_region(min_x + shift_x, max_x + shift_x, min_y, max_y, 0, 0, 0, 0, block_size, result, subtract_raster());
+            this->recursive_access_region(min_x + shift_x, max_x + shift_x, min_y, max_y, 0, 0, 0, 0, block_size, result, subtract_raster{n_cols});
 
             return result;
 
