@@ -398,7 +398,6 @@ namespace block_tree_2d {
             }
         }
 
-        template <class add_function, class result_type>
         bool rec_check_edge(const size_type xq,const size_type yq,
                                      const size_type idx, const size_type level,
                                      const size_type block_size,
@@ -488,8 +487,7 @@ namespace block_tree_2d {
                                     static_cast<size_type >(new_min_y),
                                     static_cast<size_type >(new_min_y + length_y), x, y, ptr, l, block_size, result, add, true, level);
         }
-
-        template <class result_type, class add_function>
+        
         void take_pointer(const size_type xq, const size_type yq,
                           size_type ptr,
                           const value_type offset_x, const value_type offset_y,
