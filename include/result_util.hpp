@@ -60,6 +60,21 @@ namespace block_tree_2d{
         }
     };
 
+    struct add_raster {
+        template<class size_type>
+        void operator() (std::vector<size_type> &result, const size_type x, const size_type y, size_type n_cols)
+        {
+            result[y*n_cols+x] = 1;
+        }
+    };
+
+    struct subtract_raster {
+        template<class size_type>
+        void operator() (std::vector<size_type> &result, const size_type x, const size_type y, size_type n_cols)
+        {
+            result[y*n_cols+x] = 0;
+        }
+    };
 }
 
 

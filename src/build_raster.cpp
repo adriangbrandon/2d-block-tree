@@ -33,7 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <dataset_reader.hpp>
 #include <adjacency_list_helper.hpp>
 #include <sdsl/io.hpp>
-#include <block_tree_comp_ones_v2.hpp>
+#include <block_tree_raster.hpp>
 #include <file_util.hpp>
 
 /*template<class t_block_tree>
@@ -53,9 +53,9 @@ void build(block_tree_2d::block_tree_hybrid<> &b, std::vector<std::vector<int64_
     std::cout << "There are pointers from level " << b.minimum_level+1 << " up to level " << b.maximum_level-1 << std::endl;
 }*/
 
-void build(block_tree_2d::block_tree_comp_ones_v2<dataset_reader::raster> &b, const std::string &file_name,
+void build(block_tree_2d::block_tree_raster<dataset_reader::raster> &b, const std::string &file_name,
            const uint64_t k, const uint64_t last_block_size_k2_tree, const uint64_t n_rows, const uint64_t n_cols){
-    b = block_tree_2d::block_tree_comp_ones_v2<dataset_reader::raster>(file_name, k, last_block_size_k2_tree, n_rows, n_cols);
+    b = block_tree_2d::block_tree_raster<dataset_reader::raster>(file_name, k, last_block_size_k2_tree, n_rows, n_cols);
     std::cout << "Block tree height=" << b.height << std::endl;
     std::cout << "There are pointers from level " << b.minimum_level+1 << " up to level " << b.maximum_level-1 << std::endl;
 }
@@ -162,6 +162,6 @@ int main(int argc, char **argv) {
     auto n_rows = static_cast<uint64_t >(atoi(argv[4]));
     auto n_cols = static_cast<uint64_t >(atoi(argv[5]));
 
-    run_build<block_tree_2d::block_tree_comp_ones_v2<dataset_reader::raster>>(dataset, k, last_block_size_k2_tree, n_rows, n_cols);
+    run_build<block_tree_2d::block_tree_raster<dataset_reader::raster>>(dataset, k, last_block_size_k2_tree, n_rows, n_cols);
 
 }

@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Created by Adrián on 03/06/2020.
 //
 
-#include <block_tree_comp_leaves.hpp>
+#include <block_tree_raster.hpp>
 #include <time_util.hpp>
 #include <experiment_setup.hpp>
 
@@ -49,10 +49,8 @@ void run_times(const std::string &name_file, const std::string &queries, const s
     std::cout << "Running queries" << std::endl;
     auto t0 = util::time::user::now();
     uint64_t sum = 0;
-    std::vector<int> r;
-    for(uint64_t id = 0; id < qs.size(); ++id){
-        m_block_tree.values_region(qs[id].x, qs[id].y, qs[id].x, qs[id].y, n_cols, n_rows, r);
-        sum += r[0];
+    for(auto & q : qs){
+        sum += m_block_tree.get_cell(q.x, q.y, n_cols);
     }
     auto t1 = util::time::user::now();
 
@@ -74,7 +72,7 @@ int main(int argc, char **argv) {
     std::string queries = argv[2];
     int n_rows = atoi(argv[3]);
     int n_cols = atoi(argv[4]);
-    run_times<block_tree_2d::block_tree_comp_leaves<dataset_reader::raster_log>>(name_file, queries, n_cols, n_rows);
+    run_times<block_tree_2d::block_tree_raster<dataset_reader::raster>>(name_file, queries, n_cols, n_rows);
 
 
 }

@@ -160,7 +160,7 @@ namespace dataset_reader{
             }
 
 
-            return {n_rows, sigma * n_cols};
+            return {min_value, max_value};
 
         }
 

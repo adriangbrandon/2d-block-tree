@@ -50,6 +50,15 @@ namespace experiments {
         int y;
     } cell_type;
 
+    typedef struct {
+        int min_x;
+        int max_x;
+        int min_y;
+        int max_y;
+        int lb;
+        int ub;
+    } range_type;
+
     class reader {
 
     public:
@@ -80,7 +89,7 @@ namespace experiments {
             return neighs;
         }
 
-        static std::vector<cell_type> cells(const std::string file_queries){
+        static std::vector<cell_type> cells(const std::string &file_queries){
             std::ifstream input(file_queries);
             std::vector<cell_type> cells;
             int x, y;
@@ -93,6 +102,21 @@ namespace experiments {
             }
             input.close();
             return cells;
+        }
+
+        static std::vector<range_type> range(const std::string &file_queries){
+            std::ifstream input(file_queries);
+            std::vector<range_type> ranges;
+            int min_x, min_y, max_x, max_y, lb, ub;
+            input >> min_x;
+            while(1){
+                input >> min_x >> max_x >> min_y >> max_y >> lb >> ub;
+                if(!input.good()) break;
+                range_type p{min_x, max_x, min_y, max_y, lb, ub};
+                ranges.push_back(p);
+            }
+            input.close();
+            return ranges;
         }
 
     };
