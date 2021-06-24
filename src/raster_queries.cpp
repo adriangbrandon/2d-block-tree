@@ -52,11 +52,11 @@ int main(int argc, char **argv) {
     std::ofstream out(file_name);
     out << queries << std::endl;
     for(int i = 0; i < queries; ++i){
-        auto min_x = (rand() % (n_cols - window)) + 1;
-        auto min_y = (rand() % (n_rows - window)) + 1;
+        auto min_x = (rand() % (n_cols - window));
+        auto min_y = (rand() % (n_rows - window));
         auto max_x = min_x + window-1;
         auto max_y = min_y + window-1;
-        auto lb = rand() % (max_value - range);
+        auto lb = rand() % (max_value - range) + 1;
         auto ub = lb + range-1;
         out << min_y << " " << max_y << " " << min_x << " " << max_x << " " << lb << " " << ub << std::endl;
     }

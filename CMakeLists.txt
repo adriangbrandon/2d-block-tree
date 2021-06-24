@@ -187,3 +187,6 @@ target_link_libraries(test_raster sdsl divsufsort divsufsort64)
 
 add_executable(raster_queries src/raster_queries.cpp )
 target_link_libraries(raster_queries sdsl divsufsort divsufsort64)
+
+add_executable(test_raster_range src/test_raster_range.cpp )
+target_link_libraries(test_raster_range sdsl divsufsort divsufsort64)
