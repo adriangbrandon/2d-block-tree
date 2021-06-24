@@ -63,11 +63,77 @@ namespace block_tree_2d{
     struct add_raster {
 
         uint64_t n_cols;
+        uint64_t count;
 
        template<class result_type, class size_type>
        void operator() (result_type &result, const size_type x, const size_type y)
         {
             result[y*n_cols+x] = 1;
+            ++count;
+        }
+    };
+
+    struct add_raster_v2 {
+
+        uint64_t n_cols;
+
+        template<class result_type, class size_type>
+        void operator() (result_type &result, const size_type x, const size_type y)
+        {
+            //if(m_ptr_map->find(y*n_cols+x) == m_ptr_map->end()){
+                result.push_back(y*n_cols+x);
+            //}
+
+        }
+    };
+
+    struct add_raster_nocheck {
+
+        uint64_t n_cols;
+        template<class result_type, class size_type>
+        void operator() (result_type &result, const size_type x, const size_type y)
+        {
+                result.push_back(y*n_cols+x);
+
+        }
+    };
+
+    struct subtract_raster_v2 {
+
+        uint64_t n_cols;
+
+        template<class result_type, class size_type>
+        void operator() (result_type &result, const size_type x, const size_type y)
+        {
+            //m_ptr_map->insert(y*n_cols+x);
+        }
+    };
+
+
+    struct add_raster_v3 {
+
+        uint64_t n_cols;
+        const std::vector<uint8_t >* aux;
+
+        template<class result_type, class size_type>
+        void operator() (result_type &result, const size_type x, const size_type y)
+        {
+            //if(m_ptr_map->find(y*n_cols+x) == m_ptr_map->end()){
+            if(!aux->at(y*n_cols+x)){
+                result.push_back(y*n_cols+x);
+            }
+
+        }
+    };
+
+    struct subtract_raster_v3 {
+
+        uint64_t n_cols;
+
+        template<class aux_type, class size_type>
+        void operator() (aux_type &aux, const size_type x, const size_type y)
+        {
+            aux[y*n_cols+x] = 1;
         }
     };
 
@@ -81,6 +147,8 @@ namespace block_tree_2d{
             result[y*n_cols+x] = 0;
         }
     };
+
+
 }
 
 

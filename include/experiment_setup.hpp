@@ -110,7 +110,7 @@ namespace experiments {
             int min_x, min_y, max_x, max_y, lb, ub;
             input >> min_x;
             while(1){
-                input >> min_x >> max_x >> min_y >> max_y >> lb >> ub;
+                input >> min_y >> max_y >> min_x >> max_x >> lb >> ub;
                 if(!input.good()) break;
                 range_type p{min_x, max_x, min_y, max_y, lb, ub};
                 ranges.push_back(p);

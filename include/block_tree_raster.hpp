@@ -309,7 +309,7 @@ namespace block_tree_2d {
         template <class add_function, class result_type>
         void recursive_access_region(const size_type min_x, const size_type max_x, const size_type min_y, const size_type max_y,
                                      const size_type x, const size_type y, const size_type idx, const size_type level,
-                                     const size_type block_size, result_type &result, add_function add,
+                                     const size_type block_size, result_type &result, add_function &add,
                                      const bool taking_pointer=false, const size_type level_taking_pointer = 0){
 
 #if BT_VERBOSE
@@ -589,12 +589,13 @@ namespace block_tree_2d {
         }
 
 
-        inline std::vector<uint8_t> region_range(const size_type min_x, const size_type min_y,
+        inline std::vector<size_type> region_range(const size_type min_x, const size_type min_y,
                                   const size_type max_x, const size_type max_y,
                                   size_type lb, size_type ub,
                                   const size_type n_cols){
             size_type size_vector = (max_y - min_y+1) * (max_x - min_x + 1);
-            std::vector<uint8_t> result(size_vector, (uint8_t) 0);
+            std::vector<uint8_t> aux(size_vector, 0);
+            std::vector<size_type> result;
 
             if(lb > m_max || ub < m_min) return result;
 
@@ -603,13 +604,57 @@ namespace block_tree_2d {
             if(ub > m_max) ub = m_max; //The highest value is m_max
             //1. Upper bound region
             auto shift_x = n_cols * (ub - m_min);
-            this->recursive_access_region(min_x + shift_x, max_x + shift_x, min_y, max_y, 0, 0, 0, 0, block_size, result, add_raster{max_x - min_x+1});
+            add_raster add{max_x - min_x+1, 0};
+            this->recursive_access_region(min_x + shift_x, max_x + shift_x, min_y, max_y, 0, 0, 0, 0, block_size, aux, add);
 
+            if(lb > m_min) {
+                //2. Lower bound region
+                subtract_raster sub{max_x - min_x+1};
+                shift_x = n_cols * (lb-1 - m_min);
+                this->recursive_access_region(min_x + shift_x, max_x + shift_x, min_y, max_y, 0, 0, 0, 0, block_size, aux, sub);
+            }
 
-            if(lb <= m_min) return result; //No subtraction
-            //2. Lower bound region
-            shift_x = n_cols * (lb-1 - m_min);
-            this->recursive_access_region(min_x + shift_x, max_x + shift_x, min_y, max_y, 0, 0, 0, 0, block_size, result, subtract_raster{max_x - min_x+1});
+            uint64_t n = 0;
+            result.reserve(add.count);
+            while(n < size_vector){
+                if(aux[n]) result.push_back(n);
+                ++n;
+            }
+
+            return result;
+
+        }
+
+        inline std::vector<size_type> region_range_v2(const size_type min_x, const size_type min_y,
+                                                 const size_type max_x, const size_type max_y,
+                                                 size_type lb, size_type ub,
+                                                 const size_type n_cols){
+
+            std::vector<size_type> result;
+            result.reserve(max_x - min_x+1);
+            if(lb > m_max || ub < m_min) return result;
+            if(ub > m_max) ub = m_max; //The highest value is m_max
+
+            auto block_size = (size_type) std::pow(this->m_k, this->m_height);
+            uint64_t shift_x;
+            if(lb > m_min) {
+                //1. Lower bound region
+                shift_x = n_cols * (lb-1 - m_min);
+                //std::set<size_type> subtract;
+                subtract_raster_v2 sub{max_x - min_x+1};
+                this->recursive_access_region(min_x + shift_x, max_x + shift_x, min_y, max_y, 0, 0, 0, 0, block_size, result, sub);
+                //2. Upper bound region
+                shift_x = n_cols * (ub - m_min);
+                add_raster_v2 add{max_x - min_x+1};
+                this->recursive_access_region(min_x + shift_x, max_x + shift_x, min_y, max_y, 0, 0, 0, 0, block_size, result, add);
+
+            }else{
+                //1. Upper bound region
+                shift_x = n_cols * (ub - m_min);
+                add_raster_nocheck add{max_x - min_x+1};
+                this->recursive_access_region(min_x + shift_x, max_x + shift_x, min_y, max_y, 0, 0, 0, 0, block_size, result, add);
+
+            }
 
             return result;
 

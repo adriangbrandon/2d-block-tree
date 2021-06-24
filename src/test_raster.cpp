@@ -53,6 +53,14 @@ void build(block_tree_2d::block_tree_hybrid<> &b, std::vector<std::vector<int64_
     std::cout << "There are pointers from level " << b.minimum_level+1 << " up to level " << b.maximum_level-1 << std::endl;
 }*/
 
+template <class Container>
+void print_container(const Container &c){
+    for(const auto &v : c){
+        std::cout << v << ", ";
+    }
+    std::cout << std::endl;
+}
+
 void build(block_tree_2d::block_tree_raster<dataset_reader::raster> &b, const std::string &file_name,
            const uint64_t k, const uint64_t last_block_size_k2_tree, const uint64_t n_rows, const uint64_t n_cols){
     b = block_tree_2d::block_tree_raster<dataset_reader::raster>(file_name, k, last_block_size_k2_tree, n_rows, n_cols);
@@ -123,23 +131,38 @@ void run_build(const std::string &dataset, const uint64_t k,
 
     auto lb = 1;
     auto ub = 20;
-    auto size = 20;
+    auto size_x = 20;
+    auto size_y = 30;
 
-    auto vals = m_block_tree.region_range(3330, 756,3330 + size-1, 756+size-1, lb, ub, n_cols);
+   // auto vals = m_block_tree.region_range(3330, 756,3330 + size-1, 756+size-1, lb, ub, n_cols);
     n = 0;
-    for(int r = 0; r + size-1 < n_rows; ++r){
-        for(int c = 0; c + size-1 < n_cols; ++c){
-            auto vals = m_block_tree.region_range(c, r,c + size-1, r+size-1, lb, ub, n_cols);
+    for(int r = 0; r + size_y-1 < n_rows; ++r){
+        for(int c = 0; c + size_x-1 < n_cols; ++c){
+            auto vals = m_block_tree.region_range(c, r,c + size_x-1, r+size_y-1, lb, ub, n_cols);
             if(n % 10000 == 0) std::cout << n << std::endl;
-            for(int oy = 0; oy < size; ++oy){
-                for(int ox = 0; ox < size; ++ox){
+            std::vector<uint64_t > expected;
+            for(int oy = 0; oy < size_y; ++oy){
+                for(int ox = 0; ox < size_x; ++ox){
                     auto n_i = (r+oy) * n_cols +  (c+ox);
-                    if(((lb <= values[n_i] && values[n_i] <= ub) && !vals[ox + oy * size]) ||
-                        ((lb > values[n_i] || values[n_i] > ub) && vals[ox + oy * size])){
-                        std::cout << "Error: r=" << r << " c=" << c << std::endl;
-                        std::cout << "ox=" << ox << " oy=" << oy << std::endl;
-                        std::cout << "Value: " << values[n_i] << std::endl;
-                        std::cout << "Set: " <<  (uint64_t) vals[ox + oy * size] << std::endl;
+                    if(lb <= values[n_i] && values[n_i] <= ub){
+                        expected.push_back(oy*size_x + ox);
+                    }
+                }
+            }
+            std::sort(expected.begin(), expected.end());
+            if(expected.size() != vals.size()){
+                std::cout << "Error different size" << std::endl;
+                exit(0);
+            }else{
+                for(int i = 0; i < expected.size(); ++i){
+                    if(vals[i] != expected[i]){
+                        std::cout << "r: " << r << std::endl;
+                        std::cout << "c: " << c << std::endl;
+                        std::cout << "Error at position i: " << i << std::endl;
+                        std::cout << "Expected" << std::endl;
+                        print_container(expected);
+                        std::cout << "Obtained" << std::endl;
+                        print_container(vals);
                         exit(0);
                     }
                 }

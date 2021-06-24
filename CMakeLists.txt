@@ -184,3 +184,6 @@ target_link_libraries(build_k2tree_raster sdsl divsufsort divsufsort64)
 
 add_executable(test_raster src/test_raster.cpp )
 target_link_libraries(test_raster sdsl divsufsort divsufsort64)
+
+add_executable(raster_queries src/raster_queries.cpp )
+target_link_libraries(raster_queries sdsl divsufsort divsufsort64)

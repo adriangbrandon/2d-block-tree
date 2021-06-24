@@ -50,15 +50,28 @@ void run_times(const std::string &name_file, const std::string &queries, const s
 //    m_block_tree.region_range(3504, 2036, 3590, 2503, 116, 267, n_cols);
  //   exit(0);
     std::cout << "Running queries" << std::endl;
-    auto t0 = util::time::user::now();
+    uint64_t sum_x = 0, sum_y = 0, sum_int = 0;
     uint64_t sum = 0;
+    auto t0 = util::time::user::now();
     for(int i = 0; i < qs.size(); ++i){
-        //std::cout << qs[i].min_x << ", " << qs[i].min_y << ", " << qs[i].max_x << ", " <<
-        //qs[i].max_y << ", " << qs[i].lb << ", " << qs[i].ub << std::endl;
+        /*std::cout << qs[i].min_x << ", " << qs[i].min_y << ", " << qs[i].max_x << ", " <<
+        qs[i].max_y << ", " << qs[i].lb << ", " << qs[i].ub << std::endl;*/
         auto values = m_block_tree.region_range(qs[i].min_x, qs[i].min_y,
-                                                qs[i].max_x, qs[i].max_y, qs[i].lb, qs[i].ub, n_cols);
+                                                qs[i].max_x, qs[i].max_y,
+                                                qs[i].lb, qs[i].ub, n_cols);
+        /*sum_x += (qs[i].max_x - qs[i].min_x );
+        sum_y += (qs[i].max_y - qs[i].min_y);
+        sum_int += (qs[i].ub - qs[i].lb);*/
         sum += values.size();
     }
+
+    /*double avg_x = (sum_x / (double ) qs.size());
+    double avg_y = (sum_y / (double ) qs.size());
+    double avg_int = (sum_int / (double ) qs.size());
+
+    std::cout << "Media x: " << avg_x << std::endl;
+    std::cout << "Media y: " << avg_y << std::endl;
+    std::cout << "Media int: " << avg_int << std::endl;*/
     auto t1 = util::time::user::now();
 
     auto t = util::time::duration_cast<util::time::microseconds>(t1-t0);
