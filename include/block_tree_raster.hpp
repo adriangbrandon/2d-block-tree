@@ -627,6 +627,46 @@ namespace block_tree_2d {
 
         }
 
+        inline std::vector<size_type> region_range_v3(const size_type min_x, const size_type min_y,
+                                                   const size_type max_x, const size_type max_y,
+                                                   size_type lb, size_type ub,
+                                                   const size_type n_cols){
+            size_type size_vector = (max_y - min_y+1) * (max_x - min_x + 1);
+            std::vector<uint8_t> aux(size_vector, 0);
+            std::vector<size_type> result;
+
+            if(lb > m_max || ub < m_min) return result;
+
+            auto block_size = (size_type) std::pow(this->m_k, this->m_height);
+
+            if(ub > m_max) ub = m_max; //The highest value is m_max
+            uint64_t shift_x;
+            if(lb > m_min) {
+                //2. Lower bound region
+                subtract_raster_v3 sub{max_x - min_x+1};
+                shift_x = n_cols * (lb-1 - m_min);
+                this->recursive_access_region(min_x + shift_x, max_x + shift_x, min_y, max_y, 0, 0, 0, 0, block_size, aux, sub);
+            }
+
+            //1. Upper bound region
+            shift_x = n_cols * (ub - m_min);
+            add_raster_v3 add{max_x - min_x+1, &aux};
+            this->recursive_access_region(min_x + shift_x, max_x + shift_x, min_y, max_y, 0, 0, 0, 0, block_size, result, add);
+
+
+
+            /*uint64_t n = 0;
+            result.reserve(add.count);
+            while(n < size_vector){
+                if(aux[n]) result.push_back(n);
+                ++n;
+            }*/
+
+            return result;
+
+        }
+
+
         inline std::vector<size_type> region_range_v2(const size_type min_x, const size_type min_y,
                                                  const size_type max_x, const size_type max_y,
                                                  size_type lb, size_type ub,

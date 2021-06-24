@@ -103,7 +103,8 @@ void run_build(const std::string &dataset, const std::string &queries, const std
     auto a = 0;
     for(auto q : qs){
         std::vector<uint64_t > expected;
-        auto vals = m_block_tree.region_range(q.min_x, q.min_y, q.max_x, q.max_y,q.lb, q.ub, n_cols);
+        auto vals = m_block_tree.region_range_v3(q.min_x, q.min_y, q.max_x, q.max_y,q.lb, q.ub, n_cols);
+        std::sort(vals.begin(), vals.end());
         std::cout << q.min_x << " " << q.max_x << " " << q.min_y << " " << q.max_y << " "
         << q.lb << " " << q.ub << std::endl;
         for(int r = q.min_y;  r <= q.max_y; ++r) {
