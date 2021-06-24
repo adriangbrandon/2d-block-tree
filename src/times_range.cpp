@@ -56,7 +56,7 @@ void run_times(const std::string &name_file, const std::string &queries, const s
     for(int i = 0; i < qs.size(); ++i){
         /*std::cout << qs[i].min_x << ", " << qs[i].min_y << ", " << qs[i].max_x << ", " <<
         qs[i].max_y << ", " << qs[i].lb << ", " << qs[i].ub << std::endl;*/
-        auto values = m_block_tree.region_range(qs[i].min_x, qs[i].min_y,
+        auto values = m_block_tree.region_range_v3(qs[i].min_x, qs[i].min_y,
                                                 qs[i].max_x, qs[i].max_y,
                                                 qs[i].lb, qs[i].ub, n_cols);
         /*sum_x += (qs[i].max_x - qs[i].min_x );
