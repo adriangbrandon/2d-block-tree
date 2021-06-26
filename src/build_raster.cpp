@@ -85,63 +85,42 @@ void run_build(const std::string &dataset, const uint64_t k,
     sdsl::store_to_file(m_block_tree, name_file);
     std::cout << "Done. " << std::endl;
     //m_block_tree.print();
-    std::vector<std::vector<int64_t>> copy_lists;
-    auto rows_cols = dataset_reader::raster::read(dataset, copy_lists, n_rows, n_cols);
-    std::cout << "Retrieving adjacency lists... " << std::flush;
-    std::vector<std::vector<int64_t >> result;
-    m_block_tree.access_region(0, 0, rows_cols.second - 1, rows_cols.first - 1, result);
+    std::ifstream input(dataset);
+    uint64_t n = 0;
+    std::vector<int> values(n_rows * n_cols);
+    for (int r = 0; r < n_rows; ++r) {
+        for (int c = 0; c < n_cols; ++c) {
+            sdsl::read_member(values[n], input);
+            ++n;
+        }
+    }
+    input.close();
+
+    //exit(0);
+    std::cout << "Retrieving cells... " << std::flush;
+    n = 0;
+    for(int r = 0; r <n_rows; ++r){
+        for (int c = 0; c < n_cols; ++c){
+            auto v = m_block_tree.get_cell(c, r, n_cols);
+            if(n % 10000 == 0) std::cout << n << std::endl;
+            if(values[n] != v){
+                std::cout << "c=" << c << std::endl;
+                std::cout << "r=" << r << std::endl;
+                std::cout << "Error en n=" << n << std::endl;
+                std::cout << "Obtained=" << v << std::endl;
+                std::cout << "Expected=" << values[n] << std::endl;
+                std::cout << m_block_tree.get_cell(c, r, n_cols) << std::endl;
+                exit(10);
+            }
+            ++n;
+        }
+    }
+
     std::cout << "Done." << std::endl;
     auto size_bt = sdsl::size_in_bytes(m_block_tree);
     /*std::cout << "--------------------Result--------------------" << std::endl;
     block_tree_2d::algorithm::print_ajdacent_list(result);
     std::cout << "----------------------------------------------" << std::endl;*/
-
-    std::cout << "Checking results." << std::endl;
-    if (result.size() != copy_lists.size()) {
-        std::cout << "Error: the number of lists is incorrect." << std::endl;
-        std::cout << "Expected: " << copy_lists.size() << std::endl;
-        std::cout << "Obtained: " << result.size() << std::endl;
-        exit(10);
-    }
-    bool error = false;
-    for (auto i = 0; i < result.size(); ++i) {
-        if (!error && result[i].size() != copy_lists[i].size()) {
-            std::cout << "Error: the size of list " << i << " is incorrect." << std::endl;
-            std::cout << "Expected: " << copy_lists[i].size() << std::endl;
-            std::cout << "Obtained: " << result[i].size() << std::endl;
-            for(uint64_t o = 0; o < copy_lists[i].size(); ++o){
-                std::cout << copy_lists[i][o] << ",";
-            }
-            std::cout << std::endl;
-            for(uint64_t o = 0; o < result[i].size(); ++o){
-                std::cout << result[i][o] << ",";
-            }
-            std::cout << std::endl;
-            //m_block_tree.access_region(10, 2, 11, 3, result);
-            error = true;
-        }
-    }
-    if (error){
-        util::adjacency_list::write(copy_lists, "adjacency_lists.txt");
-        exit(10);
-    }else{
-        for (auto i = 0; i < result.size(); ++i) {
-            for (auto j = 0; j < result[i].size(); ++j) {
-                if (result[i][j] != copy_lists[i][j]) {
-                  //  std::cout << "Error: the " << j << "-th value of list " << i << " is incorrect." << std::endl;
-                  //  std::cout << "Expected: " << copy_lists[i][j] << std::endl;
-                  //  std::cout << "Obtained: " << result[i][j] << std::endl;
-                    error = true;
-                }
-            }
-        }
-        if (!error) {
-            std::cout << "Everything is OK!" << std::endl;
-        }else{
-            util::adjacency_list::write(copy_lists, "adjacency_lists.txt");
-            exit(10);
-        }
-    }
     std::cout << std::endl;
     std::cout << "The Block-tree was built in " << duration << " seconds and uses " << size_bt << " bytes." << std::endl;
     std::cout << duration << " " << size_bt << std::endl;
