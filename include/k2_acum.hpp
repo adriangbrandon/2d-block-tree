@@ -145,10 +145,12 @@ namespace block_tree_2d {
 
             std::vector<std::vector<int64_t>> adjacent_lists;
             std::tie(m_min, m_max) = dataset_reader::raster::read(dataset, adjacent_lists, n_rows, n_cols);
+            std::cout << "Reader done" << std::endl;
             auto k_2 = k * k;
 
             m_k = kparam;
             m_dimensions = compute_dimensions(adjacent_lists);
+            std::cout << "Dimensions done" << std::endl;
             m_k2 = m_k*m_k;
             m_height = (size_type) std::ceil(std::log(m_dimensions)/std::log(m_k));
 
@@ -161,11 +163,12 @@ namespace block_tree_2d {
                 }
             }
             auto total_size = (size_type) std::pow(this->m_k, m_height);
-            if(adjacent_lists.size() < total_size){
+            /*if(adjacent_lists.size() < total_size){
                 adjacent_lists.resize(total_size);
-            }
+            }*/
+            std::cout << "Edges done" << std::endl;
 
-            size_type bsize = adjacent_lists.size();
+            size_type bsize = total_size;
             adjacent_lists.clear();
 
             //2. Sort edges z-order
