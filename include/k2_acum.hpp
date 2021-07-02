@@ -145,10 +145,8 @@ namespace block_tree_2d {
 
             std::vector<std::vector<int64_t>> adjacent_lists;
             std::tie(m_min, m_max) = dataset_reader::raster::read(dataset, adjacent_lists, n_rows, n_cols);
-            std::cout << "Reader done" << std::endl;
             m_k = kparam;
             m_dimensions = compute_dimensions(adjacent_lists);
-            std::cout << "Dimensions done" << std::endl;
             m_k2 = m_k*m_k;
             m_height = (size_type) std::ceil(std::log(m_dimensions)/std::log(m_k));
 
@@ -164,14 +162,12 @@ namespace block_tree_2d {
             /*if(adjacent_lists.size() < total_size){
                 adjacent_lists.resize(total_size);
             }*/
-            std::cout << "Edges done" << std::endl;
 
             size_type bsize = total_size;
             adjacent_lists.clear();
 
             //2. Sort edges z-order
             std::sort(edges_z_order.begin(), edges_z_order.end());
-            std::cout << "Sort done" << std::endl;
 
             //4. Init bitmap
             m_t[0] = 1;
@@ -193,11 +189,8 @@ namespace block_tree_2d {
                 std::cout << i << ", " << j << "," << z_0 << "," << bsize << std::endl;
                 q.pop();
                 size_type elements = bsize * bsize;
-                std::cout << "Elements: " << elements << std::endl;
                 for(size_type z_child = 0; z_child < m_k2; ++z_child){
-                    std::cout << "Searching: " << z_0 + elements -1 << std::endl;
                     auto le = util::search::lower_or_equal_search(i, j, edges_z_order, z_0+elements-1);
-                    std::cout << "Search done" << std::endl;
                     if(bsize > leaf_size){
                         check_resize(m_t, t);
                         check_resize(m_full_ones, full_ones);
@@ -252,7 +245,6 @@ namespace block_tree_2d {
             m_full_ones.resize(full_ones);
             sdsl::util::init_support(m_t_rank, &m_t);
 
-            std::cout << "Building the vocab"<< std::endl;
             //Building the vocab
             m_voc.resize(hash.size());
             std::vector<std::pair<size_type, size_type>> vocab_vector (hash.begin(),hash.end());
@@ -300,7 +292,7 @@ namespace block_tree_2d {
                         size_type o_x = set_bit % leaf_size;
                         size_type o_y = set_bit / leaf_size;
                         if(min_x <= o_x && o_x <= max_x && min_y <= o_y && o_y <= max_y){
-                            add(result, x + o_x, y + o_y);
+                            add(result, x + o_x - min_x, y + o_y - min_y);
                         }
                         code = code & sdsl::bits::lo_unset[set_bit+1];
                     }
@@ -574,8 +566,8 @@ namespace block_tree_2d {
             sdsl::read_member(m_dimensions, in);
             sdsl::read_member(m_ones_prev_leaves, in);
             m_t.load(in);
-            m_t_rank.load(in);
-            m_t_rank.set_vector(&m_t);
+            m_t_rank.load(in, &m_t);
+            //m_t_rank.set_vector(&m_t);
             m_full_ones.load(in);
             m_voc.load(in);
             m_l.load(in);

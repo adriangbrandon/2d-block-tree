@@ -76,6 +76,7 @@ void run_build(const std::string &dataset, const uint64_t k,
     name_file = name_file + ".k2acum";
     uint64_t duration = 0;
     if(util::file::file_exists(name_file)){
+        std::cout << "Exists" << std::endl;
         sdsl::load_from_file(m_block_tree, name_file);
     }else{
         auto t0 = std::chrono::high_resolution_clock::now();
@@ -107,7 +108,7 @@ void run_build(const std::string &dataset, const uint64_t k,
     input.close();
 
     //exit(0);
-    std::cout << "Testing" << std::endl;
+    /*std::cout << "Testing" << std::endl;
     n = 0;
     for(int r = 0; r <n_rows; ++r){
         for (int c = 0; c < n_cols; ++c){
@@ -124,15 +125,13 @@ void run_build(const std::string &dataset, const uint64_t k,
             }
             ++n;
         }
-    }
+    }*/
 
     auto lb = 1;
     auto ub = 20;
     auto size_x = 20;
     auto size_y = 30;
 
-   // auto vals = m_block_tree.region_range(3330, 756,3330 + size-1, 756+size-1, lb, ub, n_cols);
-    n = 0;
     for(int r = 0; r + size_y-1 < n_rows; ++r){
         for(int c = 0; c + size_x-1 < n_cols; ++c){
             auto vals = m_block_tree.region_range(c, r,c + size_x-1, r+size_y-1, lb, ub, n_cols);
@@ -146,11 +145,12 @@ void run_build(const std::string &dataset, const uint64_t k,
                     }
                 }
             }
-            std::sort(expected.begin(), expected.end());
             if(expected.size() != vals.size()){
                 std::cout << "Error different size" << std::endl;
                 exit(0);
             }else{
+                std::sort(vals.begin(), vals.end());
+                std::sort(expected.begin(), expected.end());
                 for(int i = 0; i < expected.size(); ++i){
                     if(vals[i] != expected[i]){
                         std::cout << "r: " << r << std::endl;
