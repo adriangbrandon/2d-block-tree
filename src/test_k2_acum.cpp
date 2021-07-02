@@ -190,8 +190,8 @@ int main(int argc, char **argv) {
 
     std::string dataset = argv[1];
     auto k = static_cast<uint64_t >(atoi(argv[2]));
-    auto n_rows = static_cast<uint64_t >(atoi(argv[4]));
-    auto n_cols = static_cast<uint64_t >(atoi(argv[5]));
+    auto n_rows = static_cast<uint64_t >(atoi(argv[3]));
+    auto n_cols = static_cast<uint64_t >(atoi(argv[4]));
 
     run_build<block_tree_2d::k2_acum<>>(dataset, k, n_rows, n_cols);
 
