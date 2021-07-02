@@ -192,6 +192,7 @@ namespace block_tree_2d {
             //5. Split the front of q into its children
             while (!q.empty()) {
                 std::tie(i, j, bsize, z_0) = q.front();
+                std::cout << i << ", " << j << std::endl;
                 q.pop();
                 auto elements = bsize * bsize;
                 for(size_type z_child = 0; z_child < k_2; ++z_child){
