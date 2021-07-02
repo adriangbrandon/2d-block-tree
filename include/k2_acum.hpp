@@ -104,7 +104,6 @@ namespace block_tree_2d {
 
         template <class Container>
         inline void check_resize(Container&& cont, const size_type pos) {
-            std::cout << "Resize to: " << cont.size()*2 << std::endl;
             if(pos >= cont.size()){
                 cont.resize(cont.size()*2);
             }
@@ -147,8 +146,6 @@ namespace block_tree_2d {
             std::vector<std::vector<int64_t>> adjacent_lists;
             std::tie(m_min, m_max) = dataset_reader::raster::read(dataset, adjacent_lists, n_rows, n_cols);
             std::cout << "Reader done" << std::endl;
-            auto k_2 = k * k;
-
             m_k = kparam;
             m_dimensions = compute_dimensions(adjacent_lists);
             std::cout << "Dimensions done" << std::endl;
@@ -183,8 +180,8 @@ namespace block_tree_2d {
 
 
             size_type i, j, z_0;
-            size_type t = k_2, full_ones = k_2 - 1;
-            size_type n_elem = 0, zeroes = k_2 -1;
+            size_type t = m_k2, full_ones = m_k2 - 1;
+            size_type n_elem = 0, zeroes = m_k2 -1;
             std::unordered_map<size_type , size_type > hash;
             std::vector<size_type> code_leaves;
 
@@ -197,7 +194,7 @@ namespace block_tree_2d {
                 q.pop();
                 size_type elements = bsize * bsize;
                 std::cout << "Elements: " << elements << std::endl;
-                for(size_type z_child = 0; z_child < k_2; ++z_child){
+                for(size_type z_child = 0; z_child < m_k2; ++z_child){
                     std::cout << "Searching: " << z_0 + elements -1 << std::endl;
                     auto le = util::search::lower_or_equal_search(i, j, edges_z_order, z_0+elements-1);
                     std::cout << "Search done" << std::endl;
