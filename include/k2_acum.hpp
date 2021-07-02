@@ -192,11 +192,14 @@ namespace block_tree_2d {
             //5. Split the front of q into its children
             while (!q.empty()) {
                 std::tie(i, j, bsize, z_0) = q.front();
-                std::cout << i << ", " << j << "," << z_0 << std::endl;
+                std::cout << i << ", " << j << "," << z_0 << "," << bsize << std::endl;
                 q.pop();
                 auto elements = bsize * bsize;
+                std::cout << "Elements: " << elements << std::endl;
                 for(size_type z_child = 0; z_child < k_2; ++z_child){
+                    std::cout << "Searching: " << z_0 + elements -1 << std::endl;
                     auto le = util::search::lower_or_equal_search(i, j, edges_z_order, z_0+elements-1);
+                    std::cout << "Search done" << std::endl;
                     if(bsize > leaf_size){
                         check_resize(m_t, t);
                         check_resize(m_full_ones, full_ones);
