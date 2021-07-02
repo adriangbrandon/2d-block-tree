@@ -104,6 +104,7 @@ namespace block_tree_2d {
 
         template <class Container>
         inline void check_resize(Container&& cont, const size_type pos) {
+            std::cout << "Resize to: " << cont.size()*2 << std::endl;
             if(pos >= cont.size()){
                 cont.resize(cont.size()*2);
             }
@@ -173,6 +174,7 @@ namespace block_tree_2d {
 
             //2. Sort edges z-order
             std::sort(edges_z_order.begin(), edges_z_order.end());
+            std::cout << "Sort done" << std::endl;
 
             //4. Init bitmap
             m_t[0] = 1;
@@ -248,6 +250,7 @@ namespace block_tree_2d {
             m_full_ones.resize(full_ones);
             sdsl::util::init_support(m_t_rank, &m_t);
 
+            std::cout << "Building the vocab"<< std::endl;
             //Building the vocab
             m_voc.resize(hash.size());
             std::vector<std::pair<size_type, size_type>> vocab_vector (hash.begin(),hash.end());
