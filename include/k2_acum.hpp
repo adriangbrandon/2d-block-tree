@@ -180,8 +180,7 @@ namespace block_tree_2d {
             m_t[0] = 1;
             m_ones_prev_leaves = 1;
 
-            std::queue<t_part_tuple> q;
-            q.push(t_part_tuple(0, edges_z_order.size()-1, bsize/k , 0));
+
 
             size_type i, j, z_0;
             size_type t = k_2, full_ones = k_2 - 1;
@@ -189,12 +188,14 @@ namespace block_tree_2d {
             std::unordered_map<size_type , size_type > hash;
             std::vector<size_type> code_leaves;
 
+            std::queue<t_part_tuple> q;
+            q.push(t_part_tuple(0, edges_z_order.size()-1, bsize/k , 0));
             //5. Split the front of q into its children
             while (!q.empty()) {
                 std::tie(i, j, bsize, z_0) = q.front();
                 std::cout << i << ", " << j << "," << z_0 << "," << bsize << std::endl;
                 q.pop();
-                auto elements = bsize * bsize;
+                size_type elements = bsize * bsize;
                 std::cout << "Elements: " << elements << std::endl;
                 for(size_type z_child = 0; z_child < k_2; ++z_child){
                     std::cout << "Searching: " << z_0 + elements -1 << std::endl;
