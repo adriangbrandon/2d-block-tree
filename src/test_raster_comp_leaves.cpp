@@ -33,7 +33,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <dataset_reader.hpp>
 #include <adjacency_list_helper.hpp>
 #include <sdsl/io.hpp>
-#include <block_tree_raster.hpp>
 #include <block_tree_raster_comp_leaves.hpp>
 #include <file_util.hpp>
 
@@ -62,7 +61,7 @@ void print_container(const Container &c){
     std::cout << std::endl;
 }
 
-void build(block_tree_2d::block_tree_raster<dataset_reader::raster> &b, const std::string &file_name,
+void build(block_tree_2d::block_tree_raster_comp_leaves<dataset_reader::raster> &b, const std::string &file_name,
            const uint64_t k, const uint64_t last_block_size_k2_tree, const uint64_t n_rows, const uint64_t n_cols){
     b = block_tree_2d::block_tree_raster<dataset_reader::raster>(file_name, k, last_block_size_k2_tree, n_rows, n_cols);
     std::cout << "Block tree height=" << b.height << std::endl;
@@ -77,15 +76,13 @@ void run_build(const std::string &dataset, const uint64_t k,
     t_block_tree m_block_tree;
     uint64_t first_block_size = last_block_size_k2_tree / k;
     std::string name_file = dataset;
-    name_file = name_file +"_" + std::to_string(first_block_size) + ".2dbt";
+    name_file = name_file +"_" + std::to_string(first_block_size) + ".2dbt.cl";
     uint64_t duration = 0;
     if(util::file::file_exists(name_file)){
         sdsl::load_from_file(m_block_tree, name_file);
     }else{
-        auto t0 = std::chrono::high_resolution_clock::now();
-        build(m_block_tree, dataset, k, last_block_size_k2_tree, n_rows, n_cols);
-        auto t1 = std::chrono::high_resolution_clock::now();
-        duration = std::chrono::duration_cast<std::chrono::seconds>(t1-t0).count();
+       std::cout << "Error file does not exist" << std::endl;
+       exit(0);
     }
 
 
@@ -198,6 +195,6 @@ int main(int argc, char **argv) {
     auto n_rows = static_cast<uint64_t >(atoi(argv[4]));
     auto n_cols = static_cast<uint64_t >(atoi(argv[5]));
 
-    run_build<block_tree_2d::block_tree_raster<dataset_reader::raster>>(dataset, k, last_block_size_k2_tree, n_rows, n_cols);
+    run_build<block_tree_2d::block_tree_raster_comp_leaves<dataset_reader::raster>>(dataset, k, last_block_size_k2_tree, n_rows, n_cols);
 
 }

@@ -30,11 +30,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // Created by Adrián on 06/08/2019.
 //
-#include <dataset_reader.hpp>
 #include <adjacency_list_helper.hpp>
 #include <sdsl/io.hpp>
-#include <block_tree_raster.hpp>
-#include <block_tree_raster_comp_leaves.hpp>
+#include <k2_acum.hpp>
 #include <file_util.hpp>
 
 /*template<class t_block_tree>
@@ -62,28 +60,26 @@ void print_container(const Container &c){
     std::cout << std::endl;
 }
 
-void build(block_tree_2d::block_tree_raster<dataset_reader::raster> &b, const std::string &file_name,
-           const uint64_t k, const uint64_t last_block_size_k2_tree, const uint64_t n_rows, const uint64_t n_cols){
-    b = block_tree_2d::block_tree_raster<dataset_reader::raster>(file_name, k, last_block_size_k2_tree, n_rows, n_cols);
-    std::cout << "Block tree height=" << b.height << std::endl;
-    std::cout << "There are pointers from level " << b.minimum_level+1 << " up to level " << b.maximum_level-1 << std::endl;
+void build(block_tree_2d::k2_acum<> &b, const std::string &file_name,
+           const uint64_t k, const uint64_t n_rows, const uint64_t n_cols){
+    b = block_tree_2d::k2_acum<>(file_name, k, n_rows, n_cols);
+    std::cout << "K2-acum height=" << b.height << std::endl;
 }
 
 template<class t_block_tree>
 void run_build(const std::string &dataset, const uint64_t k,
-               const uint64_t last_block_size_k2_tree, const uint64_t n_rows, const uint64_t n_cols){
+               const uint64_t n_rows, const uint64_t n_cols){
 
-    std::cout << "Building Block-tree..." << std::endl;
+    std::cout << "Building K2-acum..." << std::endl;
     t_block_tree m_block_tree;
-    uint64_t first_block_size = last_block_size_k2_tree / k;
     std::string name_file = dataset;
-    name_file = name_file +"_" + std::to_string(first_block_size) + ".2dbt";
+    name_file = name_file + ".k2acum";
     uint64_t duration = 0;
     if(util::file::file_exists(name_file)){
         sdsl::load_from_file(m_block_tree, name_file);
     }else{
         auto t0 = std::chrono::high_resolution_clock::now();
-        build(m_block_tree, dataset, k, last_block_size_k2_tree, n_rows, n_cols);
+        build(m_block_tree, dataset, k, n_rows, n_cols);
         auto t1 = std::chrono::high_resolution_clock::now();
         duration = std::chrono::duration_cast<std::chrono::seconds>(t1-t0).count();
     }
@@ -111,7 +107,7 @@ void run_build(const std::string &dataset, const uint64_t k,
     input.close();
 
     //exit(0);
-    /*
+    std::cout << "Testing" << std::endl;
     n = 0;
     for(int r = 0; r <n_rows; ++r){
         for (int c = 0; c < n_cols; ++c){
@@ -128,7 +124,7 @@ void run_build(const std::string &dataset, const uint64_t k,
             }
             ++n;
         }
-    }*/
+    }
 
     auto lb = 1;
     auto ub = 20;
@@ -187,17 +183,16 @@ void run_build(const std::string &dataset, const uint64_t k,
 
 int main(int argc, char **argv) {
 
-    if(argc != 6){
-        std::cout << argv[0] << " <dataset> <k> <last_block_size_k2_tree> <n_rows> <n_cols>" << std::endl;
+    if(argc != 5){
+        std::cout << argv[0] << " <dataset> <k> <n_rows> <n_cols>" << std::endl;
         return 0;
     }
 
     std::string dataset = argv[1];
     auto k = static_cast<uint64_t >(atoi(argv[2]));
-    auto last_block_size_k2_tree = static_cast<uint64_t >(atoi(argv[3]));
     auto n_rows = static_cast<uint64_t >(atoi(argv[4]));
     auto n_cols = static_cast<uint64_t >(atoi(argv[5]));
 
-    run_build<block_tree_2d::block_tree_raster<dataset_reader::raster>>(dataset, k, last_block_size_k2_tree, n_rows, n_cols);
+    run_build<block_tree_2d::k2_acum<>>(dataset, k, n_rows, n_cols);
 
 }
