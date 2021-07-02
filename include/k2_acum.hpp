@@ -50,7 +50,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace block_tree_2d {
 
-    template <class input_t = std::vector<std::vector<int64_t>>, uint8_t leaf_size = 8, uint8_t voc_word = 64>
+    template <class input_t = std::vector<std::vector<int64_t>>, uint8_t leaf_size = 4, uint8_t voc_word = 16>
     class k2_acum {
 
     public:
