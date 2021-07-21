@@ -44,8 +44,28 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 int main(int argc, char **argv) {
 
 
-    std::vector<std::vector<int64_t>> adjacency_lists;
-    dataset_reader::web_graph::read(argv[1], adjacency_lists);
+    std::vector<uint32_t > vec;
+    vec.resize(10);
+    uint32_t* array = new uint32_t[10];
+    array[0] = 5;
+    array[1] = 8;
+    array[2] = 9;
+    array[3] = 1;
+    array[4] = 2;
+    array[5] = 54;
+    array[6] = 52;
+    array[7] = 51;
+    array[8] = 50;
+    array[9] = 33;
+
+    std::memmove(vec.data(), array, sizeof(uint32_t)*10);
+
+    for(const auto &v : vec){
+        std::cout << v << std::endl;
+    }
+
+    //std::vector<std::vector<int64_t>> adjacency_lists;
+    //dataset_reader::web_graph::read(argv[1], adjacency_lists);
 
     /*uint64_t size = 100;
     std::vector<std::vector<uint8_t >> v(size, std::vector<uint8_t>(size));

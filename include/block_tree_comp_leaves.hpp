@@ -76,12 +76,12 @@ namespace block_tree_2d {
         std::vector<sdsl::int_vector<>> m_pointers;
         std::vector<sdsl::int_vector<>> m_offsets;
         sdsl::int_vector<> m_level_ones;
-        value_type m_msb;
         size_type m_minimum_level; //starts block_tree
         size_type m_maximum_level; //ends block_tree
         size_type m_zeroes;
         sdsl::bit_vector m_explicit;
         sdsl::rank_support_v5<> m_rank_explicit;
+        std::vector<sdsl::int_vector<>> m_explicit_location;
         sdsl::int_vector<voc_word> m_voc;
         sdsl::dac_vector_dp_opt<> m_l;
         size_type m_ones_prev_leaves;
@@ -92,57 +92,8 @@ namespace block_tree_2d {
             size_type child;
         } node_info_type;
 
-        void add_new_pointers_offsets_explicit(){
-            this->m_offsets.push_back(sdsl::int_vector<>(ARRAY_RESIZE, 0));
-            this->m_pointers.push_back(sdsl::int_vector<>(ARRAY_RESIZE, 0));
-        }
 
-        template<class CollectionNodes>
-        size_type compact_current_level(const CollectionNodes &nodes, const size_type level,
-                                        size_type &topology_index, size_type &is_pointer_index, size_type &explicit_index) {
-            size_type offset_index = 0, pointer_index = 0;
-            add_new_pointers_offsets_explicit();
-            this->check_resize(this->m_level_ones, 3*level+1);
-            this->m_level_ones[3*level] = topology_index; //number of elements up to the current level (excluded)
-            this->m_level_ones[3*level+1] = this->m_level_ones[3*(level-1)+1]; //number of pointers up to the current level (included)
-            this->m_level_ones[3*level+2] = this->m_level_ones[3*(level-1)+2]; //number of explicit up to the current level (included)
-            size_type pointers = 0;
-            for(const auto &node : nodes) {
-                //Check sizes
-                //check_resize(m_topology, topology_index);
-                this->check_resize(this->m_t, topology_index);
-                this->check_resize(this->m_is_pointer, is_pointer_index);
-                this->check_resize(m_explicit, explicit_index);
-                if(node.type == NODE_INTERNAL){
-                    this->m_t[topology_index++] = 1;
-                }else if (node.type == NODE_EMPTY){
-                    this->m_t[topology_index++] = 0;
-                    this->m_is_pointer[is_pointer_index++] = 0;
-                }else if (node.type == NODE_LEAF){
-                    this->m_t[topology_index++] = 0;
-                    this->m_is_pointer[is_pointer_index++] = 1;
-                    ++(this->m_level_ones[3*level+1]);
-                    this->m_explicit[explicit_index++] = 0;
-                    this->check_resize(this->m_offsets[level], offset_index+1);
-                    this->check_resize(this->m_pointers[level], pointer_index);
-                    this->m_offsets[level][offset_index++] = codes::alternative_code::encode(node.offset_x);
-                    this->m_offsets[level][offset_index++] = codes::alternative_code::encode(node.offset_y);
-                    this->m_pointers[level][pointer_index++] = node.ptr;
-                    ++pointers;
-                }else{
-                    this->m_t[topology_index++] = 0;
-                    this->m_is_pointer[is_pointer_index++] = 1;
-                    ++(this->m_level_ones[3*level+1]);
-                    ++(this->m_level_ones[3*level+2]);
-                    m_explicit[explicit_index++] = 1;
-                }
-            }
-            this->m_offsets[level].resize(offset_index);
-            this->m_pointers[level].resize(pointer_index);
-            sdsl::util::bit_compress(this->m_offsets[level]);
-            sdsl::util::bit_compress(this->m_pointers[level]);
-            return pointers;
-        }
+
 
         inline uint64_t compute_dimensions(input_type &adjacency_lists){
             uint64_t d = adjacency_lists.size()-1;
@@ -373,7 +324,7 @@ namespace block_tree_2d {
             m_explicit = p.m_explicit;
             m_rank_explicit = p.m_rank_explicit;
             m_rank_explicit.set_vector(&m_explicit);
-            m_msb = p.m_msb;
+            m_explicit_location = p.m_explicit_location;
             m_voc = p.m_voc;
             m_l = p.m_l;
             m_ones_prev_leaves = p.m_ones_prev_leaves;
@@ -404,15 +355,6 @@ namespace block_tree_2d {
                             add(result, x + o_x - min_x, y + o_y - min_y);
                         }
                         code = code & sdsl::bits::lo_unset[set_bit+1];
-                    }
-                }else if(level >= m_maximum_level){
-                    size_type pos_leaf = idx_leaf(idx);
-                    if(this->m_is_pointer[pos_leaf]){
-                        for (size_type offset_y = min_y; offset_y <= max_y; ++offset_y) {
-                            for (size_type offset_x = min_x; offset_x <= max_x; ++offset_x) {
-                                add(result, x + offset_x - min_x, y + offset_y - min_y);
-                            }
-                        }
                     }
                 }
             }else{
@@ -453,18 +395,17 @@ namespace block_tree_2d {
                         disp_x = 1;
                     }
                 }else {
-                    if(taking_pointer_condition(taking_pointer, level_taking_pointer, level)){
+                    if (taking_pointer_condition(taking_pointer, level_taking_pointer, level)){
                         size_type pos_leaf = idx_leaf(idx);
                         if(idx > 0 && this->m_is_pointer[pos_leaf]){
                             size_type pos_pointer_or_explicit = idx_pointer_or_explicit(pos_leaf);
                             size_type pos_explicit = idx_explicit(pos_pointer_or_explicit, level);
-
                             if(m_explicit[pos_pointer_or_explicit]){
-                                //TODO: adding all the elements on the queried region
-                                for (size_type offset_y = min_y; offset_y <= max_y; ++offset_y) {
-                                    for (size_type offset_x = min_x; offset_x <= max_x; ++offset_x) {
-                                        add(result, x + offset_x - min_x, y + offset_y - min_y);
-                                    }
+                                size_type offset_x, offset_y;
+                                explicit_node_info(pos_explicit, level, offset_x, offset_y);
+                                if(min_x <= offset_x && offset_x <= max_x && min_y <= offset_y && offset_y <= max_y){
+                                    //if(level_taking_pointer < level){
+                                    add(result, x + offset_x - min_x, y + offset_y - min_y);
                                 }
                             }else{
                                 size_type pos_pointer = idx_pointer(pos_explicit, pos_pointer_or_explicit, level);
@@ -475,195 +416,13 @@ namespace block_tree_2d {
                                              offset_x, offset_y, level, block_size, result, add);
                             }
                         }
-                    }else if(level >= m_maximum_level){
-                        size_type pos_leaf = idx_leaf(idx);
-                        if(this->m_is_pointer[pos_leaf]){
-                            for (size_type offset_y = min_y; offset_y <= max_y; ++offset_y) {
-                                for (size_type offset_x = min_x; offset_x <= max_x; ++offset_x) {
-                                    add(result, x + offset_x - min_x, y + offset_y - min_y);
-                                }
-                            }
-                        }
                     }
-
                 }
             }
         }
 
 
-        inline void add_value(const region_type &query, const size_type x, const size_type y,
-                              const size_type n_cols, std::vector<int> &result){
 
-            auto b = x / n_cols;
-            auto c = x % n_cols;
-            //std::cout << "adding b=" << b << " x=" << c << " y=" << y << std::endl;
-            auto i = (query.max_x-query.min_x+1) * (y-query.min_y) + (c- query.min_x);
-            result[i] = result[i] | (0x0001 << b);
-        }
-
-        //min_x, max_x, min_y and max_y are relative to the raster matrix
-        void recursive_multiple_region(const region_type &query, std::vector<region_type> &regions,
-                                     const size_type x, const size_type y, const size_type idx, const size_type level,
-                                     const size_type block_size, const size_type n_cols, const size_type n_rows,
-                                     std::vector<int> &result,
-                                     const bool taking_pointer=false, const size_type level_taking_pointer = 0){
-
-            assert(!regions.empty());
-            //std::cout << "rec" << std::endl;
-#if BT_VERBOSE
-            std::cout << "at position: " << idx << std::endl;
-            std::cout << "x=" << x << " y=" << y << std::endl;
-            std::cout << "block_size: " << block_size << std::endl;
-            std::cout << "current_level: " << level << std::endl;
-            std::cout << "Regions:" << std::endl;
-            for(const auto &reg :regions){
-                std::cout << "(" << x+reg.min_x << ", " << x+reg.max_x << ") x (" << y+reg.min_y << ", " << y+reg.max_y << ")" << std::endl;
-            }
-            std::cout << std::endl;
-#endif
-            /*if(level == this->m_height){
-                //if(m_topology[idx]){
-                if(this->m_l[idx - this->m_t.size()]){
-                    //Adding result
-                    add_value(query, x, y, n_cols, result);
-                    //result[y].push_back(x);
-                }*/
-            if(block_size == leaf_size){
-                if(m_t[idx]) {
-                    size_type c_i = m_t_rank(idx+1) - m_ones_prev_leaves -1;
-                    size_type code = m_voc[m_l[c_i]];
-                    while(code){
-                        size_type set_bit = sdsl::bits::lo(code);
-                        size_type o_x = set_bit % leaf_size;
-                        size_type o_y = set_bit / leaf_size;
-                        for(auto const &region : regions) {
-                            if(region.min_x <= o_x && o_x <= region.max_x
-                                && region.min_y <= o_y && o_y <= region.max_y){
-                                add_value(query,x + o_x, y + o_y, n_cols, result);
-                            }
-                        }
-                        code = code & sdsl::bits::lo_unset[set_bit+1];
-                    }
-                }else if(level >= m_maximum_level){
-                    size_type pos_leaf = idx_leaf(idx);
-                    if(this->m_is_pointer[pos_leaf]){
-                        for(auto const &region : regions) {
-                            size_type min_x, max_x, min_y, max_y;
-                            for (size_type offset_y = region.min_y; offset_y <= region.max_y; ++offset_y) {
-                                for (size_type offset_x = region.min_x; offset_x <= region.max_x; ++offset_x) {
-                                    add_value(query,x + offset_x, y + offset_y, n_cols, result);
-                                }
-                            }
-                        }
-                    }
-                }
-            }else{
-                //if(m_topology[idx]){
-                if(this->m_t[idx]){
-                    size_type new_min_x, new_max_x, new_min_y, new_max_y;
-                    //size_type start_children =  m_topology_rank(idx + 1) * m_k2;
-                    size_type start_children =  this->m_t_rank(idx + 1) * this->m_k2;
-                    size_type new_block_size = block_size / this->m_k;
-                    std::vector<std::vector<region_type>> queues(this->m_k2);
-
-                    for(auto &region : regions){
-
-                        size_type min_x = region.min_x;
-                        size_type max_x = region.max_x;
-                        size_type min_y = region.min_y;
-                        size_type max_y = region.max_y;
-                        for (size_type i = min_x / new_block_size; i <= max_x / new_block_size; i++) {
-                            new_min_x = 0;
-                            if (i == min_x / new_block_size) {
-                                new_min_x = min_x % new_block_size;
-                            }
-                            new_max_x = new_block_size - 1;
-                            if (i == max_x / new_block_size) {
-                                new_max_x = max_x % new_block_size;
-                            }
-                            for (size_type j = min_y / new_block_size; j <= max_y / new_block_size; j++) {
-                                new_min_y = 0;
-                                if (j == min_y / new_block_size) {
-                                    new_min_y = min_y % new_block_size;
-                                }
-                                new_max_y = new_block_size - 1;
-                                if (j == max_y / new_block_size) {
-                                    new_max_y = max_y % new_block_size;
-                                }
-
-                                auto n_i = i * this->k + j;
-                                assert(n_i < this->m_k2);
-                                assert(0 <= new_min_x && new_min_x <= new_block_size-1);
-                                assert(0 <= new_min_y && new_min_y <= new_block_size-1);
-                                assert(0 <= new_max_x && new_max_x <= new_block_size-1);
-                                assert(0 <= new_max_y && new_max_y <= new_block_size-1);
-                                queues[n_i].emplace_back(region_type{new_min_x, new_max_x, new_min_y, new_max_y});
-                            }
-                        }
-                    }
-                    regions.clear();
-                    for(size_type i = 0; i < this->m_k; ++i){
-                        for(size_type j = 0; j < this->m_k; ++j){
-                            auto n_i = i * this->m_k + j;
-                            assert(n_i < this->m_k2);
-                            if(queues[n_i].size()>0) {
-                                assert(queues[n_i].size() > 0);
-                               // std::cout << "n_i:" << n_i << std::endl;
-                               // std::cout << "regions: " << queues[n_i].size() << std::endl;
-                                recursive_multiple_region(query, queues[n_i],
-                                                          x + (new_block_size * i),
-                                                          y + (new_block_size * j),
-                                                          start_children + codes::zeta_order::encode(i, j),
-                                                          level + 1,
-                                                          new_block_size, n_cols, n_rows, result,
-                                                          taking_pointer, level_taking_pointer);
-                            }
-                        }
-                    }
-                }else {
-                    if(taking_pointer_condition(taking_pointer, level_taking_pointer, level)){
-                        size_type pos_leaf = idx_leaf(idx);
-                        if(idx > 0 && this->m_is_pointer[pos_leaf]){
-                            size_type pos_pointer_or_explicit = idx_pointer_or_explicit(pos_leaf);
-                            size_type pos_explicit = idx_explicit(pos_pointer_or_explicit, level);
-
-                            if(m_explicit[pos_pointer_or_explicit]){
-                                for(auto const &region : regions) {
-                                    size_type min_x, max_x, min_y, max_y;
-                                    for (size_type offset_y = region.min_y; offset_y <= region.max_y; ++offset_y) {
-                                        for (size_type offset_x = region.min_x; offset_x <= region.max_x; ++offset_x) {
-                                            add_value(query,x + offset_x, y + offset_y, n_cols, result);
-                                        }
-                                    }
-                                }
-
-                            }else{
-                                //std::cout << "Taking pointer" << std::endl;
-                                size_type pos_pointer = idx_pointer(pos_explicit, pos_pointer_or_explicit, level);
-                                value_type offset_x, offset_y;
-                                size_type pointer;
-                                leaf_node_info(pos_pointer, level, pointer, offset_x, offset_y);
-                                take_pointer(query, regions, x, y, pointer, offset_x, offset_y, level,
-                                             block_size, n_cols, n_rows, result);
-                            }
-                        }
-                    }else if(level >= m_maximum_level){
-                        size_type pos_leaf = idx_leaf(idx);
-                        if(this->m_is_pointer[pos_leaf]){
-                            for(auto const &region : regions) {
-                                size_type min_x, max_x, min_y, max_y;
-                                for (size_type offset_y = region.min_y; offset_y <= region.max_y; ++offset_y) {
-                                    for (size_type offset_x = region.min_x; offset_x <= region.max_x; ++offset_x) {
-                                        add_value(query,x + offset_x, y + offset_y, n_cols, result);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                }
-            }
-        }
 
         template <class result_type, class add_function>
         void take_pointer(const size_type min_x, const size_type  max_x,
@@ -695,84 +454,6 @@ namespace block_tree_2d {
                                     static_cast<size_type >(new_min_y + length_y), x, y, ptr, l, block_size, result, add, true, level);
         }
 
-        void take_pointer(const region_type &query, std::vector<region_type> &regions,
-                          const size_type x, const size_type y,
-                          size_type ptr,
-                          const value_type offset_x, const value_type offset_y,
-                          const size_type level, size_type block_size,
-                          const size_type n_cols, const size_type n_rows,
-                          std::vector<int> &result){
-                value_type new_min_x, new_min_y, length_x, length_y;
-                value_type left = regions.front().min_x + offset_x;
-                value_type right = regions.back().max_x + offset_x;
-                value_type lower = regions.front().min_y + offset_y;
-                value_type upper = regions.back().max_y + offset_y;
-                /*for(const auto &region : regions) {
-                    new_min_x = region.min_x + offset_x;
-                    new_min_y = region.min_y + offset_y;
-                    length_x = region.max_x - region.min_x;
-                    length_y = region.max_y - region.min_y;
-                    if(left > new_min_x) left = new_min_x;
-                    if(right < new_min_x + length_x) right = new_min_x + length_x;
-                    if(lower > new_min_y) lower = new_min_y;
-                    if(upper < new_min_y + length_y) upper = new_min_y + length_y;
-                    //new_regions.push(region(new_min_x, new_min_x + length_x, new_min_y, new_min_y + length_y));
-                }*/
-#if BT_VERBOSE
-                std::cout << "lower=" << lower << " upper=" << upper << std::endl;
-                std::cout << "left=" << left << " right=" << right << std::endl;
-                std::cout << "bsize=" << block_size << std::endl;
-#endif
-                auto l = level;
-                length_x = right-left;
-                length_y = upper-lower;
-                auto shift_x = 0;
-                auto shift_y = 0;
-                size_type new_x = x - offset_x;
-                size_type new_y = y - offset_y;
-                while(left + shift_x < 0 || lower + shift_y < 0 ||
-                      left + shift_x + length_x >= block_size ||
-                      lower + shift_y + length_y >= block_size){
-                    auto zth = ptr % this->m_k2;
-                    auto p = codes::zeta_order::decode(zth);
-                    shift_x += p.first * block_size;
-                    shift_y += p.second * block_size;
-                    new_x = new_x - p.first * block_size;
-                    new_y = new_y - p.second * block_size;
-                    //std::cout << "shift_x=" << shift_x << " shift_y=" << shift_y << std::endl;
-                    block_size *= this->m_k;
-                    l--;
-                    ptr = this->m_t_select(ptr / this->m_k2);
-                }
-#if BT_VERBOSE
-                std::cout << "bsize final=" << block_size << std::endl;
-                std::cout << "iniciales" << std::endl;
-                for(const auto &region : regions){
-                    std::cout << "(" << region.min_x << ", " << region.max_x
-                    << ")x(" << region.min_y << ", " << region.max_y << ")" << std::endl;
-                }
-#endif
-
-                for(auto &region : regions) {
-                    length_x = region.max_x - region.min_x;
-                    length_y = region.max_y - region.min_y;
-                    region.min_x = region.min_x + offset_x + shift_x;
-                    region.min_y = region.min_y + offset_y + shift_y;
-                    region.max_x = region.min_x + length_x;
-                    region.max_y = region.min_y + length_y;
-                }
-#if BT_VERBOSE
-                std::cout << "finales" << std::endl;
-                for(const auto &region : regions){
-                    std::cout << "(" << region.min_x << ", " << region.max_x
-                              << ")x(" << region.min_y << ", " << region.max_y << ")" << std::endl;
-                }
-                std::cout << std::endl;
-#endif
-                recursive_multiple_region(query, regions, new_x, new_y, ptr, l, block_size, n_cols, n_rows, result,
-                                          true, level);
-        }
-
 
         inline bool taking_pointer_condition(const bool taking_pointer, const size_type level_taking_pointer, const size_type level){
             //std::cout << "condition-> taking_pointer=" << taking_pointer << " level_taking_pointer=" << level_taking_pointer << " level=" << level << std::endl;
@@ -802,6 +483,11 @@ namespace block_tree_2d {
             pointer = this->m_level_ones[3*(level-m_minimum_level)]+ this->m_pointers[level-m_minimum_level][idx_pointer];
             offset_x = codes::alternative_code::decode(this->m_offsets[level-m_minimum_level][2*idx_pointer]);
             offset_y = codes::alternative_code::decode(this->m_offsets[level-m_minimum_level][2*idx_pointer+1]);
+        }
+
+        void explicit_node_info(const size_type pos_explicit, const size_type level, size_type &offset_x, size_type &offset_y){
+            offset_x = m_explicit_location[level-m_minimum_level][2*pos_explicit];
+            offset_y = m_explicit_location[level-m_minimum_level][2*pos_explicit+1];
         }
 
 
@@ -844,21 +530,6 @@ namespace block_tree_2d {
         }
 
 
-        inline void values_region(const size_type min_x, const size_type min_y,
-                                  const size_type max_x, const size_type max_y,
-                                  const size_type n_cols, size_type n_rows,
-                                  std::vector<int> &result){
-            size_type size_vector = (max_y - min_y+1) * (max_x - min_x + 1);
-            result = std::vector<int>(size_vector, 0);
-            std::vector<region_type> regions;
-            for(size_type i = 0; i <= m_msb; ++i){
-                regions.emplace_back(region_type{i*n_cols+min_x, i*n_cols+max_x, min_y, max_y});
-            }
-            region_type query = region_type{min_x, max_x, min_y, max_y};
-            auto block_size = (size_type) std::pow(this->m_k, this->m_height);
-            this->recursive_multiple_region(query, regions, 0, 0, 0, 0, block_size, n_cols, n_rows, result);
-
-        }
 
         inline void access_region(const size_type min_x, const size_type min_y,
                                   const size_type max_x, const size_type max_y,
@@ -902,14 +573,11 @@ namespace block_tree_2d {
                                       aux_l,cw,to_delete);
                     }else {
                         auto zth = idx_leaf(start_children+i);
-                        if(m_is_pointer[zth]){
-                            auto s_x = (i % this->m_k) * new_block_size + x;
-                            auto s_y = (i / this->m_k) * new_block_size + y;
-                            for(auto dx = 0; dx <  new_block_size; ++dx){
-                                for(auto dy = 0; dy < new_block_size; ++dy){
-                                    cw = cw | (1ULL << ((s_y + dy) * leaf_size + (s_x+dx)));
-                                }
-                            }
+                        if(zth < m_is_pointer.size() && m_is_pointer[zth]){
+                            traverse_leaf(start_children + i, new_block_size,
+                                          (i % this->m_k) * new_block_size + x,
+                                          (i / this->m_k) * new_block_size + y,
+                                          aux_l,cw,to_delete);
                         }
                     }
                     ++to_delete;
@@ -1024,7 +692,7 @@ namespace block_tree_2d {
                 m_explicit = std::move(p.m_explicit);
                 m_rank_explicit = std::move(p.m_rank_explicit);
                 m_rank_explicit.set_vector(&m_explicit);
-                m_msb = std::move(p.m_msb);
+                m_explicit_location = std::move(p.m_explicit_location);
                 m_l = std::move(p.m_l);
                 m_voc = std::move(p.m_voc);
                 m_ones_prev_leaves = std::move(p.m_ones_prev_leaves);
@@ -1063,7 +731,7 @@ namespace block_tree_2d {
             std::swap(m_zeroes, p.m_zeroes);
             std::swap(m_explicit, p.m_explicit);
             sdsl::util::swap_support(m_rank_explicit, p.m_rank_explicit, &m_explicit, &(p.m_explicit));
-            std::swap(m_msb, p.m_msb);
+            std::swap(m_explicit_location, p.m_explicit_location);
             std::swap(m_l, p.m_l);
             std::swap(m_voc, p.m_voc);
             std::swap(m_ones_prev_leaves, p.m_ones_prev_leaves);
@@ -1097,7 +765,9 @@ namespace block_tree_2d {
             written_bytes += sdsl::write_member(m_zeroes, out, child, "zeroes");
             written_bytes += m_explicit.serialize(out, child, "explicit");
             written_bytes += m_rank_explicit.serialize(out, child, "rank_explicit");
-            written_bytes += sdsl::write_member(m_msb, out, child, "msb");
+            uint64_t m_explicit_location_size = m_explicit_location.size();
+            sdsl::write_member(m_explicit_location_size, out, child, "explicit_location_size");
+            written_bytes += sdsl::serialize_vector(m_explicit_location, out, child, "explicit_location");
             written_bytes += m_l.serialize(out, child, "l");
             written_bytes += m_voc.serialize(out, child, "voc");
             written_bytes += sdsl::write_member(m_ones_prev_leaves, out, child, "ones_prev_leaves");
@@ -1130,7 +800,10 @@ namespace block_tree_2d {
             sdsl::read_member(m_zeroes, in);
             m_explicit.load(in);
             m_rank_explicit.load(in, &m_explicit);
-            sdsl::read_member(m_msb, in);
+            uint64_t m_explicit_location_size = 0;
+            sdsl::read_member(m_explicit_location_size, in);
+            m_explicit_location.resize(m_explicit_location_size);
+            sdsl::load_vector(m_explicit_location, in);
             m_l.load(in);
             m_voc.load(in);
             sdsl::read_member(m_ones_prev_leaves, in);
@@ -1164,7 +837,11 @@ namespace block_tree_2d {
             sdsl::read_member(m_zeroes, in);
             m_explicit.load(in);
             m_rank_explicit.load(in, &m_explicit);
-            sdsl::read_member(m_msb, in);
+            uint64_t m_explicit_location_size = 0;
+            sdsl::read_member(m_explicit_location_size, in);
+            m_explicit_location.resize(m_explicit_location_size);
+            sdsl::load_vector(m_explicit_location, in);
+
 
             std::cout << "1" << std::endl;
             m_ones_prev_leaves = 0;
