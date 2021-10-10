@@ -9,7 +9,7 @@ set(PROJECT_CONTACT "adrian.gbrandon@udc.es")
 
 
 #Change to "Debug" when you need it
-set(CMAKE_BUILD_TYPE "Debug")
+set(CMAKE_BUILD_TYPE "Release")
 
 # C++11 compiler Check
 if(NOT CMAKE_CXX_COMPILER_VERSION) # work around for cmake versions smaller than 2.8.10
@@ -87,6 +87,12 @@ target_link_libraries(hash_table sdsl divsufsort divsufsort64)
 
 add_executable(build_webgraph src/build_webgraph.cpp)
 target_link_libraries(build_webgraph sdsl divsufsort divsufsort64)
+
+add_executable(build_rdf src/build_rdf.cpp)
+target_link_libraries(build_rdf sdsl divsufsort divsufsort64)
+
+add_executable(build_k2tree_rdf src/build_k2tree_rdf.cpp)
+target_link_libraries(build_k2tree_rdf sdsl divsufsort divsufsort64)
 
 add_executable(build_webgraph_comp_leaves src/build_webgraph_comp_leaves.cpp)
 target_link_libraries(build_webgraph_comp_leaves sdsl divsufsort divsufsort64)
@@ -214,3 +220,6 @@ target_link_libraries(test_k2_acum sdsl divsufsort divsufsort64)
 
 add_executable(times_k2_acum src/times_k2_acum.cpp)
 target_link_libraries(times_k2_acum sdsl divsufsort divsufsort64)
+
+add_executable(transform_rdf src/transform_rdf.cpp)
+target_link_libraries(transform_rdf sdsl divsufsort divsufsort64)

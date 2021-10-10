@@ -97,6 +97,12 @@ namespace util {
         }
 
 
+        template<class T>
+        void write_value(const T& t, std::ostream& out) {
+            out.write((char *) &t, sizeof(t));
+        }
+
+
         template<class t_value>
         void write_to_file(const std::string& file, const std::vector<t_value> &container){
             std::ofstream out(file, std::ios::out | std::ios::binary );

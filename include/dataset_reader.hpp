@@ -107,6 +107,56 @@ namespace dataset_reader{
         }
     };
 
+
+    class rdf {
+
+
+
+    public:
+        static std::pair<int, int> read(const std::string file_name,
+                         std::vector<std::vector<int64_t>> &adjacency_lists,
+                         const uint64_t n_rows=0, const uint64_t n_cols=0) {
+
+            struct stat s;
+            const char *file_name_c = file_name.c_str();
+            if (stat(file_name_c, &s) != 0) {
+                std::cout << "Error cannot open file: " << file_name << std::endl;
+            }
+            FILE *file = fopen(file_name_c, "r");
+            uint32_t number_nodes = 0;
+            uint64_t number_edges = 0;
+            fread(&number_nodes, sizeof(uint32_t), 1, file);
+            fread(&number_edges, sizeof(uint64_t), 1, file);
+            std::cout << "number_nodes: " << number_nodes << std::endl;
+            std::cout << "number_edges: " << number_edges << std::endl;
+            std::cout << s.st_size << std::endl;
+            uint32_t zero = 0;
+            //fread(&zero, sizeof(uint32_t), 1, file);
+            uint64_t len_lists = (s.st_size - sizeof(uint32_t) - sizeof(uint64_t)) / sizeof(int32_t);
+            int32_t *data = (int32_t *) std::malloc(sizeof(int32_t) * len_lists);
+            fread(data, sizeof(uint32_t), len_lists, file);
+            adjacency_lists.resize(number_nodes, std::vector<int64_t>());
+            int max = 0;
+            int64_t id = -1, number_ones = 0;
+            for (uint64_t i = 0; i < len_lists && id < number_nodes; i++) {
+                if (data[i] < 0) {
+                    id++;
+                } else {
+                    number_ones++;
+                    adjacency_lists[id].push_back(data[i]);
+                    if(data[i]>max) max = data[i];
+                }
+            }
+
+            std::free(data);
+            fclose(file);
+            std::cout << "number_ones: " << number_ones << std::endl;
+            std::cout << "number_nodes: " << number_nodes << std::endl;
+            std::cout << "number_edges: " << number_edges << std::endl;
+            return {number_nodes, max+1};
+        }
+    };
+
     class raster {
     public:
         static std::pair<int, int> read(const std::string file_name,
