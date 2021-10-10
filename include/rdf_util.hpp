@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define INC_2D_BLOCK_TREE_RDF_UTIL_HPP
 
 #include <file_util.hpp>
+#include <algorithm>
 
 namespace util{
 
