@@ -65,7 +65,7 @@ void build(block_tree_2d::block_tree_double_hybrid_skipping_block<dataset_reader
 }
 
 template<class t_block_tree>
-void run_build(const std::string &dataset, const uint64_t k,
+void run_build(const std::string &dataset, const std::string &out_file, const uint64_t k,
                const uint64_t last_block_size_k2_tree){
 
     std::cout << "Building Block-tree..." << std::endl;
@@ -146,6 +146,9 @@ void run_build(const std::string &dataset, const uint64_t k,
     sdsl::write_structure<sdsl::JSON_FORMAT>(m_block_tree, name_file + ".json");
     sdsl::write_structure<sdsl::HTML_FORMAT>(m_block_tree, name_file + ".html");
     std::cout << "Elements: " << elements << std::endl;
+    std::ofstream out(out_file);
+    out << "The Block-tree was built in " << duration << " seconds and uses " << size_bt << " bytes." << std::endl;
+    out.close();
 }
 
 int main(int argc, char **argv) {
@@ -161,14 +164,17 @@ int main(int argc, char **argv) {
     auto first = static_cast<uint64_t >(atoi(argv[4]));
     auto last = static_cast<uint64_t >(atoi(argv[5]));
 
-    std::vector<std::string> files;
+    std::vector<std::string> files, outs;
     for(auto i = first; i<=last; ++i){
-        files.push_back(dataset + "." + std::to_string(i));
+        files.push_back(dataset + ".hdt.adj." + std::to_string(i));
+    }
+    for(auto i = first; i<=last; ++i){
+        files.push_back(dataset + ".bt." + std::to_string(i) + ".out");
     }
 
 #pragma omp parallel for
     for(auto i=0; i < files.size(); ++i){
-        run_build<block_tree_2d::block_tree_double_hybrid_skipping_block<dataset_reader::rdf>>(files[i], k,
+        run_build<block_tree_2d::block_tree_double_hybrid_skipping_block<dataset_reader::rdf>>(files[i], outs[i], k,
                 last_block_size_k2_tree);
     }
 }
