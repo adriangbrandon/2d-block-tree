@@ -169,7 +169,7 @@ int main(int argc, char **argv) {
         files.push_back(dataset + ".hdt.adj." + std::to_string(i));
     }
     for(auto i = first; i<=last; ++i){
-        files.push_back(dataset + ".bt." + std::to_string(i) + ".out");
+        outs.push_back(dataset + ".bt." + std::to_string(i) + ".out");
     }
 
 #pragma omp parallel for
