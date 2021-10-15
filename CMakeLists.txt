@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.7)
+cmake_minimum_required(VERSION 3.9)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
 include(AppendCompilerFlags)
 
@@ -56,7 +56,7 @@ include_directories("${PROJECT_SOURCE_DIR}/external/googletest/include"
         ${STXXL_INCLUDE_DIRS}
         )
 
-
+find_package(OpenMP)
 
 add_executable(karp_rabin_v2 src/karp_rabin_v2.cpp)
 target_link_libraries(karp_rabin_v2 sdsl divsufsort divsufsort64)
@@ -223,3 +223,6 @@ target_link_libraries(times_k2_acum sdsl divsufsort divsufsort64)
 
 add_executable(transform_rdf src/transform_rdf.cpp)
 target_link_libraries(transform_rdf sdsl divsufsort divsufsort64)
+
+add_executable(build_rdf_parallel src/build_rdf_parallel.cpp)
+target_link_libraries(build_rdf_parallel sdsl divsufsort divsufsort64 OpenMP::OpenMP_CXX)
