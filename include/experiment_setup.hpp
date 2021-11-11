@@ -59,6 +59,13 @@ namespace experiments {
         int ub;
     } range_type;
 
+    typedef struct {
+        int min_x;
+        int max_x;
+        int min_y;
+        int max_y;
+    } region_type;
+
     class reader {
 
     public:
@@ -119,6 +126,36 @@ namespace experiments {
             return ranges;
         }
 
+        static std::vector<region_type> regions(const std::string &file_queries){
+            std::ifstream input(file_queries);
+            std::vector<region_type> regions;
+            int min_x, min_y, max_x, max_y;
+            input >> min_x;
+            while(1){
+                input >> min_y >> max_y >> min_x >> max_x;
+                if(!input.good()) break;
+                region_type p{min_x, max_x, min_y, max_y};
+                regions.push_back(p);
+            }
+            input.close();
+            return regions;
+        }
+
+        static std::vector<range_type> region(const std::string &file_queries){
+            std::ifstream input(file_queries);
+            std::vector<range_type> ranges;
+            int min_x, min_y, max_x, max_y, lb, ub;
+            input >> min_x;
+            while(1){
+                input >> min_y >> max_y >> min_x >> max_x >> lb >> ub;
+                if(!input.good()) break;
+                range_type p{min_x, max_x, min_y, max_y, lb, ub-1};
+                ranges.push_back(p);
+            }
+            input.close();
+            return ranges;
+        }
+
     };
 
     class writer {
@@ -141,6 +178,20 @@ namespace experiments {
                 int n = rand() % max;
                 int a = rand() % max;
                 output << n << " " << a << std::endl;
+            }
+            output.close();
+        }
+
+        static void regions(const std::string &file_queries,
+                                                const int width, const int size, const int max){
+            std::ofstream output(file_queries);
+            srand (time(NULL));
+            for(int i = 0; i < size; ++i){
+                int min_x = rand() % (max-width-1);
+                int min_y = rand() % (max-width-1);
+                int max_x = min_x + width-1;
+                int max_y = min_y + width-1;
+                output << min_y << " " << max_y << " " << min_x << " " << max_x << std::endl;
             }
             output.close();
         }

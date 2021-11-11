@@ -176,6 +176,9 @@ target_link_libraries(size_cl sdsl divsufsort divsufsort64)
 add_executable(experiment_files src/experiment_files.cpp )
 target_link_libraries(experiment_files sdsl divsufsort divsufsort64)
 
+add_executable(region_files src/region_files.cpp )
+target_link_libraries(region_files sdsl divsufsort divsufsort64)
+
 add_executable(entropy src/entropy.cpp )
 target_link_libraries(entropy sdsl divsufsort divsufsort64)
 
@@ -226,3 +229,6 @@ target_link_libraries(transform_rdf sdsl divsufsort divsufsort64)
 
 add_executable(build_rdf_parallel src/build_rdf_parallel.cpp)
 target_link_libraries(build_rdf_parallel sdsl divsufsort divsufsort64 OpenMP::OpenMP_CXX)
+
+add_executable(prepare_movies src/prepare_movies.cpp)
+target_link_libraries(prepare_movies sdsl divsufsort divsufsort64)

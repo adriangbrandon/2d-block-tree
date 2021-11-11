@@ -102,6 +102,11 @@ namespace util {
             out.write((char *) &t, sizeof(t));
         }
 
+        template<class T>
+        void write_vector(const std::vector<T> &container, std::ostream& out){
+            out.write((char*) &container[0], container.size() * sizeof(T));
+        }
+
 
         template<class t_value>
         void write_to_file(const std::string& file, const std::vector<t_value> &container){

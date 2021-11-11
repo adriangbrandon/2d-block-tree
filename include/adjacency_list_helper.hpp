@@ -43,6 +43,7 @@ namespace util {
 
     class adjacency_list {
 
+    public:
         template <class Type>
         static void write_value(const Type &t, std::ofstream &out){
             out.write((char*)&t, sizeof(t));
