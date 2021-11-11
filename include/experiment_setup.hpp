@@ -191,7 +191,7 @@ namespace experiments {
                 int min_y = rand() % (max-width-1);
                 int max_x = min_x + width-1;
                 int max_y = min_y + width-1;
-                output << min_y << " " << max_y << " " << min_x << " " << max_x << std::endl;
+                output << min_x << " " << max_x << " " << min_y << " " << max_y << std::endl;
             }
             output.close();
         }

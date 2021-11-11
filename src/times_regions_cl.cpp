@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Created by Adrián on 03/06/2020.
 //
 
-#include <block_tree_double_hybrid_skipping_block.hpp>
+#include <block_tree_comp_leaves.hpp>
 #include <time_util.hpp>
 #include <experiment_setup.hpp>
 
