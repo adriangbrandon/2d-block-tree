@@ -155,6 +155,15 @@ target_link_libraries(times_access_cl sdsl divsufsort divsufsort64)
 add_executable(times_k2_access src/times_k2_access.cpp)
 target_link_libraries(times_k2_access sdsl divsufsort divsufsort64)
 
+add_executable(times_regions src/times_regions.cpp)
+target_link_libraries(times_regions sdsl divsufsort divsufsort64)
+
+add_executable(times_regions_cl src/times_regions_cl.cpp)
+target_link_libraries(times_regions_cl sdsl divsufsort divsufsort64)
+
+add_executable(times_k2_regions src/times_k2_regions.cpp)
+target_link_libraries(times_k2_regions sdsl divsufsort divsufsort64)
+
 add_executable(times_reverse src/times_reverse.cpp)
 target_link_libraries(times_reverse sdsl divsufsort divsufsort64)
 
