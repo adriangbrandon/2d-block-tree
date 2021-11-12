@@ -132,7 +132,7 @@ namespace experiments {
             int min_x, min_y, max_x, max_y;
             input >> min_x;
             while(1){
-                input >> min_y >> max_y >> min_x >> max_x;
+                input >> min_x >> max_x >> min_y >> max_y;
                 if(!input.good()) break;
                 region_type p{min_x, max_x, min_y, max_y};
                 regions.push_back(p);
