@@ -130,7 +130,6 @@ namespace experiments {
             std::ifstream input(file_queries);
             std::vector<region_type> regions;
             int min_x, min_y, max_x, max_y;
-            input >> min_x;
             while(1){
                 input >> min_x >> max_x >> min_y >> max_y;
                 if(!input.good()) break;
