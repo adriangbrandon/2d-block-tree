@@ -236,8 +236,14 @@ target_link_libraries(times_k2_acum sdsl divsufsort divsufsort64)
 add_executable(transform_rdf src/transform_rdf.cpp)
 target_link_libraries(transform_rdf sdsl divsufsort divsufsort64)
 
+add_executable(build_samatrix src/build_samatrix.cpp)
+target_link_libraries(build_samatrix sdsl divsufsort divsufsort64)
+
 add_executable(build_rdf_parallel src/build_rdf_parallel.cpp)
 target_link_libraries(build_rdf_parallel sdsl divsufsort divsufsort64 OpenMP::OpenMP_CXX)
 
 add_executable(prepare_movies src/prepare_movies.cpp)
 target_link_libraries(prepare_movies sdsl divsufsort divsufsort64)
+
+add_executable(sa_to_adjacency_lists src/sa_to_adjacency_lists.cpp)
+target_link_libraries(sa_to_adjacency_lists sdsl divsufsort divsufsort64)

@@ -40,8 +40,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sys/stat.h>
 #include <fstream>
 #include <sdsl/coder.hpp>
+#include <adjacency_list_helper.hpp>
 
-namespace dataset_reader{
+namespace dataset_reader {
 
 
     class web_graph {
@@ -64,7 +65,8 @@ namespace dataset_reader{
 
     public:
         static void read(const std::string file_name,
-                         std::vector<std::vector<int64_t>> &adjacency_lists, const uint64_t n_rows=0, const uint64_t n_cols=0) {
+                         std::vector<std::vector<int64_t>> &adjacency_lists, const uint64_t n_rows = 0,
+                         const uint64_t n_cols = 0) {
 
             struct stat s;
             const char *file_name_c = file_name.c_str();
@@ -111,11 +113,10 @@ namespace dataset_reader{
     class rdf {
 
 
-
     public:
         static std::pair<int, int> read(const std::string file_name,
-                         std::vector<std::vector<int64_t>> &adjacency_lists,
-                         const uint64_t n_rows=0, const uint64_t n_cols=0) {
+                                        std::vector<std::vector<int64_t>> &adjacency_lists,
+                                        const uint64_t n_rows = 0, const uint64_t n_cols = 0) {
 
             struct stat s;
             const char *file_name_c = file_name.c_str();
@@ -144,7 +145,7 @@ namespace dataset_reader{
                 } else {
                     number_ones++;
                     adjacency_lists[id].push_back(data[i]);
-                    if(data[i]>max) max = data[i];
+                    if (data[i] > max) max = data[i];
                 }
             }
 
@@ -153,14 +154,15 @@ namespace dataset_reader{
             std::cout << "number_ones: " << number_ones << std::endl;
             std::cout << "number_nodes: " << number_nodes << std::endl;
             std::cout << "number_edges: " << number_edges << std::endl;
-            return {number_nodes, max+1};
+            return {number_nodes, max + 1};
         }
     };
 
     class raster {
     public:
         static std::pair<int, int> read(const std::string file_name,
-                        std::vector<std::vector<int64_t>> &adjacency_lists, const uint64_t n_rows, const uint64_t n_cols){
+                                        std::vector<std::vector<int64_t>> &adjacency_lists, const uint64_t n_rows,
+                                        const uint64_t n_cols) {
 
             std::ifstream input(file_name);
             uint64_t n = 0;
@@ -171,10 +173,10 @@ namespace dataset_reader{
             for (int r = 0; r < n_rows; ++r) {
                 for (int c = 0; c < n_cols; ++c) {
                     sdsl::read_member(values[n], input);
-                    if(values[n]>0){
-                        if(values[n] > max_value) max_value = values[n];
-                        if(values[n] < min_value) min_value = values[n];
-                    }else{
+                    if (values[n] > 0) {
+                        if (values[n] > max_value) max_value = values[n];
+                        if (values[n] < min_value) min_value = values[n];
+                    } else {
                         ++zeroes;
                     }
                     ++n;
@@ -184,28 +186,28 @@ namespace dataset_reader{
 
             std::cout << "Min value: " << min_value << std::endl;
             std::cout << "Max value: " << max_value << std::endl;
-            std::cout << "Zeroes: " << zeroes << " (" << (zeroes / (double) n)*100 << "% ) " << std::endl;
+            std::cout << "Zeroes: " << zeroes << " (" << (zeroes / (double) n) * 100 << "% ) " << std::endl;
             //exit(0);
 
             auto bit_position = [](uint64_t col, uint64_t value, uint64_t n_cols, uint64_t min_value) {
-                return col + (n_cols * (value-min_value));
+                return col + (n_cols * (value - min_value));
             };
 
             //Prepare input for adjacency_lists
             adjacency_lists.resize(n_rows, std::vector<int64_t>());
             int sigma = max_value - min_value + 1;
             n = 0;
-            for(int r = 0; r < n_rows; ++r){
-                for(int c = 0; c < n_cols; ++c ){
-                    if(values[n]>0){
-                        for(auto v = values[n]; v <= max_value; ++v){
+            for (int r = 0; r < n_rows; ++r) {
+                for (int c = 0; c < n_cols; ++c) {
+                    if (values[n] > 0) {
+                        for (auto v = values[n]; v <= max_value; ++v) {
                             adjacency_lists[r].push_back(bit_position(c, v, n_cols, min_value));
                         }
                     }
                     ++n;
                 }
             }
-            for(int r = 0; r < n_rows; ++r){
+            for (int r = 0; r < n_rows; ++r) {
                 std::sort(adjacency_lists[r].begin(), adjacency_lists[r].end());
             }
 
@@ -219,7 +221,8 @@ namespace dataset_reader{
     class raster_log {
     public:
         static std::pair<int, int> read(const std::string file_name,
-                                        std::vector<std::vector<int64_t>> &adjacency_lists, const uint64_t n_rows, const uint64_t n_cols){
+                                        std::vector<std::vector<int64_t>> &adjacency_lists, const uint64_t n_rows,
+                                        const uint64_t n_cols) {
 
             std::ifstream input(file_name);
             uint64_t n = 0;
@@ -230,7 +233,7 @@ namespace dataset_reader{
                 for (int c = 0; c < n_cols; ++c) {
                     sdsl::read_member(values[n], input);
                     int hi = sdsl::bits::hi(values[n]);
-                    if(msb < hi) msb = hi;
+                    if (msb < hi) msb = hi;
                     if (values[n] == 0) ++zeroes;
                     ++n;
                 }
@@ -238,7 +241,7 @@ namespace dataset_reader{
             input.close();
 
             std::cout << "MSB: " << msb << std::endl;
-            std::cout << "Zeroes: " << zeroes << " (" << (zeroes / (double) n)*100 << "% ) " << std::endl;
+            std::cout << "Zeroes: " << zeroes << " (" << (zeroes / (double) n) * 100 << "% ) " << std::endl;
             //exit(0);
 
             auto bit_position = [](uint64_t col, uint64_t n_cols, uint64_t ith_bit) {
@@ -247,12 +250,12 @@ namespace dataset_reader{
 
             //Prepare input for adjacency_lists
             adjacency_lists.resize(n_rows, std::vector<int64_t>());
-            for(int b = 0; b <= msb; ++b){
+            for (int b = 0; b <= msb; ++b) {
                 n = 0;
-                for(int r = 0; r < n_rows; ++r){
-                    for(int c = 0; c < n_cols; ++c ){
-                        bool set_bit =  values[n] & (0x0001 << b);
-                        if(set_bit){
+                for (int r = 0; r < n_rows; ++r) {
+                    for (int c = 0; c < n_cols; ++c) {
+                        bool set_bit = values[n] & (0x0001 << b);
+                        if (set_bit) {
                             adjacency_lists[r].push_back(bit_position(c, n_cols, b));
                         }
                         ++n;
@@ -260,16 +263,27 @@ namespace dataset_reader{
                 }
             }
 
-            for(int r = 0; r < n_rows; ++r){
+            for (int r = 0; r < n_rows; ++r) {
                 std::sort(adjacency_lists[r].begin(), adjacency_lists[r].end());
             }
 
 
-            return {n_rows, (msb+1) * n_cols};
+            return {n_rows, (msb + 1) * n_cols};
 
         }
 
     };
+
+    class samatrix {
+
+    public:
+        static void read(const std::string file_name,
+                         std::vector<std::vector<int64_t>> &adjacency_lists, const uint64_t n_rows = 0,
+                         const uint64_t n_cols = 0) {
+            util::adjacency_list::read(adjacency_lists, file_name);
+        }
+    };
+
 
 }
 
