@@ -239,6 +239,9 @@ target_link_libraries(transform_rdf sdsl divsufsort divsufsort64)
 add_executable(build_samatrix src/build_samatrix.cpp)
 target_link_libraries(build_samatrix sdsl divsufsort divsufsort64)
 
+add_executable(build_k2tree_samatrix src/build_k2tree_samatrix.cpp)
+target_link_libraries(build_k2tree_samatrix sdsl divsufsort divsufsort64)
+
 add_executable(build_rdf_parallel src/build_rdf_parallel.cpp)
 target_link_libraries(build_rdf_parallel sdsl divsufsort divsufsort64 OpenMP::OpenMP_CXX)
 
