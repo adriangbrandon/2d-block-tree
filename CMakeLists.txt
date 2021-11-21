@@ -218,6 +218,9 @@ target_link_libraries(build_raster_dag_comp_leaves sdsl divsufsort divsufsort64)
 add_executable(build_k2tree_raster src/build_k2tree_raster.cpp )
 target_link_libraries(build_k2tree_raster sdsl divsufsort divsufsort64)
 
+add_executable(build_png_comp_leaves src/build_png_comp_leaves.cpp )
+target_link_libraries(build_png_comp_leaves sdsl divsufsort divsufsort64)
+
 add_executable(test_raster src/test_raster.cpp )
 target_link_libraries(test_raster sdsl divsufsort divsufsort64)
 
@@ -239,8 +242,17 @@ target_link_libraries(transform_rdf sdsl divsufsort divsufsort64)
 add_executable(build_samatrix src/build_samatrix.cpp)
 target_link_libraries(build_samatrix sdsl divsufsort divsufsort64)
 
+add_executable(build_samatrix_comp_leaves src/build_samatrix_comp_leaves.cpp)
+target_link_libraries(build_samatrix_comp_leaves sdsl divsufsort divsufsort64)
+
+add_executable(build_png src/build_png.cpp)
+target_link_libraries(build_png sdsl divsufsort divsufsort64)
+
 add_executable(build_k2tree_samatrix src/build_k2tree_samatrix.cpp)
 target_link_libraries(build_k2tree_samatrix sdsl divsufsort divsufsort64)
+
+add_executable(build_k2tree_png src/build_k2tree_png.cpp)
+target_link_libraries(build_k2tree_png sdsl divsufsort divsufsort64)
 
 add_executable(build_rdf_parallel src/build_rdf_parallel.cpp)
 target_link_libraries(build_rdf_parallel sdsl divsufsort divsufsort64 OpenMP::OpenMP_CXX)
