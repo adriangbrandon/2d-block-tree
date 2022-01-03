@@ -1,4 +1,4 @@
-*dataset/*
+*datasets/*
 *build/*
 .idea*
 .DS_Store/
