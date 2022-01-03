@@ -28,32 +28,57 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 //
-// Created by Adrián on 29/07/2019.
+// Created by Adrián on 2/1/22.
 //
 
-#ifndef INC_UTIL_BITHACKS_HPP
-#define INC_UTIL_BITHACKS_HPP
+#include <heap_4ary.hpp>
+#include <iostream>
+#include <vector>
 
-#define BYTE_2_BITS 8
+int main(int argc, char **argv) {
 
-namespace util {
 
-    namespace bithacks {
-
-        template <class T>
-        inline T abs(const T &v){
-            const T mask = v >> (sizeof(T) * BYTE_2_BITS -1);
-            return ((v ^ mask) - mask);
+    struct compare_min {
+        bool operator()(uint64_t x, uint64_t y){
+            return x < y;
         }
+    };
 
-        template <class BigInt, class Int>
-        inline Int mersenne_mod(const BigInt value, const Int p, const Int p_pow){
-            Int h = ((Int) value & p) + (Int)(value >> p_pow);
-            h = (h & p) + (h >> p_pow);
-            return h == p ? 0 : h;
-        }
+    struct local_min {
+        uint64_t operator()(const uint64_t* cont, uint64_t x, uint64_t y){
+            return (cont[x] < cont[y]) ? x : y;
+        };
+    };
 
+    /*util::heap_4ary<uint64_t, local_min, compare_min> m_heap(9);
+    m_heap.push(5);
+    m_heap.print();
+    m_heap.push(4);
+    m_heap.print();
+    m_heap.push(9);
+    m_heap.print();
+    m_heap.push(8);
+    m_heap.print();
+    m_heap.push(1);
+    m_heap.print();
+    m_heap.push(6);
+    m_heap.print();
+    m_heap.push(7);
+    m_heap.print();
+    m_heap.push(2);
+    m_heap.print();
+    m_heap.push(3);
+    m_heap.print();*/
+
+    std::vector<uint64_t> va = {5, 4, 9, 8, 1, 6, 7, 2, 3};
+    util::heap_4ary<uint64_t, local_min, compare_min> m_heap(9, va);
+
+    while(!m_heap.empty()){
+        std::cout << m_heap.top() << std::endl;
+        m_heap.pop();
+        m_heap.print();
     }
+
 }
 
-#endif //INC_2D_BLOCK_TREE_BITHACKS_HPP
+

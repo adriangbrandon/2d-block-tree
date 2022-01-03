@@ -9,7 +9,7 @@ set(PROJECT_CONTACT "adrian.gbrandon@udc.es")
 
 
 #Change to "Debug" when you need it
-set(CMAKE_BUILD_TYPE "Release")
+set(CMAKE_BUILD_TYPE "Debug")
 
 # C++11 compiler Check
 if(NOT CMAKE_CXX_COMPILER_VERSION) # work around for cmake versions smaller than 2.8.10
@@ -218,6 +218,9 @@ target_link_libraries(build_raster_dag_comp_leaves sdsl divsufsort divsufsort64)
 add_executable(build_k2tree_raster src/build_k2tree_raster.cpp )
 target_link_libraries(build_k2tree_raster sdsl divsufsort divsufsort64)
 
+add_executable(build_png_comp_leaves src/build_png_comp_leaves.cpp )
+target_link_libraries(build_png_comp_leaves sdsl divsufsort divsufsort64)
+
 add_executable(test_raster src/test_raster.cpp )
 target_link_libraries(test_raster sdsl divsufsort divsufsort64)
 
@@ -239,11 +242,29 @@ target_link_libraries(transform_rdf sdsl divsufsort divsufsort64)
 add_executable(build_samatrix src/build_samatrix.cpp)
 target_link_libraries(build_samatrix sdsl divsufsort divsufsort64)
 
+add_executable(build_samatrix_comp_leaves src/build_samatrix_comp_leaves.cpp)
+target_link_libraries(build_samatrix_comp_leaves sdsl divsufsort divsufsort64)
+
+add_executable(build_png src/build_png.cpp)
+target_link_libraries(build_png sdsl divsufsort divsufsort64)
+
+add_executable(build_k2tree_samatrix src/build_k2tree_samatrix.cpp)
+target_link_libraries(build_k2tree_samatrix sdsl divsufsort divsufsort64)
+
+add_executable(build_k2tree_png src/build_k2tree_png.cpp)
+target_link_libraries(build_k2tree_png sdsl divsufsort divsufsort64)
+
 add_executable(build_rdf_parallel src/build_rdf_parallel.cpp)
 target_link_libraries(build_rdf_parallel sdsl divsufsort divsufsort64 OpenMP::OpenMP_CXX)
 
 add_executable(prepare_movies src/prepare_movies.cpp)
 target_link_libraries(prepare_movies sdsl divsufsort divsufsort64)
+
+add_executable(test_bt test/test_bt.cpp)
+target_link_libraries(test_bt sdsl divsufsort divsufsort64)
+
+add_executable(heap_4ary_test test/heap_4ary_test.cpp)
+target_link_libraries(heap_4ary_test sdsl divsufsort divsufsort64)
 
 add_executable(sa_to_adjacency_lists src/sa_to_adjacency_lists.cpp)
 target_link_libraries(sa_to_adjacency_lists sdsl divsufsort divsufsort64)

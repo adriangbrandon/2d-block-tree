@@ -94,7 +94,7 @@ namespace util {
             value_type __top(std::move(*__start));
             do
             {
-                // we are not in heap-order, swap the parent with it's largest child
+                // we are not in heap-order, swap the parent with its largest child
                 *__start = std::move(*__child_i);
                 __start = __child_i;
 

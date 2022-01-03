@@ -84,7 +84,7 @@ void run_build(const std::string &type, const std::string &dataset, const uint64
     std::cout << "Done. " << std::endl;
     //m_block_tree.print();
     std::vector<std::vector<int64_t>> copy_lists;
-    dataset_reader::web_graph::read(dataset, copy_lists, limit);
+    dataset_reader::samatrix::read(dataset, copy_lists, limit);
     std::cout << "Retrieving adjacency lists... " << std::flush;
     std::vector<std::vector<int64_t >> result;
     m_block_tree.access_region(0, 0, copy_lists.size() - 1, copy_lists.size() - 1, result);

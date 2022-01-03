@@ -188,19 +188,19 @@ namespace block_tree_2d {
                 block_tree_2d::algorithm::get_fingerprint_blocks_skipping_blocks_stack_lite(adjacency_lists, this->k,
                         m_htc, this->dimensions, block_size, this->m_t, this->m_t_rank, topology_index,
                         nodes, iterators_to_delete, true);
-                block_tree_2d::algorithm::mark_to_delete(iterators_to_delete);
 
 
                 util::logger::log("Computing fingerprint of shifts at level=" + std::to_string(l));
                 /*block_tree_2d::algorithm::get_type_of_nodes_skipping_blocks_stack_lite(adjacency_lists, this->k,
                                                                                        m_htc, this->dimensions,
                                                                                        block_size, hash, nodes);*/
-
+                block_tree_2d::algorithm::mark_to_delete(iterators_to_delete);
                 block_tree_2d::algorithm::get_type_of_nodes_skipping_blocks_stack_lite(adjacency_lists, this->k,
                                                                                        m_htc, this->dimensions,
                                                                                        block_size, this->m_t,
                                                                                        this->m_t_rank, topology_index,
                                                                                        nodes);
+
 
 
                 size_type bits_k2_tree = 0, leaf_nodes = 0, empty_nodes = 0, internal_nodes = 0, explicit_nodes = 0;

@@ -56,36 +56,6 @@ void load_from(const std::string &file_name, const std::string &dataset,
     block_tree_2d::algorithm::print_ajdacent_list(result);
     std::cout << "----------------------------------------------" << std::endl;*/
 
-    std::ifstream input(dataset);
-    uint64_t n = 0;
-    std::vector<int> values(n_rows * n_cols);
-    for (int r = 0; r < n_rows; ++r) {
-        for (int c = 0; c < n_cols; ++c) {
-            sdsl::read_member(values[n], input);
-            ++n;
-        }
-    }
-    input.close();
-    //exit(0);
-    m_block_tree.get_cell(3186, 765, n_cols);
-    std::cout << "Retrieving cells... " << std::flush;
-    n = 0;
-    for(int r = 0; r <n_rows; ++r){
-        for (int c = 0; c < n_cols; ++c){
-            auto v = m_block_tree.get_cell(c, r, n_cols);
-            if(n % 10000 == 0) std::cout << n << std::endl;
-            if(values[n] != v){
-                std::cout << "c=" << c << std::endl;
-                std::cout << "r=" << r << std::endl;
-                std::cout << "Error en n=" << n << std::endl;
-                std::cout << "Obtained=" << v << std::endl;
-                std::cout << "Expected=" << values[n] << std::endl;
-                std::cout << m_block_tree.get_cell(c, r, n_cols) << std::endl;
-                exit(10);
-            }
-            ++n;
-        }
-    }
     std::cout << std::endl;
     std::cout << "The Block-tree uses " << size_bt << " bytes." << std::endl;
     sdsl::write_structure<sdsl::JSON_FORMAT>(m_block_tree, name_file + ".json");
@@ -101,6 +71,6 @@ int main(int argc, char **argv) {
     int n_rows = atoi(argv[3]);
     int n_cols = atoi(argv[4]);
 
-    load_from<block_tree_2d::block_tree_raster_comp_leaves<dataset_reader::raster>>(file_name, dataset, n_rows, n_cols);
+    load_from<block_tree_2d::block_tree_raster_comp_leaves<dataset_reader::samatrix>>(file_name, dataset, n_rows, n_cols);
 
 }
