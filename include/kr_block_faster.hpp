@@ -31,21 +31,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Created by Adrián on 15/07/2019.
 //
 
-#ifndef INC_KARP_RABIN_BLOCK_ADJACENT_LIST_SKIPPING_BLOCK_HPP
-#define INC_KARP_RABIN_BLOCK_ADJACENT_LIST_SKIPPING_BLOCK_HPP
+#ifndef INC_KARP_RABIN_BLOCK_FASTER_HPP
+#define INC_KARP_RABIN_BLOCK_FASTER_HPP
 
 #include <cstdint>
 #include <vector>
 #include <iostream>
-
+#include <type_traits>
+#include <math_util.hpp>
+#include <bithacks.hpp>
 
 namespace karp_rabin {
 
     template <class t_input = std::vector<std::vector<int64_t>>>
-    class kr_block_adjacent_list_skipping_block {
+    class kr_block_faster {
 
     public:
-
+        typedef __uint128_t uint128_t;
         typedef int64_t value_type;
         typedef uint64_t size_type;
         typedef uint64_t hash_type;
@@ -55,9 +57,11 @@ namespace karp_rabin {
 
     private:
 
-        size_type m_asize = 2;
+        static constexpr size_type m_prime_pow = 61;
+        static constexpr size_type m_prime = (1ull << 61) - 1;
+
+        size_type m_x;
         size_type m_block_size;
-        size_type m_prime;
         hash_type m_hash;
         value_type m_row = 0;
         value_type m_col = 0;
@@ -69,10 +73,8 @@ namespace karp_rabin {
         std::vector<iterator_value_type> m_iterators_value;
         std::vector<hash_type> m_h_length;
 
-        void copy(const kr_block_adjacent_list_skipping_block &p){
+        void copy(const kr_block_faster &p){
             m_block_size = p.m_block_size;
-            m_prime = p.m_prime;
-            m_asize = p.m_asize;
             m_hash = p.m_hash;
             m_row = p.m_row;
             m_col = p.m_col;
@@ -143,15 +145,17 @@ namespace karp_rabin {
                 while(it_element != (*it_list).end() && (*it_element) < (m_col+1)* m_block_size){
                     //2.1 Compute hash_value with 0s
                     auto length = (*it_element) - (prev_value+1);
-                    hash_value = (hash_value * m_h_length[length]) % m_prime;
-                    /*for(auto v = prev_value+1; v < (*it_element); ++v){
-                        hash_value = (hash_value * m_asize) % m_prime;
-                    }*/
+                   // hash_value = (hash_value * m_h_length[length]) % m_prime;
+                    uint128_t hc = (uint128_t) m_h_length[length] * hash_value;
+                    hash_value = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
+
                     //2.2 Compute hash_value with 1
                     ++m_number_ones;
                     m_x_point = (*it_element);
                     m_y_point = m_row * m_block_size + list_id;
-                    hash_value = (hash_value * m_asize + 1) % m_prime;
+                    //hash_value = (hash_value * m_asize + 1) % m_prime;
+                    hc = (uint128_t) hash_value * m_x + 1;
+                    hash_value = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
                     //2.3 Next element of adjacent list
                     prev_value = (*it_element);
                     ++it_element;
@@ -159,7 +163,9 @@ namespace karp_rabin {
                 //3. Check the last element and compute hash_value with 0s
                 //prev_value is always smaller than block_size
                 auto length = (m_col+1)*m_block_size - (prev_value+1);
-                hash_value = (hash_value * m_h_length[length]) % m_prime;
+                //hash_value = (hash_value * m_h_length[length]) % m_prime;
+                uint128_t hc = (uint128_t) hash_value * m_h_length[length];
+                hash_value = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
                 ++list_id;
             }
             return hash_value;
@@ -175,18 +181,19 @@ namespace karp_rabin {
         const value_type &x_point = m_x_point;
         const value_type &y_point = m_y_point;
 
-        kr_block_adjacent_list_skipping_block() = default;
+        kr_block_faster() = default;
 
-        kr_block_adjacent_list_skipping_block(size_type bs, size_type q, input_type &input){
+        kr_block_faster(size_type bs, size_type x, input_type &input){
             m_block_size = bs;
-            m_prime = q;
+            m_x = x;
             m_iterators_value = std::vector<iterator_value_type>(m_block_size);
             init_iterators_first_row(input.begin());
             m_end_list = input.end();
             m_h_length = std::vector<hash_type >(m_block_size+1);
             m_h_length[0]=1;
             for(size_type i = 1; i <= m_block_size; ++i){
-                m_h_length[i] = (m_h_length[i-1] * m_asize) % m_prime;
+                uint128_t hc = (uint128_t) m_h_length[i-1] * m_x;
+                m_h_length[i] = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
             }
         }
 
@@ -199,30 +206,29 @@ namespace karp_rabin {
         }*/
 
         //! Copy constructor
-        kr_block_adjacent_list_skipping_block(const kr_block_adjacent_list_skipping_block& o)
+        kr_block_faster(const kr_block_faster& o)
         {
             copy(o);
         }
 
         //! Move constructor
-        kr_block_adjacent_list_skipping_block(kr_block_adjacent_list_skipping_block&& o)
+        kr_block_faster(kr_block_faster&& o)
         {
             *this = std::move(o);
         }
 
 
-        kr_block_adjacent_list_skipping_block &operator=(const kr_block_adjacent_list_skipping_block &o) {
+        kr_block_faster &operator=(const kr_block_faster &o) {
             if (this != &o) {
                 copy(o);
             }
             return *this;
         }
-        kr_block_adjacent_list_skipping_block &operator=(kr_block_adjacent_list_skipping_block &&o) {
+        kr_block_faster &operator=(kr_block_faster &&o) {
             if (this != &o) {
 
-                m_asize = std::move(o.m_asize);
+                m_x = std::move(o.m_x);
                 m_block_size = std::move(o.m_block_size);
-                m_prime = std::move(o.m_prime);
                 m_hash = std::move(o.m_hash);
                 m_row = std::move(o.m_row);
                 m_col = std::move(o.m_col);
@@ -236,11 +242,10 @@ namespace karp_rabin {
             return *this;
         }
 
-        void swap(kr_block_adjacent_list_skipping_block &o) {
+        void swap(kr_block_faster &o) {
             // m_bp.swap(bp_support.m_bp); use set_vector to set the supported bit_vector
-            std::swap(m_asize, o.m_asize);
+            std::swap(m_x, o.m_x);
             std::swap(m_block_size, o.m_block_size);
-            std::swap(m_prime, o.m_prime);
             std::swap(m_hash, o.m_hash);
             std::swap(m_row, o.m_row);
             std::swap(m_col, o.m_col);

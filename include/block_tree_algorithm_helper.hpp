@@ -47,6 +47,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <search_util.hpp>
 #include "logger.hpp"
 #include "intersection_lists.hpp"
+#include "kr_block_faster.hpp"
+#include "kr_roll_faster.hpp"
 
 #define NODE_EMPTY 0
 #define NODE_LEAF 1
@@ -603,6 +605,7 @@ namespace block_tree_2d {
         //const uint64_t prime = 27162335252586509; // next prime (2**54 + 2**53 + 2**47 + 2**13)
 
         static constexpr uint64_t prime = 3355443229;
+        //static constexpr uint64_t prime = 3;
 
         template<class iterators_type>
         static void mark_to_delete(const iterators_type &iterators){
@@ -713,7 +716,8 @@ namespace block_tree_2d {
                                                                       std::vector<node_type> &nodes, iterators_type &iterators_to_delete,
                                                                       const bool compute_bits = false){
 
-            typedef karp_rabin::kr_block_adjacent_list_skipping_block<input_type> kr_type;
+            typedef karp_rabin::kr_block_faster<input_type> kr_type;
+            //typedef karp_rabin::kr_block_adjacent_list_skipping_block<input_type> kr_type;
             typedef std::vector<typename kr_type::iterator_value_type> iterators_value_type;
             // typedef uint64_t iterators_type;
             typedef typename hash_table_type::iterator_table_type iterator_table_type;
@@ -729,7 +733,7 @@ namespace block_tree_2d {
             auto blocks_per_row = adjacent_lists.size() / block_size;
             //Total number of blocks
             auto total_blocks = blocks_per_row * blocks_per_row;
-            util::progress_bar m_progress_bar(total_blocks);
+            //util::progress_bar m_progress_bar(total_blocks);
             //IMPORTANT: kr_block, skips every empty block. For this reason, every node of the current level has to be
             //           initialized as empty node.
             size_type leaves = 0;
@@ -809,7 +813,7 @@ namespace block_tree_2d {
                     }
                 }
 
-                m_progress_bar.update(processed_blocks);
+                //m_progress_bar.update(processed_blocks);
                 ++hashes;
 #if BT_VERBOSE
                 std::cout << std::endl;
@@ -817,7 +821,7 @@ namespace block_tree_2d {
             }
             //Delete sources of hash_table
             ht.remove_marked();
-            m_progress_bar.done();
+            //m_progress_bar.done();
             std::cout << "Total hashes: " << hashes << std::endl;
             std::cout << "Total leaves: " << leaves << std::endl;
             //print_ajdacent_list(adjacent_lists);
@@ -1578,7 +1582,8 @@ namespace block_tree_2d {
                                                                  const BitVector &bv, const Rank &rank, const size_type bv_end,
                                                                  std::vector<node_type> &nodes){
 
-            typedef karp_rabin::kr_roll_adjacent_list_skipping_block<input_type> kr_type;
+            typedef karp_rabin::kr_roll_faster<input_type> kr_type;
+            //typedef karp_rabin::kr_roll_adjacent_list_skipping_block<input_type> kr_type;
             typedef typename kr_type::hash_type hash_type;
             typedef std::vector<typename kr_type::iterator_value_type> iterators_value_type;
             // typedef uint64_t iterators_type;
@@ -1590,7 +1595,7 @@ namespace block_tree_2d {
             auto rolls_per_row = adjacent_lists.size() - block_size + 1;
             //Total number of blocks
             auto total_rolls = rolls_per_row * rolls_per_row;
-            util::progress_bar m_progress_bar(total_rolls);
+            //util::progress_bar m_progress_bar(total_rolls);
 
             kr_type kr_roll(block_size, prime, adjacent_lists);
             iterator_table_type it_table;
@@ -1727,10 +1732,10 @@ namespace block_tree_2d {
 #if BT_VERBOSE
                 std::cout << std::endl;
 #endif
-                m_progress_bar.update(processed_rolls);
+                //m_progress_bar.update(processed_rolls);
                 ++hashes;
             }
-            m_progress_bar.done();
+            //m_progress_bar.done();
             std::cout << "Total hashes: " << hashes << std::endl;
             std::cout << "Total leaves2: " << leaves << std::endl;
             //print_ajdacent_list(adjacent_lists);

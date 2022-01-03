@@ -9,7 +9,7 @@ set(PROJECT_CONTACT "adrian.gbrandon@udc.es")
 
 
 #Change to "Debug" when you need it
-set(CMAKE_BUILD_TYPE "Release")
+set(CMAKE_BUILD_TYPE "Debug")
 
 # C++11 compiler Check
 if(NOT CMAKE_CXX_COMPILER_VERSION) # work around for cmake versions smaller than 2.8.10
@@ -259,6 +259,12 @@ target_link_libraries(build_rdf_parallel sdsl divsufsort divsufsort64 OpenMP::Op
 
 add_executable(prepare_movies src/prepare_movies.cpp)
 target_link_libraries(prepare_movies sdsl divsufsort divsufsort64)
+
+add_executable(test_bt test/test_bt.cpp)
+target_link_libraries(test_bt sdsl divsufsort divsufsort64)
+
+add_executable(heap_4ary_test test/heap_4ary_test.cpp)
+target_link_libraries(heap_4ary_test sdsl divsufsort divsufsort64)
 
 add_executable(sa_to_adjacency_lists src/sa_to_adjacency_lists.cpp)
 target_link_libraries(sa_to_adjacency_lists sdsl divsufsort divsufsort64)

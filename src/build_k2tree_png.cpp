@@ -35,6 +35,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sdsl/io.hpp>
 #include <k2_tree_compression_leaves_ones.hpp>
 #include <block_tree_algorithm_helper.hpp>
+#include <kr_block_faster.hpp>
+#include <kr_roll_faster.hpp>
 
 
 

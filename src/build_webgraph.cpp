@@ -93,6 +93,7 @@ void run_build(const std::string &type, const std::string &dataset, const uint64
     /*std::cout << "--------------------Result--------------------" << std::endl;
     block_tree_2d::algorithm::print_ajdacent_list(result);
     std::cout << "----------------------------------------------" << std::endl;*/
+    std::cout << "The Block-tree was built in " << duration << " seconds and uses " << size_bt << " bytes." << std::endl;
 
     std::cout << "Checking results." << std::endl;
     if (result.size() != copy_lists.size()) {
@@ -126,9 +127,9 @@ void run_build(const std::string &type, const std::string &dataset, const uint64
         for (auto i = 0; i < result.size(); ++i) {
             for (auto j = 0; j < result[i].size(); ++j) {
                 if (result[i][j] != copy_lists[i][j]) {
-                  //  std::cout << "Error: the " << j << "-th value of list " << i << " is incorrect." << std::endl;
-                  //  std::cout << "Expected: " << copy_lists[i][j] << std::endl;
-                  //  std::cout << "Obtained: " << result[i][j] << std::endl;
+                    //  std::cout << "Error: the " << j << "-th value of list " << i << " is incorrect." << std::endl;
+                    //  std::cout << "Expected: " << copy_lists[i][j] << std::endl;
+                    //  std::cout << "Obtained: " << result[i][j] << std::endl;
                     error = true;
                 }
             }
@@ -141,7 +142,6 @@ void run_build(const std::string &type, const std::string &dataset, const uint64
         }
     }
     std::cout << std::endl;
-    std::cout << "The Block-tree was built in " << duration << " seconds and uses " << size_bt << " bytes." << std::endl;
     std::cout << duration << " " << size_bt << std::endl;
     sdsl::write_structure<sdsl::JSON_FORMAT>(m_block_tree, name_file + ".json");
     sdsl::write_structure<sdsl::HTML_FORMAT>(m_block_tree, name_file + ".html");

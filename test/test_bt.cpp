@@ -28,32 +28,39 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 //
-// Created by Adrián on 29/07/2019.
+// Created by Adrián on 1/1/22.
 //
+#include <adjacency_list_helper.hpp>
+#include <block_tree_double_hybrid_skipping_block.hpp>
 
-#ifndef INC_UTIL_BITHACKS_HPP
-#define INC_UTIL_BITHACKS_HPP
+int main(int argc, char **argv) {
 
-#define BYTE_2_BITS 8
+    std::vector<std::vector<int64_t>> adjacency_lists(8, std::vector<int64_t>());
+    /*adjacency_lists[0].push_back(0);
+    adjacency_lists[0].push_back(1);
+    adjacency_lists[1].push_back(1);
+    adjacency_lists[2].push_back(0);
+    adjacency_lists[2].push_back(2);
+    adjacency_lists[3].push_back(1);
+    adjacency_lists[3].push_back(2);
+    adjacency_lists[4].push_back(2);
+    adjacency_lists[7].push_back(7);*/
+    adjacency_lists[1].push_back(1);
+    adjacency_lists[1].push_back(2);
+    adjacency_lists[2].push_back(1);
+    adjacency_lists[2].push_back(2);
+    adjacency_lists[3].push_back(5);
+    adjacency_lists[3].push_back(6);
+    adjacency_lists[4].push_back(5);
+    adjacency_lists[4].push_back(6);
 
-namespace util {
+    util::adjacency_list::write(adjacency_lists, "data.txt");
 
-    namespace bithacks {
+    block_tree_2d::block_tree_double_hybrid_skipping_block<dataset_reader::samatrix> bt =
+            block_tree_2d::block_tree_double_hybrid_skipping_block<dataset_reader::samatrix>("data.txt", 2, 8, 0);
 
-        template <class T>
-        inline T abs(const T &v){
-            const T mask = v >> (sizeof(T) * BYTE_2_BITS -1);
-            return ((v ^ mask) - mask);
-        }
 
-        template <class BigInt, class Int>
-        inline Int mersenne_mod(const BigInt value, const Int p, const Int p_pow){
-            Int h = ((Int) value & p) + (Int)(value >> p_pow);
-            h = (h & p) + (h >> p_pow);
-            return h == p ? 0 : h;
-        }
 
-    }
+
+
 }
-
-#endif //INC_2D_BLOCK_TREE_BITHACKS_HPP

@@ -28,32 +28,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 //
-// Created by Adrián on 29/07/2019.
+// Created by Adrián on 31/12/21.
 //
 
-#ifndef INC_UTIL_BITHACKS_HPP
-#define INC_UTIL_BITHACKS_HPP
+#ifndef INC_MATH_UTIL_HPP
+#define INC_MATH_UTIL_HPP
 
-#define BYTE_2_BITS 8
+#include <random>
 
 namespace util {
 
-    namespace bithacks {
+    namespace math {
 
+        // Interval [b, e)
         template <class T>
-        inline T abs(const T &v){
-            const T mask = v >> (sizeof(T) * BYTE_2_BITS -1);
-            return ((v ^ mask) - mask);
-        }
-
-        template <class BigInt, class Int>
-        inline Int mersenne_mod(const BigInt value, const Int p, const Int p_pow){
-            Int h = ((Int) value & p) + (Int)(value >> p_pow);
-            h = (h & p) + (h >> p_pow);
-            return h == p ? 0 : h;
+        inline void rand(T &v, const T b, const T e){
+            v = std::rand() % (e-b) + b;
         }
 
     }
 }
 
-#endif //INC_2D_BLOCK_TREE_BITHACKS_HPP
+#endif //INC_2D_BLOCK_TREE_MATH_UTIL_HPP
