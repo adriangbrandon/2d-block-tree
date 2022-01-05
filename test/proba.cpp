@@ -41,11 +41,33 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <trie.hpp>
 #include <dataset_reader.hpp>
 
+uint32_t& at(uint32_t* arr){
+    return arr[0];
+}
+
 int main(int argc, char **argv) {
 
 
-    std::vector<uint32_t > vec;
-    vec.resize(10);
+    uint32_t* arr = (uint32_t*) std::malloc(5 * sizeof(uint32_t));
+    arr[0] = 1;
+    arr[1] = 2;
+    arr[2] = 3;
+    arr[3] = 4;
+    arr[4] = 5;
+    std::vector<uint32_t > vec = {1,2,3,4,5};
+    auto f = vec.front();
+    ++f;
+    for(const auto a : vec){
+        std::cout << a << std::endl;
+    }
+
+    std::cout << "Array" << std::endl;
+    auto t = at(arr);
+    ++t;
+    for(uint64_t i = 0; i < 5; ++i){
+        std::cout << arr[i] << std::endl;
+    }
+    /*vec.resize(10);
     uint32_t* array = new uint32_t[10];
     array[0] = 5;
     array[1] = 8;
@@ -58,11 +80,8 @@ int main(int argc, char **argv) {
     array[8] = 50;
     array[9] = 33;
 
-    std::memmove(vec.data(), array, sizeof(uint32_t)*10);
+    std::memmove(vec.data(), array, sizeof(uint32_t)*10);*/
 
-    for(const auto &v : vec){
-        std::cout << v << std::endl;
-    }
 
     //std::vector<std::vector<int64_t>> adjacency_lists;
     //dataset_reader::web_graph::read(argv[1], adjacency_lists);

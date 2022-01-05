@@ -34,7 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef INC_2D_BLOCK_TREE_BLOCK_TREE_DHSB_ONES_HPP
 #define INC_2D_BLOCK_TREE_BLOCK_TREE_DHSB_ONES_HPP
 
-#include <block_tree_algorithm_helper.hpp>
+#include <block_tree_algorithm_helper_v2.hpp>
 #include "alternative_code.hpp"
 #include "dataset_reader.hpp"
 #include <logger.hpp>

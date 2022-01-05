@@ -178,7 +178,7 @@ namespace util {
 
         heap_v2() = default;
 
-        explicit heap_v2(const container_type &values){
+        explicit heap_v2(const container_type &values, const size_t max_size = 0){
             m_values = values;
             make_heap(m_values.begin(), m_values.end());
         }
@@ -252,6 +252,26 @@ namespace util {
         void swap(heap_v2 &o) {
             // m_bp.swap(bp_support.m_bp); use set_vector to set the supported bit_vector
             std::swap(m_values, o.m_values);
+        }
+
+        void printa(){
+            for(auto j = 0; j < m_values.size() ; ++j){
+                std::cout << "{" << m_values[j].second << ", " << *(m_values[j].first) << "} , ";
+            }
+            std::cout << std::endl;
+        }
+
+        bool check(){
+            for(auto i = 0; i < m_values.size() ; ++i){
+                if(*(m_values[i].first) < 0 ){
+                    for(auto j = 0; j < m_values.size() ; ++j){
+                        std::cout << "{" << m_values[j].second << ", " << *(m_values[j].first) << "} , ";
+                    }
+                    std::cout << std::endl;
+                    return false;
+                }
+            }
+            return true;
         }
 
     };

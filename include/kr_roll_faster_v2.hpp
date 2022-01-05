@@ -31,8 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Created by Adrián on 15/07/2019.
 //
 
-#ifndef INC_KARP_RABIN_ROLL_FASTER_HPP
-#define INC_KARP_RABIN_ROLL_FASTER_HPP
+#ifndef INC_KARP_RABIN_ROLL_FASTER_V2_HPP
+#define INC_KARP_RABIN_ROLL_FASTER_V2_HPP
 
 #include <cstdint>
 #include <vector>
@@ -91,8 +91,8 @@ namespace karp_rabin {
             }
         };
 
-        typedef util::heap_v2<pq_element_type, std::vector<pq_element_type>> heap_type;
-        //typedef util::heap_4ary<pq_element_type, local_element, compare_element> heap_type;
+        //typedef util::heap_v2<pq_element_type, std::vector<pq_element_type>> heap_type;
+        typedef util::heap_4ary<pq_element_type, local_element, compare_element> heap_type;
 
 
     private:
@@ -107,19 +107,15 @@ namespace karp_rabin {
         hash_type m_hash;
         value_type m_col = 0;
         value_type m_row = -1;
-        value_type m_next_block_row = 0;
-        value_type m_prev_block_row = 0;
         size_type m_number_ones = 0;
-        size_type m_prev_number_ones = 0;
-
         size_type shifts = 0;
         size_type next_row = 0;
 
 
         iterator_list_type m_iterator_list;
         iterator_list_type m_end_list;
-        std::vector<iterator_value_type> m_iterators_end_first_block;
-        std::vector<iterator_value_type > m_iterators;
+        std::vector<iterator_value_type > m_in_iterators;
+        std::vector<iterator_value_type > m_out_iterators;
 
         std::vector<hash_type> m_h_in_right;
         std::vector<hash_type> m_h_out_right;
@@ -129,15 +125,34 @@ namespace karp_rabin {
         //heap_4ary_type m_heap_in;
         //heap_4ary_type m_heap_out;
 
-        hash_type m_prev_hash;
-        std::vector<hash_type> m_prev_kr;
-        std::vector<size_type> m_prev_ones_row;
-
-        void init_iterators(const iterator_list_type &iterator){
-            m_iterator_list = iterator;
-            for(auto list_id = 0; list_id < m_block_size; ++list_id){
-                m_iterators_end_first_block[list_id] = (m_iterator_list+list_id)->begin();
+        inline iterator_value_type get_it_in(const size_type list_id){
+            auto it = (m_iterator_list + list_id)->begin();
+            while(it != (m_iterator_list + list_id)->end() && (std::abs(*it) < m_block_size)){
+                ++it;
             }
+            while(it != (m_iterator_list + list_id)->end() && (*it < 0)){
+                ++it;
+            }
+            return it;
+        }
+
+        inline iterator_value_type get_it_out(const size_type list_id){
+            auto it = (m_iterator_list + list_id)->begin();
+            while(it != (m_iterator_list + list_id)->end() && (*it < 0)){
+                ++it;
+            }
+            return it;
+        }
+
+        inline void next_value(iterator_value_type &it, const size_type list_id){
+            ++it;
+            while(it != (m_iterator_list + list_id)->end() && (*it < 0)){
+                ++it;
+            }
+        }
+
+        inline size_type cyclic_pos(const size_type list_id){
+            return list_id % m_block_size;
         }
 
         void init_hs(){
@@ -163,89 +178,95 @@ namespace karp_rabin {
             }
         }
 
-        void init_heaps(){
+       void init_heaps(){
 
             std::vector<pq_element_type> v_in, v_out;
             for(size_type i = 0; i < m_block_size; ++i){
-                auto it_out = m_iterator_list[m_row+i].begin();
-                while(it_out != m_iterator_list[m_row+i].end() && *it_out < 0){
-                    ++it_out;
+                auto cyclic_i = cyclic_pos(m_row+i);
+                if(m_out_iterators[cyclic_i] != m_iterator_list[m_row+i].end()){
+                    v_out.emplace_back(m_out_iterators[cyclic_i], i);
                 }
-                if(it_out != m_iterator_list[m_row+i].end()){
-                    v_out.emplace_back(it_out, i);
-                }
-
-
-                auto cyclic_i = (m_row + i) % m_block_size;
-                auto it_in = m_iterators_end_first_block[cyclic_i];
-                while(it_in != m_iterator_list[m_row+i].end() && *it_in < 0){
-                    ++it_in;
-                }
-                if(it_in != m_iterator_list[m_row+i].end()){
-                    v_in.emplace_back(it_in,  i);
+                if(m_in_iterators[cyclic_i] != m_iterator_list[m_row+i].end()){
+                    v_in.emplace_back(m_in_iterators[cyclic_i], i);
                 }
             }
             m_heap_in = heap_type(v_in, m_block_size);
             m_heap_out = heap_type(v_out, m_block_size);
         }
 
+       /*void init_heaps(){
+        std::vector<pq_element_type> v_in, v_out;
+        for(size_type i = 0; i < m_block_size; ++i){
+            auto it_out = m_iterator_list[m_row+i].begin();
+            while(it_out != m_iterator_list[m_row+i].end() && *it_out < 0){
+                ++it_out;
+            }
+            if(it_out != m_iterator_list[m_row+i].end()){
+                v_out.emplace_back(it_out, i);
+            }
 
-        int compute_initial_hash_block(){
 
-            m_row = 0;
-            m_prev_block_row = (m_row / m_block_size) * m_block_size;
-            m_next_block_row = (m_row / m_block_size+1) * m_block_size;
-            size_type list_id = 0;
-            hash_type hash_value = 0;
-            //1. Iterate over adjacency lists
-            for(auto it_list = m_iterator_list; it_list != m_iterator_list + m_block_size; ++it_list){
+            auto cyclic_i = (m_row + i) % m_block_size;
+            auto it_in = m_iterators_end_first_block[cyclic_i];
+            while(it_in != m_iterator_list[m_row+i].end() && *it_in < 0){
+                ++it_in;
+            }
+            if(it_in != m_iterator_list[m_row+i].end()){
+                v_in.emplace_back(it_in,  i);
+            }
+        }
+        m_heap_in = heap_type(v_in, m_block_size);
+        m_heap_out = heap_type(v_out, m_block_size);
+    }*/
+
+        //TODO: adrian cambiar nombre a compute_block
+        int compute_block(){
+
+            ++m_row;
+            m_col = 0;
+            //1. Prepare iterators
+            for(size_type i = 0; i < m_block_size; ++i){
+                auto it_in = get_it_in(row + i);
+                auto it_out = get_it_out(row + i);
+                auto cyclic_i = cyclic_pos(row+i);
+                m_in_iterators[cyclic_i] = it_in;
+                m_out_iterators[cyclic_i] = it_out;
+            }
+
+            //2. Compute hash
+            uint128_t hc;
+            size_type hash_value = 0;
+            for(size_type i = 0; i < m_block_size; ++i){
+                auto cyclic_i = cyclic_pos(row+i);
                 int64_t prev_value = -1;
-                //1.2. Iterate over the elements of an adjacent list
-                auto &it_element = m_iterators_end_first_block[list_id];
-                size_type hash_row = 0, n_ones_row = 0;
-                while(it_element != it_list->end() && std::abs(*it_element) < m_block_size){
-                    if((*it_element) >= 0){
+                auto it = m_out_iterators[cyclic_i];
+                while(it != (m_iterator_list+row+i)->end() && std::abs(*it) < m_block_size){
+                    if((*it) >= 0){
                         //1.2.1 Compute hash_value with 0s
-                        auto length = (*it_element) - (prev_value+1);
+                        auto length = (*it) - (prev_value+1);
                         //hash_row = (hash_row * m_h_length[length]) % m_prime;
-                        uint128_t hc = (uint128_t) m_h_length[length] * hash_row;
-                        hash_row = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
+                        hc = (uint128_t) m_h_length[length] * hash_value;
+                        hash_value = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
                         //1.2.2 Compute hash_value with 1
                         ++m_number_ones;
-                        ++n_ones_row;
                         //hash_row = (hash_row * m_asize + 1) % m_prime;
-                        hc = (uint128_t) hash_row * m_x + 1;
-                        hash_row = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
+                        hc = (uint128_t) hash_value * m_x + 1;
+                        hash_value = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
                         //1.2.3 Next element of adjacent list
-                        prev_value = (*it_element);
+                        prev_value = (*it);
                     }
-                    ++it_element;
+                    ++it;
                 }
                 //1.3. Check the last element and compute hash_value with 0s
                 //prev_value is always smaller than block_size
                 auto length = m_block_size - (prev_value+1);
                 //hash_row = (hash_row * m_h_length[length]) % m_prime;
-                uint128_t hc = (uint128_t) m_h_length[length] * hash_row;
-                hash_row = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
-
-                while(it_element != it_list->end() && (*it_element) < 0){
-                    ++it_element;
-                }
-
-                //1.4 Init the hash value per row and compute the hash of the submatrix
-                m_prev_kr[list_id] = hash_row;
-                m_prev_ones_row[list_id] = n_ones_row;
-                hc = (uint128_t) m_h_in_right[list_id] * hash_row;
-                hc = (uint128_t) util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow) + hash_value;
+                hc = (uint128_t) m_h_length[length] * hash_value;
                 hash_value = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
-                ++list_id;
             }
-            m_hash = hash_value;
-            m_prev_hash = m_hash;
-            m_prev_number_ones = m_number_ones;
-            //Initial iterators at the end of first block
-            m_iterators = m_iterators_end_first_block;
 
+            m_hash = hash_value;
+            //std::cout << "shift row: " << m_row << " col: " << m_col << std::endl;
             //2. Initialize heaps
             init_heaps();
             return (m_number_ones >= 2);
@@ -277,11 +298,8 @@ namespace karp_rabin {
                         m_hash = 0; //previous hash
                         m_number_ones = 0; //previous number ones
                         auto out_top = m_heap_out.top();
-                        ++out_top.first;
-                        //Skip deleted elements
-                        while(out_top.first != (m_iterator_list + m_row + out_top.second)->end() && *out_top.first < 0){
-                            ++out_top.first;
-                        }
+                        next_value(out_top.first, m_row + out_top.second);  //Skip deleted elements
+                        m_out_iterators[cyclic_pos(m_row + out_top.second)] = out_top.first;
                         if(out_top.first != (m_iterator_list + m_row + out_top.second)->end()){
                             m_heap_out.update_top({out_top.first, out_top.second});
                             //m_heap_out.update_top(out_top);
@@ -302,13 +320,9 @@ namespace karp_rabin {
                 //new_hash += (m_prime - m_h_out_right[out_top.second]);
                 //new_hash = new_hash % m_prime;
                 //m_heap_out.pop();
-                ++out_top.first;
                 --m_number_ones;
-                //Skip deleted elements
-                while(out_top.first != (m_iterator_list + m_row + out_top.second)->end() && *out_top.first < 0){
-                    ++out_top.first;
-                }
-
+                next_value(out_top.first, m_row + out_top.second);  //Skip deleted elements
+                m_out_iterators[cyclic_pos(m_row + out_top.second)] = out_top.first;
                 if(out_top.first != (m_iterator_list + m_row + out_top.second)->end()){
                     m_heap_out.update_top({out_top.first, out_top.second});
                     //m_heap_out.update_top(out_top);
@@ -327,12 +341,8 @@ namespace karp_rabin {
                 //new_hash = (new_hash + m_h_in_right[in_top.second]) % m_prime;
                 ++m_number_ones;
                 //m_heap_in.pop();
-                ++in_top.first;
-                //Skip deleted elements
-                while(in_top.first != (m_iterator_list + m_row + in_top.second)->end() && *in_top.first < 0){
-                    ++in_top.first;
-                }
-                m_iterators[(m_row + in_top.second) % m_block_size] = in_top.first;
+                next_value(in_top.first, m_row + in_top.second);  //Skip deleted elements
+                m_in_iterators[cyclic_pos(m_row + in_top.second)] = in_top.first;
                 if(in_top.first != (m_iterator_list + m_row + in_top.second)->end()){
                     //m_heap_in.update_top(in_top);
                     m_heap_in.update_top({in_top.first, in_top.second});
@@ -345,84 +355,6 @@ namespace karp_rabin {
             return (m_number_ones >= 2);
         }
 
-        /**
-         *
-         * @return 0 = empty, 1 = ok, 2 = next row
-         */
-        int state_next_row(){
-            //if(m_iterator_list + m_row + m_block_size == m_end_list) return false;
-            ++m_row;
-            m_prev_block_row = (m_row / m_block_size) * m_block_size;
-            m_next_block_row = (m_row / m_block_size+1) * m_block_size;
-            m_col = 0;
-            auto new_hash = m_prev_hash;
-            //Delete previous part
-            auto cyclic_i = (m_row-1) % m_block_size;
-            uint128_t hc = (uint128_t) m_prev_kr[cyclic_i] * m_h_in_right[0];
-            auto first_row = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
-            //auto first_row = (m_prev_kr[cyclic_i] * m_h_in_right[0]) % m_prime;
-            hc = (uint128_t) new_hash - first_row;
-            new_hash = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
-            //new_hash += (m_prime - first_row);
-            //new_hash = new_hash % m_prime;
-            hc = (uint128_t) new_hash * m_h_in_right[m_block_size-2];
-            new_hash = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
-            //new_hash = (new_hash * m_h_in_right[m_block_size-2]) % m_prime;
-            m_number_ones = m_prev_number_ones - m_prev_ones_row[cyclic_i];
-            // Compute hash of last row
-            hash_type hash_row = 0, n_ones = 0;
-            size_type last_row = m_row + m_block_size-1;
-            auto prev_value = (size_type) -1;
-            auto it_element = (m_iterator_list + last_row)->begin();
-            while(it_element != (m_iterator_list + last_row)->end() && std::abs(*it_element) < m_block_size){
-                // Compute hash_value with 0s
-                if(*it_element >= 0){
-                    auto length = (*it_element) - (prev_value+1);
-                    hc = (uint128_t) hash_row * m_h_length[length];
-                    hash_row = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
-                    // Compute hash_value with 1
-                    ++m_number_ones;
-                    ++n_ones;
-                    hc = (uint128_t) hash_row * m_x + 1;
-                    hash_row = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
-                    //hash_row = (hash_row * m_asize + 1) % m_prime;
-                    // Next element of adjacent list
-                    prev_value = (*it_element);
-                }
-                ++it_element;
-            }
-            // Check the last element and compute hash_value with 0s
-            //prev_value is always smaller than block_size
-            auto length = m_block_size - (prev_value+1);
-            hc = (uint128_t) hash_row * m_h_length[length];
-            hash_row = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
-            //hash_row = (hash_row * m_h_length[length]) % m_prime;
-            //1.4 Init the hash value per row and compute the hash of the submatrix
-            hc = (uint128_t) hash_row + new_hash;
-            new_hash = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
-            //new_hash = (new_hash + hash_row) % m_prime;
-            m_hash = new_hash;
-            m_prev_hash = m_hash;
-            m_prev_number_ones = m_number_ones;
-
-            while(it_element != (m_iterator_list + last_row)->end() && (*it_element) < 0){
-                ++it_element;
-            }
-            //1.5 Store prev hash and position of next one
-            m_prev_kr[cyclic_i] = hash_row;
-            m_prev_ones_row[cyclic_i] = n_ones;
-            m_iterators_end_first_block[cyclic_i] = it_element;
-            m_iterators = m_iterators_end_first_block;
-
-            //1.6 Init heaps
-            init_heaps();
-            if(m_heap_in.empty() && m_heap_out.empty()){
-                return 2;
-            }
-            ++next_row;
-            return (m_number_ones >= 2);
-
-        }
 
         void copy(const kr_roll_faster &o){
             m_x = o.m_x;
@@ -435,8 +367,8 @@ namespace karp_rabin {
             m_row = o.m_row;
             m_iterator_list = o.m_iterator_list;
             m_end_list = o.m_end_list;
-            m_iterators_end_first_block = o.m_iterators_end_first_block;
-            m_iterators = o.m_iterators;
+            m_in_iterators = o.m_in_iterators;
+            m_out_iterators = o.m_out_iterators;
 
             m_h_in_right = o.m_h_in_right;
             m_h_out_right= o.m_h_out_right;
@@ -444,10 +376,7 @@ namespace karp_rabin {
             m_heap_in = o.m_heap_in;
             m_heap_out = o.m_heap_out;
 
-            m_prev_hash = o.m_prev_hash;
-            m_prev_kr = o.m_prev_kr;
             m_number_ones = o.m_number_ones;
-            m_prev_ones_row = o.m_prev_ones_row;
 
         }
 
@@ -456,9 +385,8 @@ namespace karp_rabin {
         const hash_type &hash = m_hash;
         const value_type &row = m_row;
         const value_type &col = m_col;
-        const value_type &next_block_row = m_next_block_row;
-        const value_type &prev_block_row = m_prev_block_row;
-        std::vector<iterator_value_type > &iterators = m_iterators;
+        std::vector<iterator_value_type > &in_iterators = m_in_iterators;
+        std::vector<iterator_value_type > &out_iterators = m_out_iterators;
         heap_type &heap_in = m_heap_in;
         heap_type &heap_out = m_heap_out;
 
@@ -466,14 +394,12 @@ namespace karp_rabin {
             m_block_size = bs;
             m_x = x;
             m_total_shifts = std::distance(input.begin(), input.end()) - m_block_size + 1;
-            m_iterators_end_first_block = std::vector<iterator_value_type>(m_block_size);
-            m_iterators = std::vector<iterator_value_type>(m_block_size);
+            m_in_iterators = std::vector<iterator_value_type>(m_block_size);
+            m_out_iterators = std::vector<iterator_value_type>(m_block_size);
             m_h_in_right = std::vector<hash_type>(m_block_size);
             m_h_out_right = std::vector<hash_type>(m_block_size);
-            m_prev_kr = std::vector<hash_type>(m_block_size);
-            m_prev_ones_row = std::vector<hash_type>(m_block_size);
             m_end_list = input.end();
-            init_iterators(input.begin());
+            m_iterator_list = input.begin();
             init_hs();
             m_h_length = std::vector<hash_type >(m_block_size+1);
             m_h_length[0]=1;
@@ -516,8 +442,8 @@ namespace karp_rabin {
 
                 m_iterator_list = std::move(o.m_iterator_list);
                 m_end_list = std::move(o.m_end_list);
-                m_iterators_end_first_block = std::move(o.m_iterators_end_first_block);
-                m_iterators = std::move(o.m_iterators);
+                m_in_iterators = std::move(o.m_in_iterators);
+                m_out_iterators = std::move(o.m_out_iterators);
 
                 m_h_in_right = std::move(o.m_h_in_right);
                 m_h_out_right= std::move(o.m_h_out_right);
@@ -525,10 +451,7 @@ namespace karp_rabin {
                 m_heap_in = std::move(o.m_heap_in);
                 m_heap_out = std::move(o.m_heap_out);
 
-                m_prev_hash = std::move(o.m_prev_hash);
-                m_prev_kr = std::move(o.m_prev_kr);
                 m_number_ones = std::move(o.m_number_ones);
-                m_prev_ones_row = std::move(o.m_prev_ones_row);
             }
             return *this;
         }
@@ -545,8 +468,8 @@ namespace karp_rabin {
 
             std::swap(m_iterator_list, o.m_iterator_list);
             std::swap(m_end_list, o.m_end_list);
-            std::swap(m_iterators_end_first_block, o.m_iterators_end_first_block);
-            std::swap(m_iterators, o.m_iterators);
+            std::swap(m_in_iterators, o.m_in_iterators);
+            std::swap(m_out_iterators, o.m_out_iterators);
 
             std::swap(m_h_in_right, o.m_h_in_right);
             std::swap(m_h_out_right, o.m_h_out_right);
@@ -554,21 +477,26 @@ namespace karp_rabin {
             std::swap(m_heap_in, o.m_heap_in);
             std::swap(m_heap_out, o.m_heap_out);
 
-            std::swap(m_prev_hash, o.m_prev_hash);
-            std::swap(m_prev_kr, o.m_prev_kr);
             std::swap(m_number_ones, o.m_number_ones);
-            std::swap(m_prev_ones_row, o.m_prev_ones_row);
         }
 
         bool next(){
             //std::cout << "calling next" << std::endl;
-          /*  if(m_row == 11807 && m_col >= 9347) {
+            /*if(m_row == 11807 && m_col >= 9347) {
                 std::cout << "Row: " << m_row << " col: " << m_col << std::endl;
                 m_heap_out.printa();
             }*/
+            /*std::cout << "Row: " << m_row << " Col: " << m_col << std::endl;
+            std::cout << "Out" << std::endl;
+            m_heap_out.printa();
+            std::cout << "In" << std::endl;
+            m_heap_in.printa();
+            std::cout << std::endl;*/
+           // if(!m_heap_in.check()) exit(1);
+           // if(!m_heap_out.check()) exit(2);
             int state;
             if(m_row == -1){
-                state = compute_initial_hash_block();
+                state = compute_block();
                 //if(m_block_size == 4) std::cout << "initial_block: " << m_hash << "n_ones: " << m_number_ones << std::endl;
             }else {
                 state = state_shift_right();
@@ -580,9 +508,8 @@ namespace karp_rabin {
                     //if(m_block_size == 4) std::cout << "shift_right2: " << m_hash << "n_ones: " << m_number_ones << std::endl;
                 }else{
                     if(m_iterator_list + m_row + m_block_size == m_end_list) return false;
-                    state = state_next_row();
+                    state = compute_block();
                     //if(m_block_size == 64) std::cout << "next_row: " << m_hash << "n_ones: " << m_number_ones << std::endl;
-                    //std::cout << " next_row" << std::endl;
                     //std::cout << "b2: " << m_number_ones << std::endl;
                 }
             }
@@ -596,61 +523,34 @@ namespace karp_rabin {
             }
         }*/
 
-        void update_prev_hash_prev_row(){
-            //std::cout << "calling prev_hash"  << m_row << ", " << m_col << std::endl;
-            auto start = m_row % m_block_size;
-            //auto last = m_block_size - start;
-            uint128_t hc;
-            for(auto cyclic_i = start; cyclic_i < m_block_size; ++cyclic_i){
-                hc = (uint128_t) m_prev_kr[cyclic_i] * m_h_in_right[cyclic_i];
-                auto row_delete = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
-                //auto row_delete = (m_prev_kr[cyclic_i] * m_h_in_right[cyclic_i]) % m_prime;
-                hc = (uint128_t) m_prev_hash - row_delete;
-                m_prev_hash = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
-                //m_prev_hash = (m_prev_hash + (m_prime - row_delete)) % m_prime;
-                m_prev_number_ones = m_prev_number_ones - m_prev_ones_row[cyclic_i];
-                m_prev_kr[cyclic_i] = 0;
-                m_prev_ones_row[cyclic_i] = 0;
 
-            }
-        }
 
-        void redo_heap_in(){
-            std::vector<pq_element_type> v_in;
-            for(size_type i = 0; i < m_block_size; ++i){
-                auto cyclic_i = (m_row + i) % m_block_size;
-                auto &it_in = m_iterators[cyclic_i];
-                while(it_in != m_iterator_list[m_row+i].end() && *it_in < 0){
-                    ++it_in;
+        void redo_heap(heap_type &heap, std::vector<iterator_value_type> &iterators) {
+            std::vector<pq_element_type> v;
+            for (size_type i = 0; i < m_block_size; ++i) {
+                auto cyclic_i = cyclic_pos(m_row + i);
+                auto &it = iterators[cyclic_i];
+                if (it != (m_iterator_list + m_row + i)->end() && *it < 0) {
+                    next_value(it, m_row + i);
                 }
-                if(it_in != m_iterator_list[m_row+i].end()) {
-                    v_in.emplace_back(it_in, i);
+                if (it != (m_iterator_list + m_row + i)->end()) {
+                    v.emplace_back(it, i);
                 }
-            }
-            m_heap_in.clear();
-            m_heap_in = heap_type(v_in, m_block_size);
-            //m_heap_in = heap_4ary_type(m_block_size, v_in);
 
+            }
+            heap.clear();
+            heap = heap_type(v, m_block_size);
         }
 
-        void update_prev_hash_next_row(){
-            //std::cout << "calling next_hash en " << m_row << ", " << m_col << std::endl;
-            auto last = m_row % m_block_size;
-            auto start = m_block_size - last;
-            uint128_t hc;
-            for(auto cyclic_i = 0; cyclic_i < last; ++cyclic_i){
-                hc = (uint128_t) m_prev_kr[cyclic_i] * m_h_in_right[start + cyclic_i];
-                auto row_delete = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
-                //auto row_delete = (m_prev_kr[cyclic_i] * m_h_in_right[start + cyclic_i]) % m_prime;
-                //hc = (uint128_t) m_prev_hash + (m_prime - row_delete);
-                hc = (uint128_t) m_prev_hash - row_delete;
-                m_prev_hash = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
-                //m_prev_hash = (m_prev_hash + (m_prime - row_delete)) % m_prime;
-                m_prev_number_ones = m_prev_number_ones - m_prev_ones_row[cyclic_i];
-                m_prev_kr[cyclic_i] = 0;
-                m_prev_ones_row[cyclic_i] = 0;
-            }
+       void redo_heap_in(){
+           redo_heap(m_heap_in, m_in_iterators);
+       }
+
+
+        void redo_heap_out(){
+            redo_heap(m_heap_out, m_out_iterators);
         }
+
 
         void print(){
             std::cout << "shifts: " << shifts << " next_row: " << next_row << std::endl;

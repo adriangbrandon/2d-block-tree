@@ -59,7 +59,7 @@ namespace util {
         void copy(heap_4ary &o){
             m_bytes = o.m_bytes;
             m_size = o.m_size;
-            std::memcpy(m_array, o.m_array, o.m_bytes);
+            std::memcpy(m_array, o.m_array, m_bytes);
         }
 
         /*inline bool compare(value_type x, value_type y){
@@ -124,28 +124,33 @@ namespace util {
 
         }
 
+
         void sift_up(size_type pos){
 
             if(m_size > 1) {
 
                 size_type parent = (pos-1) / 4;
-                if(!m_compare(m_array[parent], m_array[pos])){
-                    value_type val = std::move(m_array[pos]);
-                    do {
-                        m_array[pos] = std::move(m_array[parent]);
-                        pos = parent;
-                        if(pos == 0) break;
-                        parent = (pos-1) / 4;
-
-                    }while(!m_compare(m_array[parent], val));
-                    m_array[pos] = std::move(val);
+                if(m_compare(m_array[parent], m_array[pos])){
+                    return;
                 }
+
+                value_type val = std::move(m_array[pos]);
+                do {
+                    m_array[pos] = std::move(m_array[parent]);
+                    pos = parent;
+                    if(pos == 0) break;
+                    parent = (pos-1) / 4;
+
+                }while(!m_compare(m_array[parent], val));
+                m_array[pos] = std::move(val);
+
+
             }
         }
 
         void make_heap(){
             if (m_size > 1){
-                for (int32_t i = (m_size - 1) / 4; i >= 0; --i){
+                for (int32_t i = (m_size - 2) / 4; i >= 0; --i){
                     sift_down(i, m_size-1);
                 }
             }
@@ -157,6 +162,8 @@ namespace util {
                 sift_down(0, m_size - 2);
             }
         }
+
+
 
         inline void push_heap(){
             sift_up(m_size-1);
@@ -180,7 +187,7 @@ namespace util {
             m_array = (value_type*) aligned_alloc(64, m_bytes);
         }
 
-        explicit heap_4ary(const size_type max_size, const std::vector<value_type> &c){
+        explicit heap_4ary(std::vector<value_type> &c, const size_type max_size){
             m_size = c.size();
             m_bytes = (max_size * sizeof(value_type) + 63) / 64 * 64;
             m_array = (value_type*) aligned_alloc(64, m_bytes);
@@ -188,9 +195,18 @@ namespace util {
             make_heap();
         }
 
-        inline value_type top(){
+        inline value_type& top(){
             return m_array[0];
         }
+
+        inline value_type& get_pos(size_type pos){
+            return m_array[pos];
+        }
+
+        inline size_type parent(size_type i){
+            return (i-1) / 4;
+        }
+
 
         inline void pop(){
             pop_heap();
@@ -203,13 +219,14 @@ namespace util {
             push_heap();
         }
 
-        inline void update_top(const value_type &v){
+                inline void update_top(const value_type &v){
             m_array[0] = v;
             sift_down(0, m_size-1);
         }
 
         inline void clear(){
             m_size = 0;
+            m_bytes = 0;
             std::free(m_array);
         }
 
@@ -245,7 +262,7 @@ namespace util {
             if (this != &o) {
                 m_bytes = std::move(o.m_bytes);
                 m_size = std::move(o.m_size);
-                m_array = std::move(o.m_array);
+                m_array = o.m_array;
             }
             return *this;
         }
@@ -260,10 +277,30 @@ namespace util {
         void print(){
             std::cout << "size: " << m_size << std::endl;
             std::cout << "{ ";
-            /*for(auto i = 0; i < m_size ; ++i){
+            for(auto i = 0; i < m_size ; ++i){
                 std::cout << m_array[i] << ", ";
-            }*/
+            }
             std::cout << "}" << std::endl;
+        }
+
+        void printa(){
+            for(auto j = 0; j < m_size ; ++j){
+                std::cout << "{" << m_array[j].second << ", " << *(m_array[j].first) << "} , ";
+            }
+            std::cout << std::endl;
+        }
+
+        bool check(){
+            for(auto i = 0; i < m_size ; ++i){
+                if(*(m_array[i].first) < 0 ){
+                    for(auto j = 0; j < m_size ; ++j){
+                        std::cout << "{" << m_array[j].second << ", " << *(m_array[j].first) << "} , ";
+                    }
+                    std::cout << std::endl;
+                    return false;
+                }
+            }
+            return true;
         }
 
     };

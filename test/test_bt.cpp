@@ -35,24 +35,40 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 int main(int argc, char **argv) {
 
-    std::vector<std::vector<int64_t>> adjacency_lists(8, std::vector<int64_t>());
-    /*adjacency_lists[0].push_back(0);
-    adjacency_lists[0].push_back(1);
+    uint64_t n = 9;
+    std::vector<std::vector<int64_t>> adjacency_lists(n, std::vector<int64_t>());
+    /*for(uint64_t i = 0; i < n; ++i){
+        adjacency_lists[i].push_back(i);
+        auto j = 2*i+1;
+        while(j < n){
+            adjacency_lists[i].push_back(j);
+            j = j + i+1;
+        }
+    }*/
+    adjacency_lists[0].push_back(0);
+    adjacency_lists[0].push_back(3);
     adjacency_lists[1].push_back(1);
-    adjacency_lists[2].push_back(0);
-    adjacency_lists[2].push_back(2);
-    adjacency_lists[3].push_back(1);
-    adjacency_lists[3].push_back(2);
-    adjacency_lists[4].push_back(2);
-    adjacency_lists[7].push_back(7);*/
-    adjacency_lists[1].push_back(1);
+    adjacency_lists[1].push_back(2);
+    adjacency_lists[2].push_back(3);
+    adjacency_lists[3].push_back(4);
+    adjacency_lists[4].push_back(6);
+    adjacency_lists[5].push_back(0);
+    adjacency_lists[8].push_back(2);
+
+    //adjacency_lists[2].push_back(0);
+    //adjacency_lists[2].push_back(2);
+    //adjacency_lists[3].push_back(1);
+    //adjacency_lists[3].push_back(2);
+    //adjacency_lists[4].push_back(2);
+    //adjacency_lists[7].push_back(7);
+    /*adjacency_lists[1].push_back(1);
     adjacency_lists[1].push_back(2);
     adjacency_lists[2].push_back(1);
     adjacency_lists[2].push_back(2);
     adjacency_lists[3].push_back(5);
     adjacency_lists[3].push_back(6);
     adjacency_lists[4].push_back(5);
-    adjacency_lists[4].push_back(6);
+    adjacency_lists[4].push_back(6);*/
 
     util::adjacency_list::write(adjacency_lists, "data.txt");
 

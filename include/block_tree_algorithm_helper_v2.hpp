@@ -48,7 +48,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "logger.hpp"
 #include "intersection_lists.hpp"
 #include "kr_block_faster.hpp"
-#include "kr_roll_faster.hpp"
+#include "kr_roll_faster_v2.hpp"
 
 #define NODE_EMPTY 0
 #define NODE_LEAF 1
@@ -498,7 +498,7 @@ namespace block_tree_2d {
                         redo_heap_in = true;
                     }*/
                     if(sx_b2 == 5408 && ex_b2 == 5439 && sy_b2 == 4480 && ey_b2 == 4511){
-                        //std::cout << "Remove-> row: " << sy_b2 + row << " col: " << *it_b2 << std::endl;
+                      //  std::cout << "Remove-> row: " << sy_b2 + row << " col: " << *it_b2 << std::endl;
                     }
                     *it_b2 = -(*it_b2+1);
                     last = it_b2;
@@ -525,6 +525,66 @@ namespace block_tree_2d {
                 ++row;
             }
             return redo_heap_in;
+
+        }
+
+        template <class input_type, class iterators_type>
+        static std::pair<bool, bool> delete_info_shift(input_type &adjacent_lists,
+                                      const value_type sx_b2, const value_type sy_b2,
+                                      const value_type ex_b2, const value_type ey_b2,
+                                      const iterators_type &iterators_b2,
+                                      const value_type sy_b1, const value_type ey_b1,
+                                      const iterators_type &in_iterators,
+                                      const iterators_type &out_iterators,
+                                      const size_type block_size){
+
+            size_type row = 0;
+            bool redo_heap_in = false, redo_heap_out = false;
+            while(row < block_size){
+                auto beg_list_b2 = (adjacent_lists.begin() + sy_b2 + row)->begin();
+                auto cyclic_b2 = (sy_b2 + row) % block_size;
+                auto it_b2 = iterators_b2[cyclic_b2];
+                auto last = it_b2;
+                auto count = 0;
+                while(!(adjacent_lists.begin() + sy_b2 + row)->empty() &&
+                      it_b2 != beg_list_b2 && *(--it_b2) >= sx_b2) {
+                    //auto new_it = (adjacent_lists.begin() + sy_b2 + row)->erase(it_b2);
+                    //std::cout << "Remove at " << (sy_b2+row) << " value: " << *it_b2 << std::endl;
+                    //TODO: probando
+                    //IMPORTANT: what happen when the next 1 is going to be deleted?
+                    //- We have to update the heap with the new kr_iterator
+                    /*if(kr_iterators[cyclic_b2] == it_b2){
+                        redo_heap_in = true;
+                    }*/
+                    if(sx_b2 == 5408 && ex_b2 == 5439 && sy_b2 == 4480 && ey_b2 == 4511){
+                        //  std::cout << "Remove-> row: " << sy_b2 + row << " col: " << *it_b2 << std::endl;
+                    }
+                    *it_b2 = -(*it_b2+1);
+                    last = it_b2;
+                    ++count;
+                    if(sx_b2 == 5408 && ex_b2 == 5439 && sy_b2 == 4480 && ey_b2 == 4511){
+                        //heap_out.printa();
+                    }
+
+
+                }
+
+                //IMPORTANT: what happen when the next 1 is going to be deleted?
+                //- We have to update the iterator of kr_iterator to the next one
+                //- We have to update the heap with the new kr_iterator (if it is pointing to a number)
+                /*if(sy_b1 <= sy_b2+row && sy_b2+row <= ey_b1 && count > 0
+                    && last == kr_iterators[cyclic_b2]){
+                    auto it = last + count; //in case of being negative, redo_heap_in updates it to the next positive
+                    kr_iterators[cyclic_b2] = it;
+                    redo_heap_in = true;
+                }*/
+                if(sy_b1 <= sy_b2+row && sy_b2+row <= ey_b1 && count > 0){
+                    redo_heap_in  = redo_heap_in || (*in_iterators[cyclic_b2]<0);
+                    redo_heap_out = redo_heap_out || (*out_iterators[cyclic_b2]<0);
+                }
+                ++row;
+            }
+            return {redo_heap_in, redo_heap_out};
 
         }
 
@@ -1631,9 +1691,13 @@ namespace block_tree_2d {
                     }*/
 
                     iterator_hash_value_type target;
-                    if(exist_identical(adjacent_lists, kr_roll.col, kr_roll.row, ex_source, ey_source,
+                    /*if(exist_identical(adjacent_lists, kr_roll.col, kr_roll.row, ex_source, ey_source,
                                        kr_roll.iterators, it_hash->second, block_size,
-                                       sx_target, sy_target, ex_target, ey_target, iterators_target, target)){ //check if they are identical
+                                       sx_target, sy_target, ex_target, ey_target, iterators_target, target)){ //check if they are identical*/
+                    if(exist_identical(adjacent_lists, kr_roll.col, kr_roll.row, ex_source, ey_source,
+                                       kr_roll.in_iterators, it_hash->second, block_size,
+                                       sx_target, sy_target, ex_target, ey_target, iterators_target, target)){
+
 #if BT_VERBOSE
                         std::cout << "Target: (" << sx_target << ", " << sy_target << ")" << std::endl;
                         std::cout << "Pointer to source in (x,y): " << kr_roll.col << ", " << kr_roll.row << std::endl;
@@ -1702,19 +1766,27 @@ namespace block_tree_2d {
 
                         size_type bits_k2 = 0;
                         //Delete info of <target> from adjacency list
-                        auto redo_heap_in = delete_info_shift(adjacent_lists, sx_target, sy_target, ex_target, ey_target, iterators_target,
+                        /*auto redo_heap_in = delete_info_shift(adjacent_lists, sx_target, sy_target, ex_target, ey_target, iterators_target,
                                                               kr_roll.row, kr_roll.row + block_size-1, kr_roll.iterators, kr_roll.heap_in, kr_roll.heap_out, block_size);
+                                                              */
+                        auto redo = delete_info_shift(adjacent_lists, sx_target, sy_target, ex_target, ey_target, iterators_target,
+                                                      kr_roll.row, kr_roll.row + block_size-1, kr_roll.in_iterators, kr_roll.out_iterators, block_size);
 
                         //IMPORTANT: some elements inside the heap (heap_in) were removed
                         // - Update heap_in
-                        if(redo_heap_in){
+                        //if(redo_heap_in){
+                        if(redo.first){
                             kr_roll.redo_heap_in();
+                        }
+
+                        if(redo.second){
+                            kr_roll.redo_heap_out();
                         }
 
                         //IMPORTANT: we delete the first block of the same row
                         // - We have to update the prev_hash to 0
                         // Notice that kr_roll.row is always kr_roll.row % block_size = 0
-                        if(sx_target == 0 && sy_target == kr_roll.prev_block_row){
+                        /*if(sx_target == 0 && sy_target == kr_roll.prev_block_row){
                             kr_roll.update_prev_hash_prev_row();
                         }
 
@@ -1723,7 +1795,7 @@ namespace block_tree_2d {
                         //   first block in the next row
                         if(sx_target == 0 && sy_target == kr_roll.next_block_row){
                             kr_roll.update_prev_hash_next_row();
-                        }
+                        }*/
 
                         auto z_order_target = codes::zeta_order::encode(sx_target / block_size, sy_target / block_size);
                         size_type pos_target;

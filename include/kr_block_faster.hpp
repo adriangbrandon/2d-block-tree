@@ -168,6 +168,7 @@ namespace karp_rabin {
                 hash_value = util::bithacks::mersenne_mod(hc, m_prime, m_prime_pow);
                 ++list_id;
             }
+           // std::cout << "block row: " << row << " col: " << col << " hash: " << hash_value << std::endl;
             return hash_value;
         }
 

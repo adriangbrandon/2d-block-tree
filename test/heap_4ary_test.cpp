@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
 #include <heap_4ary.hpp>
+#include <heap_v2.hpp>
 #include <iostream>
 #include <vector>
 
@@ -70,11 +71,25 @@ int main(int argc, char **argv) {
     m_heap.push(3);
     m_heap.print();*/
 
-    std::vector<uint64_t> va = {5, 4, 9, 8, 1, 6, 7, 2, 3};
-    util::heap_4ary<uint64_t, local_min, compare_min> m_heap(9, va);
-
+    std::vector<uint64_t> va = {};
+    util::heap_4ary<uint64_t, local_min, compare_min> m_heap(va, 64);
+    for(int i = 0; i < 64; ++i){
+        auto a = rand() % 255;
+        if(i < 20){
+            m_heap.push(a);
+        }else{
+            m_heap.update_top(a);
+        }
+        m_heap.print();
+    }
+    auto b = m_heap.top();
+    m_heap.pop();
     while(!m_heap.empty()){
-        std::cout << m_heap.top() << std::endl;
+        if(m_heap.top()<b){
+            std::cout << "Error" << std::endl;
+            exit(0);
+        }
+        b = m_heap.top();
         m_heap.pop();
         m_heap.print();
     }
