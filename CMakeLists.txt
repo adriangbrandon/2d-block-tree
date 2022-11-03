@@ -9,7 +9,7 @@ set(PROJECT_CONTACT "adrian.gbrandon@udc.es")
 
 
 #Change to "Debug" when you need it
-set(CMAKE_BUILD_TYPE "Debug")
+set(CMAKE_BUILD_TYPE "Release")
 
 # C++11 compiler Check
 if(NOT CMAKE_CXX_COMPILER_VERSION) # work around for cmake versions smaller than 2.8.10
@@ -58,56 +58,14 @@ include_directories("${PROJECT_SOURCE_DIR}/external/googletest/include"
 
 find_package(OpenMP)
 
-add_executable(karp_rabin_v2 src/karp_rabin_v2.cpp)
-target_link_libraries(karp_rabin_v2 sdsl divsufsort divsufsort64)
-
-
-#add_executable(algorithm_test test/algorithm_test.cpp)
-#target_link_libraries(algorithm_test sdsl divsufsort divsufsort64)
-
-add_executable(block_tree_test test/block_tree_test.cpp)
-target_link_libraries(block_tree_test sdsl divsufsort divsufsort64)
-
-
-#add_executable(block_tree_double_hybrid_skipping_block_test test/block_tree_double_hybrid_skipping_block_test.cpp)
-#target_link_libraries(block_tree_double_hybrid_skipping_block_test sdsl divsufsort divsufsort64)
-
-
-
-add_executable(hash_table src/hash_table.cpp)
-target_link_libraries(hash_table sdsl divsufsort divsufsort64)
-
-#add_executable(algorithm src/algorithm.cpp)
-#target_link_libraries(algorithm sdsl divsufsort divsufsort64)
-
-#add_executable(algorithm_v2 src/algorithm_v2.cpp)
-#target_link_libraries(algorithm_v2 sdsl divsufsort divsufsort64)
-
-
-
 add_executable(build_webgraph src/build_webgraph.cpp)
 target_link_libraries(build_webgraph sdsl divsufsort divsufsort64)
-
-add_executable(build_rdf src/build_rdf.cpp)
-target_link_libraries(build_rdf sdsl divsufsort divsufsort64)
-
-add_executable(build_k2tree_rdf src/build_k2tree_rdf.cpp)
-target_link_libraries(build_k2tree_rdf sdsl divsufsort divsufsort64)
 
 add_executable(build_webgraph_comp_leaves src/build_webgraph_comp_leaves.cpp)
 target_link_libraries(build_webgraph_comp_leaves sdsl divsufsort divsufsort64)
 
-add_executable(build_webgraph_dag src/build_webgraph_dag.cpp)
-target_link_libraries(build_webgraph_dag sdsl divsufsort divsufsort64)
-
 add_executable(build_raster src/build_raster.cpp)
 target_link_libraries(build_raster sdsl divsufsort divsufsort64)
-
-add_executable(build_raster_log src/build_raster_log.cpp)
-target_link_libraries(build_raster_log sdsl divsufsort divsufsort64)
-
-add_executable(test_raster_log src/test_raster_log.cpp)
-target_link_libraries(test_raster_log sdsl divsufsort divsufsort64)
 
 add_executable(build_k2tree src/build_k2tree.cpp)
 target_link_libraries(build_k2tree sdsl divsufsort divsufsort64)
@@ -115,27 +73,8 @@ target_link_libraries(build_k2tree sdsl divsufsort divsufsort64)
 add_executable(build_k2tree_v1 src/build_k2tree_v1.cpp)
 target_link_libraries(build_k2tree_v1 sdsl divsufsort divsufsort64)
 
-add_executable(build_k2_tree_test test/build_k2_tree_test.cpp)
-target_link_libraries(build_k2_tree_test sdsl divsufsort divsufsort64)
-
-
 add_executable(times src/times.cpp)
 target_link_libraries(times sdsl divsufsort divsufsort64)
-
-add_executable(times_god_level src/times_god_level.cpp)
-target_link_libraries(times_god_level sdsl divsufsort divsufsort64)
-
-add_executable(check_blocks src/check_blocks.cpp)
-target_link_libraries(check_blocks sdsl divsufsort divsufsort64)
-
-add_executable(proba test/proba.cpp)
-target_link_libraries(proba sdsl divsufsort divsufsort64)
-
-add_executable(segmentation src/segmentation.cpp)
-target_link_libraries(segmentation sdsl divsufsort divsufsort64)
-
-add_executable(test_neighbors src/test_neighbors.cpp)
-target_link_libraries(test_neighbors sdsl divsufsort divsufsort64)
 
 add_executable(times_direct src/times_direct.cpp)
 target_link_libraries(times_direct sdsl divsufsort divsufsort64)
@@ -173,23 +112,11 @@ target_link_libraries(times_reverse_cl sdsl divsufsort divsufsort64)
 add_executable(times_k2_reverse src/times_k2_reverse.cpp)
 target_link_libraries(times_k2_reverse sdsl divsufsort divsufsort64)
 
-add_executable(info_block_tree src/info_block_tree.cpp)
-target_link_libraries(info_block_tree sdsl divsufsort divsufsort64)
-
 add_executable(size src/size.cpp)
 target_link_libraries(size sdsl divsufsort divsufsort64)
 
 add_executable(size_cl src/size_cl.cpp)
 target_link_libraries(size_cl sdsl divsufsort divsufsort64)
-
-add_executable(experiment_files src/experiment_files.cpp )
-target_link_libraries(experiment_files sdsl divsufsort divsufsort64)
-
-add_executable(region_files src/region_files.cpp )
-target_link_libraries(region_files sdsl divsufsort divsufsort64)
-
-add_executable(entropy src/entropy.cpp )
-target_link_libraries(entropy sdsl divsufsort divsufsort64)
 
 add_executable(build_raster_comp_leaves src/build_raster_comp_leaves.cpp )
 target_link_libraries(build_raster_comp_leaves sdsl divsufsort divsufsort64)
@@ -203,68 +130,8 @@ target_link_libraries(times_range_comp_leaves sdsl divsufsort divsufsort64)
 add_executable(times_cell src/times_cell.cpp )
 target_link_libraries(times_cell sdsl divsufsort divsufsort64)
 
-add_executable(times_cell_dag src/times_cell_dag.cpp )
-target_link_libraries(times_cell_dag sdsl divsufsort divsufsort64)
-
-add_executable(build_raster_dag src/build_raster_dag.cpp )
-target_link_libraries(build_raster_dag sdsl divsufsort divsufsort64)
-
-add_executable(build_raster_min_max src/build_raster_min_max.cpp )
-target_link_libraries(build_raster_min_max sdsl divsufsort divsufsort64)
-
-add_executable(build_raster_dag_comp_leaves src/build_raster_dag_comp_leaves.cpp )
-target_link_libraries(build_raster_dag_comp_leaves sdsl divsufsort divsufsort64)
-
 add_executable(build_k2tree_raster src/build_k2tree_raster.cpp )
 target_link_libraries(build_k2tree_raster sdsl divsufsort divsufsort64)
 
-add_executable(build_png_comp_leaves src/build_png_comp_leaves.cpp )
-target_link_libraries(build_png_comp_leaves sdsl divsufsort divsufsort64)
-
-add_executable(test_raster src/test_raster.cpp )
-target_link_libraries(test_raster sdsl divsufsort divsufsort64)
-
-add_executable(raster_queries src/raster_queries.cpp )
-target_link_libraries(raster_queries sdsl divsufsort divsufsort64)
-
-add_executable(test_raster_range src/test_raster_range.cpp )
-target_link_libraries(test_raster_range sdsl divsufsort divsufsort64)
-
-add_executable(test_k2_acum src/test_k2_acum.cpp)
-target_link_libraries(test_k2_acum sdsl divsufsort divsufsort64)
-
 add_executable(times_k2_acum src/times_k2_acum.cpp)
 target_link_libraries(times_k2_acum sdsl divsufsort divsufsort64)
-
-add_executable(transform_rdf src/transform_rdf.cpp)
-target_link_libraries(transform_rdf sdsl divsufsort divsufsort64)
-
-add_executable(build_samatrix src/build_samatrix.cpp)
-target_link_libraries(build_samatrix sdsl divsufsort divsufsort64)
-
-add_executable(build_samatrix_comp_leaves src/build_samatrix_comp_leaves.cpp)
-target_link_libraries(build_samatrix_comp_leaves sdsl divsufsort divsufsort64)
-
-add_executable(build_png src/build_png.cpp)
-target_link_libraries(build_png sdsl divsufsort divsufsort64)
-
-add_executable(build_k2tree_samatrix src/build_k2tree_samatrix.cpp)
-target_link_libraries(build_k2tree_samatrix sdsl divsufsort divsufsort64)
-
-add_executable(build_k2tree_png src/build_k2tree_png.cpp)
-target_link_libraries(build_k2tree_png sdsl divsufsort divsufsort64)
-
-add_executable(build_rdf_parallel src/build_rdf_parallel.cpp)
-target_link_libraries(build_rdf_parallel sdsl divsufsort divsufsort64 OpenMP::OpenMP_CXX)
-
-add_executable(prepare_movies src/prepare_movies.cpp)
-target_link_libraries(prepare_movies sdsl divsufsort divsufsort64)
-
-add_executable(test_bt test/test_bt.cpp)
-target_link_libraries(test_bt sdsl divsufsort divsufsort64)
-
-add_executable(heap_4ary_test test/heap_4ary_test.cpp)
-target_link_libraries(heap_4ary_test sdsl divsufsort divsufsort64)
-
-add_executable(sa_to_adjacency_lists src/sa_to_adjacency_lists.cpp)
-target_link_libraries(sa_to_adjacency_lists sdsl divsufsort divsufsort64)

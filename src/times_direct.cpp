@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Created by Adrián on 03/06/2020.
 //
 
-#include <block_tree_double_hybrid_skipping_block.hpp>
+#include <block_tree_basic.hpp>
 #include <time_util.hpp>
 #include <experiment_setup.hpp>
 
@@ -71,7 +71,7 @@ int main(int argc, char **argv) {
     }
     std::string name_file = argv[1];
     std::string queries = argv[2];
-    run_times<block_tree_2d::block_tree_double_hybrid_skipping_block<>>(name_file, queries);
+    run_times<block_tree_2d::block_tree_basic<>>(name_file, queries);
 
 
 }

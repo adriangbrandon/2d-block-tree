@@ -31,12 +31,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Created by Adrián on 08/08/2019.
 //
 
-#include <block_tree_double_hybrid_skipping_block.hpp>
+#include <block_tree_basic.hpp>
 
 
 void run_load(const std::string file_name){
 
-    block_tree_2d::block_tree_double_hybrid_skipping_block<> m_block_tree;
+    block_tree_2d::block_tree_basic<> m_block_tree;
     sdsl::load_from_file(m_block_tree, file_name);
 
     std::cout  << sdsl::size_in_bytes(m_block_tree) << std::endl;

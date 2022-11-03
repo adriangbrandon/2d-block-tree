@@ -36,7 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //#include <block_tree_intersection_lists.hpp>
 //#include <block_tree_hybrid.hpp>
 //#include <block_tree_double_hybrid.hpp>
-#include <block_tree_double_hybrid_skipping_block.hpp>
+#include <block_tree_basic.hpp>
 
 /*template<class t_block_tree>
 void build(t_block_tree &b, std::vector<std::vector<int64_t>> adjacency_lists, const uint64_t k, const uint64_t last_block_size_k2_tree){
@@ -55,9 +55,9 @@ void build(block_tree_2d::block_tree_hybrid<> &b, std::vector<std::vector<int64_
     std::cout << "There are pointers from level " << b.minimum_level+1 << " up to level " << b.maximum_level-1 << std::endl;
 }*/
 
-void build(block_tree_2d::block_tree_double_hybrid_skipping_block<> &b, const std::string &file_name,
+void build(block_tree_2d::block_tree_basic<> &b, const std::string &file_name,
            const uint64_t k, const uint64_t last_block_size_k2_tree, const uint64_t limit){
-    b = block_tree_2d::block_tree_double_hybrid_skipping_block<>(file_name, k, last_block_size_k2_tree, limit);
+    b = block_tree_2d::block_tree_basic<>(file_name, k, last_block_size_k2_tree, limit);
     std::cout << "Block tree height=" << b.height << std::endl;
     std::cout << "There are pointers from level " << b.minimum_level+1 << " up to level " << b.maximum_level-1 << std::endl;
 }
@@ -191,7 +191,7 @@ int main(int argc, char **argv) {
     }else if (type == "double_hybrid"){
         //run_build<block_tree_2d::block_tree_double_hybrid<>>(type, dataset, k, limit, last_block_size_k2_tree);
     }else if (type == "god_level"){
-        run_build<block_tree_2d::block_tree_double_hybrid_skipping_block<>>(type, dataset, k, limit, last_block_size_k2_tree);
+        run_build<block_tree_2d::block_tree_basic<>>(type, dataset, k, limit, last_block_size_k2_tree);
     }else{
         std::cout << "Type: " << type << " is not supported." << std::endl;
     }
